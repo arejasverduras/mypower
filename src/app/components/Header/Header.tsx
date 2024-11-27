@@ -1,15 +1,15 @@
 'use client'
-import { useState } from "react";
+// import { useState } from "react";
 
 export const HeaderJara = () => {
-    const [headerColor, setHeaderColor ]= useState('black');
+    // const [headerColor, setHeaderColor ]= useState('bg-black');
 
     
 
 
     return (
         
-            <div className="border">Header, color = {headerColor}</div>
+            <div className="flex w-full h-1/5 justify-center items-center border">Header</div>
         
         
     )
