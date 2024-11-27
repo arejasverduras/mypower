@@ -1,11 +1,15 @@
-import Image from "next/image";
+
+import { HeaderJara } from "./components/Header/Header";
 
 export default function Home() {
   return (
-    <div className="bg-black border min-h-screen flex items-center justify-center">
-      <p>
-        Hola
-      </p>
+    <div className="min-h-screen bg-blue-800">
+      <HeaderJara/>
+      <main className="bg-black border  flex items-center justify-center">
+        <p>
+          Hola
+        </p>
+      </main>
     </div>
   );
 }
