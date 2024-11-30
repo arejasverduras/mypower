@@ -9,7 +9,7 @@ export const HeaderJara = () => {
 
     return (
         
-            <div className="flex w-full h-1/5 justify-center items-center border">Header</div>
+            <div className="flex w-full h-1/5 justify-center items-center border">Menu</div>
         
         
     )
