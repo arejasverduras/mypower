@@ -4,7 +4,7 @@ import { Hero } from "./components/Hero/Hero";
 
 export default function Home() {
   return (
-    <div className=" min-h-screen bg-blue-600 ">
+    <div className=" min-h-screen bg-blue-500 ">
       <HeaderJara/>
       <Hero/>
     </div>
