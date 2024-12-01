@@ -7,7 +7,7 @@ export const Hero = () => {
     return (
         <div className="flex flex-wrap  min-h-96 w-full justify-center" >
             <h1 className="text-5xl m-5 italic shadow-lg ">
-                Jara&apos;s Fitness
+                Jara Power!
             </h1>
             <Image 
                 src='/images/JaraFitM.png' 
