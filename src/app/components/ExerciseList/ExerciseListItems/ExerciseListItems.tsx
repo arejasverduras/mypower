@@ -1,16 +1,14 @@
 import { Exercise } from "./Exercise/Exercise"
-
+import { ExerciseProps } from "./Exercise/Exercise"
 
 interface ExerciseListItemsProps {
-    filteredData: object[]
+    filteredData: ExerciseProps []
 }
-
 
 export const ExerciseListItems = ({filteredData}:ExerciseListItemsProps) => {
     const listItems = filteredData.map((item, index) => 
         <>
            <Exercise data={item} key={index}/>
-
         </>    
     )
 
