@@ -1,20 +1,21 @@
 import { ExerciseListItems } from "./ExerciseListItems/ExerciseListItems"
 
-const fakeData = [
+import { ExerciseProps } from "./ExerciseListItems/Exercise/Exercise"
+
+const fakeData:ExerciseProps[] = [
     {
         title: 'Squats',
         image: '/images/exercises/JSquat.png',
-        video: 'https://youtu.be/6-Pu6LhaTB8?si=4Qv7dN9saFD0Daez' 
+        // video: '6-Pu6LhaTB8?si=4Qv7dN9saFD0Daez' 
     },
     {
         title: 'Frog',
         image: '/images/exercises/JFrog.png',
-        video: 'https://youtu.be/g3hzdvUFl3o?si=TPB0fQnyspqWpLUr' 
+        // video: 'g3hzdvUFl3o?si=TPB0fQnyspqWpLUr' 
     },
     {
         title: 'Stretch',
         image: '/images/exercises/JStretch.png',
-        video: 'https://youtu.be/g3hzdvUFl3o?si=TPB0fQnyspqWpLUr' 
     },
 ]
 
