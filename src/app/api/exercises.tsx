@@ -1,12 +1,12 @@
-let exercises = [
-    {
-        id: 1,
-        title: 'Squats',
-        image: '/images/exercises/JSquat.png',
-        // video: '6-Pu6LhaTB8?si=4Qv7dN9saFD0Daez' 
-        description: 'Bend those knees!',
-        reps: '3 x 12 reps. Hold weights if easy'
-    },
+const exercises = [
+    // {
+    //     id: 1,
+    //     title: 'Squats',
+    //     image: '/images/exercises/JSquat.png',
+    //     // video: '6-Pu6LhaTB8?si=4Qv7dN9saFD0Daez' 
+    //     description: 'Bend those knees!',
+    //     reps: '3 x 12 reps. Hold weights if easy'
+    // },
     // {
     //     id: 2,
     //     title: 'Frog',
