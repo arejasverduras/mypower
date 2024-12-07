@@ -15,7 +15,7 @@ export const ExerciseListItems = ({filteredData}:ExerciseListItemsProps) => {
 
     return (
         <>
-            <h3 className="text-lg">ExerciseListItems</h3>
+            {/* <h3 className="text-lg">ExerciseListItems</h3> */}
             {listItems}
         </>
     )

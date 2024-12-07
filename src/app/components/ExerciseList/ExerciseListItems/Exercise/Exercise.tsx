@@ -4,8 +4,9 @@ import { YouTube } from "@/app/components/Video/YouTube/YouTube"
 import { useState } from "react"
 
 export interface ExerciseProps {
+        id: number,
         title: string,
-        image: string,
+        image?: string,
         video?: string,
         description?: string,
         reps?: string,
@@ -32,12 +33,12 @@ export const Exercise = ({data, index}:Exercise) => {
             </h4>
            { open && (
                 <div className="">
-                    <Image 
+                   {data.image && <Image 
                         src={data.image} 
                         alt={data.title} 
                         width="1600" 
                         height="900"
-                    />
+                    />}
                     {data.video && <YouTube embedId={data.video}/>}
                     {data.description && <div className="p-5">{data.description}</div>}
                     {data.reps && 

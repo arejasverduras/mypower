@@ -1,34 +1,25 @@
-import { ExerciseListItems } from "./ExerciseListItems/ExerciseListItems"
+'use client'
+import { useState, useEffect } from "react";
 
-import { ExerciseProps } from "./ExerciseListItems/Exercise/Exercise"
-
-const fakeData:ExerciseProps[] = [
-    {
-        title: 'Squats',
-        image: '/images/exercises/JSquat.png',
-        // video: '6-Pu6LhaTB8?si=4Qv7dN9saFD0Daez' 
-        description: 'Bend those knees!',
-        reps: '3 x 12 reps. Hold weights if easy'
-    },
-    {
-        title: 'Frog',
-        image: '/images/exercises/JFrog.png',
-        // video: 'g3hzdvUFl3o?si=TPB0fQnyspqWpLUr' 
-    },
-    {
-        title: 'Stretch',
-        image: '/images/exercises/JStretch.png',
-    },
-]
+import { ExerciseListItems } from "./ExerciseListItems/ExerciseListItems";
 
 
-export const ExerciseList = () => {
+
+export const ExerciseList = ({filteredData}) => {
+    const [exercises, setExercises] = useState([]);
+
+    useEffect(()=> {
+        //fetch data fro API
+        fetch("/api/exercises")
+            .then((res) => res.json())
+            .then((data) => setExercises(data));
+    },[])
 
     return (
         <>  
             <h2 className="text-2xl">ExerciseList</h2>
             <ExerciseListItems
-                filteredData={fakeData}
+                filteredData={exercises}
             />
         </>
     )
