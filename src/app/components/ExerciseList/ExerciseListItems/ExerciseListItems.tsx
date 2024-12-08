@@ -7,9 +7,7 @@ interface ExerciseListItemsProps {
 
 export const ExerciseListItems = ({filteredData}:ExerciseListItemsProps) => {
     const listItems = filteredData.map((item, index) => 
-        <>
-           <Exercise data={item} key={index} index={index}/>
-        </>    
+           <Exercise data={item} key={item.id} index={index}/>
     )
 
 

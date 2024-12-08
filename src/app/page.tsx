@@ -2,7 +2,7 @@
 import { HeaderJara } from "./components/Header/Header";
 import { Hero } from "./components/Hero/Hero";
 import { ExerciseList } from "./components/ExerciseList/ExerciseList";
-import database from "./database";
+
 
 export default function Home() {
   
@@ -10,7 +10,7 @@ export default function Home() {
     <div className=" min-h-screen bg-primary-color text-secondary-color">
       <HeaderJara/>
       <Hero/>
-      <ExerciseList filteredData = {database.exercises}/>
+      <ExerciseList/>
     </div>
   );
 }

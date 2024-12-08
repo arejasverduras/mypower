@@ -5,7 +5,7 @@ import { ExerciseListItems } from "./ExerciseListItems/ExerciseListItems";
 
 
 
-export const ExerciseList = ({filteredData}) => {
+export const ExerciseList = () => {
     const [exercises, setExercises] = useState([]);
 
     useEffect(()=> {
