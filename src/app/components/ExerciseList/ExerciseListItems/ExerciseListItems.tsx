@@ -1,5 +1,5 @@
 import { Exercise } from "./Exercise/Exercise"
-import { ExerciseProps } from "./Exercise/Exercise"
+import { ExerciseProps } from "@/app/api/exercises/route"
 
 interface ExerciseListItemsProps {
     filteredData: ExerciseProps []

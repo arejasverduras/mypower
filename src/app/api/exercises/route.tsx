@@ -1,5 +1,14 @@
 import { NextResponse } from "next/server";
 
+export interface ExerciseProps {
+    id: number,
+    title: string,
+    image?: string,
+    video?: string,
+    description?: string,
+    reps?: string,
+}
+
 let exercises = [
 
     {
@@ -40,7 +49,7 @@ export async function GET() {
 }
 
 // POST requests
-export async function POST(req) {
+export async function POST(req: Request) {
     const body = await req.json();
     const {title, video} = body;
 
@@ -48,7 +57,14 @@ export async function POST(req) {
         return NextResponse.json({error: "Missing Fields"}, {status: 400});
     }
 
-    const newExercise = { id: exercises.length + 1, name, category };
+    const newExercise = { 
+        id: exercises.length + 1, 
+        title,
+        video,
+        image: body.image ?? null,
+        description: body.description ?? null,
+        execution: body.execution ?? null,    
+    };
     exercises.push(newExercise);
 
     return NextResponse.json(newExercise, { status: 201 });

@@ -2,15 +2,8 @@
 import Image from "next/image"
 import { YouTube } from "@/app/components/Video/YouTube/YouTube"
 import { useState } from "react"
+import { ExerciseProps } from "@/app/api/exercises/route"
 
-export interface ExerciseProps {
-        id: number,
-        title: string,
-        image?: string,
-        video?: string,
-        description?: string,
-        reps?: string,
-}
 
 interface Exercise {
     data: ExerciseProps,
