@@ -17,7 +17,7 @@ export const ExerciseList = () => {
 
     return (
         <>  
-            <h2 className="text-2xl">ExerciseList</h2>
+            <h2 className="text-2xl">All exercises</h2>
             <ExerciseListItems
                 filteredData={exercises}
             />
