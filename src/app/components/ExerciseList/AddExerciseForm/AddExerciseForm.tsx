@@ -59,7 +59,7 @@ export const AddExerciseForm = ({onAdd}: AddExerciseFormProps) => {
         onChange={(e) => setImage(e.target.value)}
       />
       <input
-        type="url"
+        type="text"
         placeholder="Video URL (optional)"
         value={video}
         onChange={(e) => setVideo(e.target.value)}
