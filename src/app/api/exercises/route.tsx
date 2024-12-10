@@ -6,38 +6,38 @@ export interface ExerciseProps {
     image?: string,
     video?: string,
     description?: string,
-    reps?: string,
+    execution?: string,
 }
 
 let exercises = [
 
     {
-        id: 3,
+        id: 1,
         title: 'Curtsy Lunge',
         video: 'wzHjHs6jlIA?si=egKTt8NaFqiVd-DA'
     },
     {
-        id: 4,
+        id: 2,
         title: 'Kettlebell Lateral Swings',
         video: 'api9BRUZ9lM?si=gxgim0Q10pmJhuJo'
     },
     {
-        id: 5,
+        id: 3,
         title: 'Banded lateral walks (Monster walks)',
         video: 'rPTkrAJ6Fh4?si=1xLYttjECSvYrGk5'
     },
     {
-        id: 6,
+        id: 4,
         title: 'Sumo deadlift',
         video: 'nAeklcroNUw?si=GrHuuacJ7xhBwad4'
     },
     {
-        id: 7,
+        id: 5,
         title: 'bulgarian split squats',
         video: 'l246T6Zy96s?si=gvsgq0cnNsxk1zIr'
     },
     {
-        id: 8,
+        id: 6,
         title: 'Bench supported glute bridge',
         video: 'LZWQgMxryDc?si=pv3P8neCufwsb8hV'
     }
@@ -51,16 +51,16 @@ export async function GET() {
 // POST requests
 export async function POST(req: Request) {
     const body = await req.json();
-    const {title, video} = body;
+    const {title} = body;
 
-    if (!title || video) {
+    if (!title) {
         return NextResponse.json({error: "Missing Fields"}, {status: 400});
     }
 
     const newExercise = { 
         id: exercises.length + 1, 
         title,
-        video,
+        video: body.video ?? null,
         image: body.image ?? null,
         description: body.description ?? null,
         execution: body.execution ?? null,    
