@@ -10,12 +10,28 @@ import { AddExerciseForm } from "./AddExerciseForm/AddExerciseForm";
 export const ExerciseList = () => {
     const [exercises, setExercises] = useState<ExerciseProps[]>([]);
 
-    useEffect(()=> {
-        //fetch data fro API
-        fetch("/api/exercises")
-            .then((res) => res.json())
-            .then((data) => setExercises(data));
-    },[]);
+    // useEffect(()=> {
+    //     //fetch data fro API
+    //     fetch("/api/exercises")
+    //         .then((res) => res.json())
+    //         .then((data) => setExercises(data));
+    // },[]);
+
+     // Fetch exercises from the API
+  useEffect(() => {
+    const fetchExercises = async () => {
+      try {
+        const res = await fetch("/api/exercises", { method: "GET" });
+        if (!res.ok) throw new Error("Failed to fetch exercises");
+        const data = await res.json();
+        setExercises(data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchExercises();
+  }, []);
 
     const handleAddExercise = async (newExercise: {
         title: string;
@@ -24,19 +40,38 @@ export const ExerciseList = () => {
         description?: string;
         execution?: string;
       }) => {
-        const res = await fetch("/api/exercises", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(newExercise),
-        });
+
+        // const res = await fetch("/api/exercises", {
+        //   method: "POST",
+        //   headers: { "Content-Type": "application/json" },
+        //   body: JSON.stringify(newExercise),
+        // });
     
-        if (!res.ok) {
-          console.error("Failed to add exercise");
-          return;
+        // if (!res.ok) {
+        //   console.error("Failed to add exercise");
+        //   return;
+        // }
+    
+        // const addedExercise = await res.json();
+        // setExercises([...exercises, addedExercise]);
+        try {
+            const res = await fetch("/api/exercises", {
+                method: "POST",
+                headers: { "Content-Type": "application/json"}, 
+                body: JSON.stringify(newExercise),
+            });
+
+            if (!res.ok) throw new Error("Failed to add exercise");
+
+            const addedExercise = await res.json();
+            setExercises((prev) => [addedExercise, ...prev]);
+
+        } catch (err) {
+            console.error(err);
         }
-    
-        const addedExercise = await res.json();
-        setExercises([...exercises, addedExercise]);
+        
+
+
       };
 
     return (
