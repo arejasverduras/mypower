@@ -10,12 +10,6 @@ import { AddExerciseForm } from "./AddExerciseForm/AddExerciseForm";
 export const ExerciseList = () => {
     const [exercises, setExercises] = useState<ExerciseProps[]>([]);
 
-    // useEffect(()=> {
-    //     //fetch data fro API
-    //     fetch("/api/exercises")
-    //         .then((res) => res.json())
-    //         .then((data) => setExercises(data));
-    // },[]);
 
      // Fetch exercises from the API
   useEffect(() => {
@@ -33,6 +27,7 @@ export const ExerciseList = () => {
     fetchExercises();
   }, []);
 
+//   POST exercise
     const handleAddExercise = async (newExercise: {
         title: string;
         image?: string;
@@ -41,19 +36,6 @@ export const ExerciseList = () => {
         execution?: string;
       }) => {
 
-        // const res = await fetch("/api/exercises", {
-        //   method: "POST",
-        //   headers: { "Content-Type": "application/json" },
-        //   body: JSON.stringify(newExercise),
-        // });
-    
-        // if (!res.ok) {
-        //   console.error("Failed to add exercise");
-        //   return;
-        // }
-    
-        // const addedExercise = await res.json();
-        // setExercises([...exercises, addedExercise]);
         try {
             const res = await fetch("/api/exercises", {
                 method: "POST",

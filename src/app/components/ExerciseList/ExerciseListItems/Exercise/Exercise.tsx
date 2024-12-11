@@ -34,8 +34,8 @@ export const Exercise = ({data, index}:Exercise) => {
                     />}
                     {data.video && <YouTube embedId={data.video}/>}
                     {data.description && <div className="p-5">{data.description}</div>}
-                    {data.reps && 
-                       (<div className="p-5"><h5 className="font-bold">Execution</h5> <div>{data.reps}</div> </div>)
+                    {data.execution && 
+                       (<div className="p-5"><h5 className="font-bold">Execution</h5> <div>{data.execution}</div> </div>)
                         }
                 </div>)}
         </div>
