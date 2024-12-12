@@ -1,16 +1,17 @@
 'use client'
 import Image from "next/image"
 import { YouTube } from "@/app/components/Video/YouTube/YouTube"
-import { useState } from "react"
+import { Dispatch, SetStateAction, useState } from "react"
 import { ExerciseProps } from "@/app/api/exercises/route"
 
 
 interface Exercise {
     data: ExerciseProps,
     index: number,
+    handleDeleteExercise: (id: number) => Promise<void>
 }
 
-export const Exercise = ({data, index}:Exercise) => {
+export const Exercise = ({data, index, handleDeleteExercise}:Exercise) => {
     const [open, setOpen] = useState(false);
 
     const toggle = () => {
@@ -38,6 +39,11 @@ export const Exercise = ({data, index}:Exercise) => {
                        (<div className="p-5"><h5 className="font-bold">Execution</h5> <div>{data.execution}</div> </div>)
                         }
                 </div>)}
+                <button
+              onClick={() => handleDeleteExercise(data.id)}
+              className="text-red-500 hover:text-red-700"
+                > Delete 
+                </button>
         </div>
     )
 }

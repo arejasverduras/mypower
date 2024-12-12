@@ -1,13 +1,27 @@
 import { Exercise } from "./Exercise/Exercise"
 import { ExerciseProps } from "@/app/api/exercises/route"
+import { Dispatch, SetStateAction } from "react"
 
 interface ExerciseListItemsProps {
-    filteredData: ExerciseProps []
+    filteredData: ExerciseProps [],
+    // setExercises: Dispatch<SetStateAction<ExerciseProps[]>>,
+    handleDeleteExercise: (id: number) => Promise<void>
 }
 
-export const ExerciseListItems = ({filteredData}:ExerciseListItemsProps) => {
+
+export const ExerciseListItems = ({filteredData, handleDeleteExercise}:ExerciseListItemsProps) => {
+    // DELETE exercise
+ 
+    
+    
     const listItems = filteredData.map((item, index) => 
-           <Exercise data={item} key={item.id} index={index}/>
+           <Exercise 
+                data={item} 
+                key={item.id} 
+                index={index}
+                // setExercises={setExercises}
+                handleDeleteExercise={handleDeleteExercise}
+                />
     )
 
 

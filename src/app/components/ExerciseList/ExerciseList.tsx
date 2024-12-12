@@ -11,7 +11,7 @@ export const ExerciseList = () => {
     const [exercises, setExercises] = useState<ExerciseProps[]>([]);
 
 
-     // Fetch exercises from the API
+     // GET exercises from the API
   useEffect(() => {
     const fetchExercises = async () => {
       try {
@@ -51,9 +51,21 @@ export const ExerciseList = () => {
         } catch (err) {
             console.error(err);
         }
-        
+      };
 
-
+    //   DELETE exercise
+      const handleDeleteExercise = async (id: number) => {
+        if (!confirm("Are you sure you want to delete this exercise?")) return;
+        console.log(id)
+        try {
+          const res = await fetch(`/api/exercises/${id}`, { method: "DELETE" });
+    
+          if (!res.ok) throw new Error("Failed to delete exercise");
+    
+          setExercises((prev) => prev.filter((exercise) => exercise.id !== id));
+        } catch (err) {
+          console.error(err);
+        }
       };
 
     return (
@@ -61,6 +73,7 @@ export const ExerciseList = () => {
             <h2 className="text-2xl">All exercises</h2>
             <ExerciseListItems
                 filteredData={exercises}
+                handleDeleteExercise={handleDeleteExercise}
             />
             <AddExerciseForm onAdd={handleAddExercise}/>
         </>
