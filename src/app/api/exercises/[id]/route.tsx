@@ -3,6 +3,24 @@ import { NextResponse } from "next/server";
 
 const prisma = new PrismaClient();
 
+export async function GET(req:Request, {params}: {params: {id:string}}) {
+    const exerciseId = parseInt(params.id, 10);
+
+    try {
+        const exercise = await prisma.exercise.findUnique({
+          where: { id: exerciseId },
+        });
+    
+        if (!exercise) {
+          return NextResponse.json({ error: "Exercise not found" }, { status: 404 });
+        }
+    
+        return NextResponse.json(exercise, { status: 200 });
+      } catch (error) {
+        return NextResponse.json({ error: "Failed to fetch exercise" }, { status: 500 });
+      }
+}
+
 // PATCH (EDIT)
 export async function PATCH(req:Request, {params}: {params: {id: string}}) {
     const exerciseID = parseInt(params.id, 10);
