@@ -13,7 +13,8 @@ const config: Config = {
         foreground: "var(--foreground)",
         "primary-color": "var(--primary-color)",
         "secondary-color": "var(--secondary-color)",
-        
+        midnightblue: "#191970", // Custom dark blue
+
       },
     },
   },
