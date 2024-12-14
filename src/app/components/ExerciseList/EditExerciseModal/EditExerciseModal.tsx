@@ -79,7 +79,7 @@ export default function EditExerciseModal({
               <div>
                 <label className="block text-sm font-medium">Image URL</label>
                 <input
-                  type="url"
+                  type="string"
                   value={formData.image || ""}
                   onChange={(e) => handleFormChange("image", e.target.value)}
                   className="w-full mt-1 p-2 bg-transparent border border-white rounded-lg focus:outline-none focus:ring-2 focus:ring-white"
@@ -88,7 +88,7 @@ export default function EditExerciseModal({
               <div>
                 <label className="block text-sm font-medium">Video URL</label>
                 <input
-                  type="url"
+                  type="string"
                   value={formData.video || ""}
                   onChange={(e) => handleFormChange("video", e.target.value)}
                   className="w-full mt-1 p-2 bg-transparent border border-white rounded-lg focus:outline-none focus:ring-2 focus:ring-white"
@@ -99,6 +99,15 @@ export default function EditExerciseModal({
                 <textarea
                   value={formData.description || ""}
                   onChange={(e) => handleFormChange("description", e.target.value)}
+                  rows={3}
+                  className="w-full mt-1 p-2 bg-transparent border border-white rounded-lg focus:outline-none focus:ring-2 focus:ring-white"
+                ></textarea>
+              </div>
+              <div>
+                <label className="block text-sm font-medium">exectution</label>
+                <textarea
+                  value={formData.execution || ""}
+                  onChange={(e) => handleFormChange("execution", e.target.value)}
                   rows={3}
                   className="w-full mt-1 p-2 bg-transparent border border-white rounded-lg focus:outline-none focus:ring-2 focus:ring-white"
                 ></textarea>
