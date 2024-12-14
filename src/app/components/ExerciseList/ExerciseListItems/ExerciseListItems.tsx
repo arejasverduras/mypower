@@ -5,11 +5,12 @@ import { Dispatch, SetStateAction } from "react"
 interface ExerciseListItemsProps {
     filteredData: ExerciseProps [],
     // setExercises: Dispatch<SetStateAction<ExerciseProps[]>>,
-    handleDeleteExercise: (id: number) => Promise<void>
+    handleDeleteExercise: (id: number) => Promise<void>,
+    onEdit: (id: number) => void;
 }
 
 
-export const ExerciseListItems = ({filteredData, handleDeleteExercise}:ExerciseListItemsProps) => {
+export const ExerciseListItems = ({filteredData, handleDeleteExercise, onEdit}:ExerciseListItemsProps) => {
     // DELETE exercise
  
     
@@ -21,6 +22,7 @@ export const ExerciseListItems = ({filteredData, handleDeleteExercise}:ExerciseL
                 index={index}
                 // setExercises={setExercises}
                 handleDeleteExercise={handleDeleteExercise}
+                onEdit={onEdit}
                 />
     )
 

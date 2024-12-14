@@ -8,10 +8,11 @@ import { ExerciseProps } from "@/app/api/exercises/route"
 interface Exercise {
     data: ExerciseProps,
     index: number,
-    handleDeleteExercise: (id: number) => Promise<void>
+    handleDeleteExercise: (id: number) => Promise<void>,
+    onEdit: (id: number) => void;
 }
 
-export const Exercise = ({data, index, handleDeleteExercise}:Exercise) => {
+export const Exercise = ({data, index, handleDeleteExercise, onEdit}:Exercise) => {
     const [open, setOpen] = useState(false);
 
     const toggle = () => {
@@ -40,9 +41,15 @@ export const Exercise = ({data, index, handleDeleteExercise}:Exercise) => {
                         }
                 </div>)}
                 <button
-              onClick={() => handleDeleteExercise(data.id)}
-              className="text-red-500 hover:text-red-700"
-                > Delete 
+                    onClick={() => onEdit(data.id)}
+                    className="text-blue-400 hover:text-blue-600"
+                >
+                    Edit
+                </button>
+                <button
+                    onClick={() => handleDeleteExercise(data.id)}
+                    className="text-red-500 hover:text-red-700"
+                        > Delete 
                 </button>
         </div>
     )

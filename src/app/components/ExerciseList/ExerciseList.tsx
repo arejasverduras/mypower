@@ -4,12 +4,13 @@ import { useState, useEffect } from "react";
 import { ExerciseListItems } from "./ExerciseListItems/ExerciseListItems";
 import { ExerciseProps } from "@/app/api/exercises/route";
 import { AddExerciseForm } from "./AddExerciseForm/AddExerciseForm";
+import EditExerciseModal from "./EditExerciseModal/EditExerciseModal";
 
 
 
 export const ExerciseList = () => {
     const [exercises, setExercises] = useState<ExerciseProps[]>([]);
-
+    const [editingId, setEditingId] = useState<number | null>(null);
 
      // GET exercises from the API
   useEffect(() => {
@@ -53,6 +54,15 @@ export const ExerciseList = () => {
         }
       };
 
+// PATCH exercise (update)
+const handleSaveExercise = (updatedExercise: ExerciseProps) => {
+  setExercises((prev) => 
+    prev.map((exercise) => 
+    exercise.id === updatedExercise.id ? updatedExercise : exercise)
+)
+  setEditingId(null); // close modal
+};
+
     //   DELETE exercise
       const handleDeleteExercise = async (id: number) => {
         if (!confirm("Are you sure you want to delete this exercise?")) return;
@@ -74,8 +84,16 @@ export const ExerciseList = () => {
             <ExerciseListItems
                 filteredData={exercises}
                 handleDeleteExercise={handleDeleteExercise}
+                onEdit={(id) => setEditingId(id)} //open modal
             />
             <AddExerciseForm onAdd={handleAddExercise}/>
+            {editingId && (
+              <EditExerciseModal
+                exerciseId={editingId}
+                onClose={()=> setEditingId(null)}
+                onSave={handleSaveExercise}
+              />
+            )}
         </>
     )
 } 
