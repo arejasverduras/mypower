@@ -27,12 +27,12 @@ export default async function ExercisePage({params}: { params: {id:string} }) {
         <div>
             <h1 className="text-2xl">{exercise.title}</h1>
             <div className="">
-                   {exercise.image && <Image 
+                   {/* {exercise.image && <Image 
                         src={exercise.image} 
                         alt={exercise.title} 
                         width="1600" 
                         height="900"
-                    />}
+                    />} */}
                     {exercise.video && <YouTube embedId={exercise.video}/>}
                     {exercise.description && <div className="p-5">{exercise.description}</div>}
                     {exercise.execution && 
