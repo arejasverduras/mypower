@@ -3,8 +3,8 @@ import Image from "next/image";
 import { YouTube } from "@/app/components/Video/YouTube/YouTube";
 
 export async function generateStaticParams() {
-    // const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/exercises`);
-    const res = await fetch(`/api/exercises`);
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/exercises`);
+    // const res = await fetch("/api/exercises");
     if (!res.ok) throw new Error("Failed to fetch exercises");
 
     const exercises = await res.json();
@@ -16,8 +16,8 @@ export async function generateStaticParams() {
 
 export default async function ExercisePage({params}: { params: {id:string} }) {
     // Fetch exercise data from API
-    // const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/exercises/${params.id}`);
-    const res = await fetch(`/api/exercises/${params.id}`);
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/exercises/${params.id}`);
+    // const res = await fetch(`/api/exercises/${params.id}`);
 
     if (!res.ok) throw new Error("Failed to fetch exercise details");
 
