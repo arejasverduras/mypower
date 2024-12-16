@@ -1,43 +1,44 @@
-'use client'
-import { useState, useEffect } from "react";
-import EditExerciseModal from "@/app/components/ExerciseList/EditExerciseModal/EditExerciseModal";
-import { ExerciseProps } from "@/app/api/exercises/route";
+
+import Image from "next/image";
 import { YouTube } from "@/app/components/Video/YouTube/YouTube";
 
-export default function ExercisePage ({params}: {params: {id: string}}) {
-    const [exercise, setExercise] = useState<ExerciseProps | null>(null);
-    const [loading, setLoading] = useState(true);
+export async function generateStaticParams() {
+    // const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/exercises`);
+    const res = await fetch(`/api/exercises`);
+    if (!res.ok) throw new Error("Failed to fetch exercises");
 
-    const exerciseId = parseInt(params.id, 10);
-    // fetch exercise from api/exercise/[id]
-    useEffect(()=>{
-        const fetchExercise = async () => {
-            try {
-                const res = await fetch(`/api/exercises/${exerciseId}`);
-                if (!res.ok) {
-                    throw new Error("Failed to fetch exercise details")
-                }
-                const data = await res.json();
-                setExercise(data);
-            } catch (error) {
-                console.log(error);
-            } finally {
-                setLoading(false);
-            }    
-        }
-          fetchExercise();  
-    },[]) //empty or 
+    const exercises = await res.json();
 
-    if (loading) return <div>Loading...</div>; // Show loading state
+    return exercises.map((exercise: {id: number}) => ({
+        id: exercise.id.toString(), // Convert ID's to strings
+    }))
+};
 
-    if (!exercise) return <div>No exercise found</div>; // Show when no exercise is available
+export default async function ExercisePage({params}: { params: {id:string} }) {
+    // Fetch exercise data from API
+    // const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/exercises/${params.id}`);
+    const res = await fetch(`/api/exercises/${params.id}`);
+
+    if (!res.ok) throw new Error("Failed to fetch exercise details");
+
+    const exercise = await res.json();
 
     return (
-        <div className="bg-midnight">
-            <h1>{exercise.title}</h1>
-            {exercise.video && <YouTube embedId={exercise.video}/>}
-            {exercise.description && <div className="p-5">{exercise.description}</div>}
-            {exercise.execution && (<div className="p-5"><h5 className="font-bold">Execution</h5> <div>{exercise.execution}</div> </div>)}
+        <div>
+            <h1 className="text-2xl">{exercise.title}</h1>
+            <div className="">
+                   {exercise.image && <Image 
+                        src={exercise.image} 
+                        alt={exercise.title} 
+                        width="1600" 
+                        height="900"
+                    />}
+                    {exercise.video && <YouTube embedId={exercise.video}/>}
+                    {exercise.description && <div className="p-5">{exercise.description}</div>}
+                    {exercise.execution && 
+                       (<div className="p-5"><h5 className="font-bold">Execution</h5> <div>{exercise.execution}</div> </div>)
+                        }
+                </div>)
         </div>
     )
 }
