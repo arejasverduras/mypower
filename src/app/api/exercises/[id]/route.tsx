@@ -24,8 +24,9 @@ export async function GET(req:Request, {params}: {params: Promise<{id:string}>})
 }
 
 // PATCH (EDIT)
-export async function PATCH(req:Request, {params}: {params: {id: string}}) {
-    const exerciseID = parseInt(params.id, 10);
+export async function PATCH(req:Request, {params}: {params: Promise<{id:string}>}) {
+  const { id } = await params;  
+  const exerciseID = parseInt(id, 10);
     const body = await req.json();
 
     try {
@@ -47,9 +48,10 @@ export async function PATCH(req:Request, {params}: {params: {id: string}}) {
 }
 
 // DELETE: Remove an exercise
-export async function DELETE(req: Request, { params }: { params: { id: string } }) {
-    const exerciseId = parseInt(params.id, 10);
-    console.log(params.id);
+export async function DELETE(req: Request, { params }: {params: Promise<{id:string}>}) {
+  const { id } = await params;  
+  const exerciseId = parseInt(id, 10);
+    
   
     try {
       await prisma.exercise.delete({
