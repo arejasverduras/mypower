@@ -21,7 +21,7 @@ export default async function ExercisePage({params}: { params: Promise<{id:strin
     const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/exercises/${id}`);
 
     if (res.status === 404) {
-        redirect("/exercises")
+        redirect("/exercises?error=not-found")
     }
 
     if (!res.ok) throw new Error("Failed to fetch exercise details");
