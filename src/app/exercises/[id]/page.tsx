@@ -4,7 +4,7 @@ import { YouTube } from "@/app/components/Video/YouTube/YouTube";
 
 export async function generateStaticParams() {
     const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/exercises`);
-    // const res = await fetch("/api/exercises");
+
     if (!res.ok) throw new Error("Failed to fetch exercises");
 
     const exercises = await res.json();
