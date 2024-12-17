@@ -1,4 +1,4 @@
-
+import { redirect } from "next/navigation";
 // import Image from "next/image";
 import { YouTube } from "@/app/components/Video/YouTube/YouTube";
 
@@ -19,6 +19,10 @@ export default async function ExercisePage({params}: { params: Promise<{id:strin
     
     // Fetch exercise data from API
     const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/exercises/${id}`);
+
+    if (res.status === 404) {
+        redirect("/exercises")
+    }
 
     if (!res.ok) throw new Error("Failed to fetch exercise details");
 
