@@ -1,7 +1,7 @@
 'use client'
 import Image from "next/image"
 import { YouTube } from "@/app/components/Video/YouTube/YouTube"
-import { Dispatch, SetStateAction, useState } from "react"
+import { useState } from "react"
 import { ExerciseProps } from "@/app/api/exercises/route"
 
 
