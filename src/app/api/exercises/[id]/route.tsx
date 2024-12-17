@@ -3,8 +3,9 @@ import { NextResponse } from "next/server";
 
 const prisma = new PrismaClient();
 
-export async function GET(req:Request, {params}: {params: {id:string}}) {
-    const exerciseId = parseInt(params.id, 10);
+export async function GET(req:Request, {params}: {params: Promise<{id:string}>}) {
+  const { id } = await params;  
+  const exerciseId = parseInt(id, 10);
 
     try {
         const exercise = await prisma.exercise.findUnique({
@@ -17,6 +18,7 @@ export async function GET(req:Request, {params}: {params: {id:string}}) {
     
         return NextResponse.json(exercise, { status: 200 });
       } catch (error) {
+        console.log(error)
         return NextResponse.json({ error: "Failed to fetch exercise" }, { status: 500 });
       }
 }
@@ -39,6 +41,7 @@ export async function PATCH(req:Request, {params}: {params: {id: string}}) {
         })
         return NextResponse.json(updatedExercise, { status: 200});
     } catch (error) {
+        console.log(error);
         return NextResponse.json({error: "Exercise not found or update failed"}, {status: 404});
     }
 }
@@ -55,6 +58,7 @@ export async function DELETE(req: Request, { params }: { params: { id: string } 
   
       return NextResponse.json({ message: "Exercise deleted successfully" }, { status: 200 });
     } catch (error) {
+      console.log(error);
       return NextResponse.json({ error: "Exercise not found or delete failed" }, { status: 404 });
     }
   }
