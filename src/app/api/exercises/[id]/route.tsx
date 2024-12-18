@@ -4,11 +4,16 @@ import { NextResponse } from "next/server";
 const prisma = new PrismaClient();
 
 export async function GET(req:Request, {params}: {params: Promise<{id:string}>}) {
-  const { id } = await params;  
-  const exerciseId = parseInt(id, 10);
+  const { id } = await params;
+  
+  const exerciseId = parseInt(id, 10);  
 
+  // if (id !== typeof Number) {
+  //   return NextResponse.json({error: "invalid url"}, {status: 404});
+  // }
+  
     try {
-        const exercise = await prisma.exercise.findUnique({
+      const exercise = await prisma.exercise.findUnique({
           where: { id: exerciseId },
         });
     
