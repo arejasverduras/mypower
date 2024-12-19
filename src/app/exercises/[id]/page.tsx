@@ -1,4 +1,4 @@
-import { redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 // import Image from "next/image";
 import { YouTube } from "@/app/components/Video/YouTube/YouTube";
 
@@ -18,10 +18,13 @@ export default async function ExercisePage({params}: { params: Promise<{id:strin
     const { id } = await params;
     
     // Fetch exercise data from API
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/exercises/${id}`);
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/exercises/${id}`, {
+        next: {revalidate: 10} // ISR every 10 seconds.
+    });
 
     if (res.status === 404) {
-        redirect("/exercises?error=not-found")
+        // redirect("/exercises?error=not-found")
+        notFound(); // redirect to 404 page
     }
 
     if (!res.ok) throw new Error("Failed to fetch exercise details");
