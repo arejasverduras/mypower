@@ -7,10 +7,9 @@ export async function GET(req:Request, {params}: {params: Promise<{id:string}>})
   const { id } = await params;
   
   const exerciseId = parseInt(id, 10);  
-
-  // if (id !== typeof Number) {
-  //   return NextResponse.json({error: "invalid url"}, {status: 404});
-  // }
+  if (isNaN(exerciseId) || exerciseId <=0) {
+    return NextResponse.json({ error: "Invalid exercise Id"}, {status: 400})
+  }
   
     try {
       const exercise = await prisma.exercise.findUnique({
@@ -24,7 +23,7 @@ export async function GET(req:Request, {params}: {params: Promise<{id:string}>})
         return NextResponse.json(exercise, { status: 200 });
       } catch (error) {
         console.log(error)
-        return NextResponse.json({ error: "Failed to fetch exercise" }, { status: 500 });
+        return NextResponse.json({ error: "Internal server error" }, { status: 500 });
       }
 }
 

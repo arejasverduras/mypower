@@ -22,6 +22,11 @@ export default async function ExercisePage({params}: { params: Promise<{id:strin
         next: {revalidate: 10} // ISR every 10 seconds.
     });
 
+      // Handle invalid or non-numeric IDs (400 response)
+  if (res.status === 400) {
+    notFound(); // Redirect to the 404 page
+  }
+
     if (res.status === 404) {
         // redirect("/exercises?error=not-found")
         notFound(); // redirect to 404 page
