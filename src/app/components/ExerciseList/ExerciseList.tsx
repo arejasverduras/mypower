@@ -63,30 +63,18 @@ const handleSaveExercise = (updatedExercise: ExerciseProps) => {
   setEditingId(null); // close modal
 };
 
-    //   DELETE exercise
-      const handleDeleteExercise = async (id: number) => {
-        if (!confirm("Are you sure you want to delete this exercise?")) return;
-        console.log(id)
-        try {
-          const res = await fetch(`/api/exercises/${id}`, { method: "DELETE" });
-    
-          if (!res.ok) throw new Error("Failed to delete exercise");
-    
-          setExercises((prev) => prev.filter((exercise) => exercise.id !== id));
-        } catch (err) {
-          console.error(err);
-        }
-      };
+   
 
     return (
         <>  
             <h2 className="text-2xl">All exercises</h2>
             <ExerciseListItems
                 filteredData={exercises}
-                handleDeleteExercise={handleDeleteExercise}
                 onEdit={(id) => setEditingId(id)} //open modal
             />
+            {/* keep this here */}
             <AddExerciseForm onAdd={handleAddExercise}/>
+            
             {editingId && (
               <EditExerciseModal
                 exerciseId={editingId}

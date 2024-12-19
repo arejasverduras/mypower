@@ -1,6 +1,5 @@
 import { notFound } from "next/navigation";
-// import Image from "next/image";
-import { YouTube } from "@/app/components/Video/YouTube/YouTube";
+import { Exercise } from "@/app/components/ExerciseList/ExerciseListItems/Exercise/Exercise";
 
 export async function generateStaticParams() {
     const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/exercises`);
@@ -28,7 +27,6 @@ export default async function ExercisePage({params}: { params: Promise<{id:strin
   }
 
     if (res.status === 404) {
-        // redirect("/exercises?error=not-found")
         notFound(); // redirect to 404 page
     }
 
@@ -36,22 +34,22 @@ export default async function ExercisePage({params}: { params: Promise<{id:strin
 
     const exercise = await res.json();
 
+
+
     return (
         <div>
-            <h1 className="text-2xl">{exercise.title}</h1>
-            <div className="">
-                   {/* {exercise.image && <Image 
-                        src={exercise.image} 
-                        alt={exercise.title} 
-                        width="1600" 
-                        height="900"
-                    />} */}
-                    {exercise.video && <YouTube embedId={exercise.video}/>}
-                    {exercise.description && <div className="p-5">{exercise.description}</div>}
-                    {exercise.execution && 
-                       (<div className="p-5"><h5 className="font-bold">Execution</h5> <div>{exercise.execution}</div> </div>)
-                        }
-                </div>)
+            <Exercise 
+                view="page" 
+                exercise={exercise}
+                index={exercise.id}
+                />
         </div>
+        
     )
 }
+
+//move edit and delete to this page. 
+
+// create an Exercise component with different views: one for list (without edit and delete) functions,
+// that navigates to this page. 
+// one for this page including crud
