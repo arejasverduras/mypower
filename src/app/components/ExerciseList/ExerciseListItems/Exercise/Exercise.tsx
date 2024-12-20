@@ -6,8 +6,6 @@ import { useRouter } from "next/navigation"
 import { ExerciseProps } from "@/app/api/exercises/route"
 import EditExerciseModal from "../../EditExerciseModal/EditExerciseModal"
 
-
-
 interface Exercise {
     exercise: ExerciseProps,
     index: number,
@@ -37,7 +35,6 @@ export const Exercise = ({exercise, index, view}:Exercise) => {
         setEditingId(null); // close modal
     };
   
-
      //   DELETE exercise
      const handleDeleteExercise = async (id:number) => {
         if (!confirm("Are you sure you want to delete this exercise?")) return;
@@ -78,7 +75,6 @@ export const Exercise = ({exercise, index, view}:Exercise) => {
                         (<div className="p-5"><h5 className="font-bold">Execution</h5> <div>{exerciseData.execution}</div> </div>)
                             }
                     </div>)}
-                    
             </div>
         )
     }
