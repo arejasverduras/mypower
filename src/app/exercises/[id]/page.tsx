@@ -34,8 +34,6 @@ export default async function ExercisePage({params}: { params: Promise<{id:strin
 
     const exercise = await res.json();
 
-
-
     return (
         <div>
             <Exercise 
@@ -44,12 +42,5 @@ export default async function ExercisePage({params}: { params: Promise<{id:strin
                 index={exercise.id}
                 />
         </div>
-        
     )
-}
-
-//move edit and delete to this page. 
-
-// create an Exercise component with different views: one for list (without edit and delete) functions,
-// that navigates to this page. 
-// one for this page including crud
+};

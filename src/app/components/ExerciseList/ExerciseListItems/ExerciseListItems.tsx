@@ -1,11 +1,9 @@
 import { Exercise } from "./Exercise/Exercise"
 import { ExerciseProps } from "@/app/api/exercises/route"
 
-
 interface ExerciseListItemsProps {
     filteredData: ExerciseProps [],
 }
-
 
 export const ExerciseListItems = ({filteredData}:ExerciseListItemsProps) => {
 
@@ -18,11 +16,10 @@ export const ExerciseListItems = ({filteredData}:ExerciseListItemsProps) => {
                 />
     )
 
-
     return (
         <>
             <h3 className="text-lg"><i>Component: ExerciseListItems</i></h3>
             {listItems}
         </>
     )
-}
+};
