@@ -58,7 +58,7 @@ export const AddExerciseForm = ({onAdd}: AddExerciseFormProps) => {
       />
       <label className="block text-sm font-medium text-gray-700">Image (URL)</label> 
       <input
-        type="url"
+        type="text"
         placeholder="Image URL (optional)"
         value={image}
         onChange={(e) => setImage(e.target.value)}

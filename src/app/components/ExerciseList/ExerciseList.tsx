@@ -1,16 +1,11 @@
 'use client'
 import { useState, useEffect } from "react";
-
 import { ExerciseListItems } from "./ExerciseListItems/ExerciseListItems";
 import { ExerciseProps } from "@/app/api/exercises/route";
 import { AddExerciseForm } from "./AddExerciseForm/AddExerciseForm";
-import EditExerciseModal from "./EditExerciseModal/EditExerciseModal";
-
-
 
 export const ExerciseList = () => {
     const [exercises, setExercises] = useState<ExerciseProps[]>([]);
-    const [editingId, setEditingId] = useState<number | null>(null);
 
      // GET exercises from the API
   useEffect(() => {
@@ -54,34 +49,13 @@ export const ExerciseList = () => {
         }
       };
 
-// PATCH exercise (update)
-// const handleSaveExercise = (updatedExercise: ExerciseProps) => {
-//   setExercises((prev) => 
-//     prev.map((exercise) => 
-//     exercise.id === updatedExercise.id ? updatedExercise : exercise)
-// )
-//   setEditingId(null); // close modal
-// };
-
-   
-
     return (
         <>  
             <h2 className="text-2xl">All exercises</h2>
             <ExerciseListItems
                 filteredData={exercises}
-                onEdit={(id) => setEditingId(id)} //open modal
             />
-            {/* keep this here */}
             <AddExerciseForm onAdd={handleAddExercise}/>
-            
-            {/* {editingId && (
-              <EditExerciseModal
-                exerciseId={editingId}
-                onClose={()=> setEditingId(null)}
-                onSave={handleSaveExercise}
-              />
-            )} */}
         </>
     )
-} 
+};

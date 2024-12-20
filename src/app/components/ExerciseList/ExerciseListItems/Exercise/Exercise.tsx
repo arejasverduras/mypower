@@ -20,10 +20,12 @@ export const Exercise = ({exercise, index, view}:Exercise) => {
     const [editingId, setEditingId] = useState<number | null>(null);
     const [exerciseData, setExerciseData] = useState<ExerciseProps>(exercise)
 
+    // list view toggle
     const toggle = () => {
         setOpen(!open);
     }
 
+    // opens editing modal
     const onEdit = (id: ExerciseProps["id"]) => {
         setEditingId(id);
         console.log(editingId);
@@ -39,7 +41,7 @@ export const Exercise = ({exercise, index, view}:Exercise) => {
      //   DELETE exercise
      const handleDeleteExercise = async (id:number) => {
         if (!confirm("Are you sure you want to delete this exercise?")) return;
-        // console.log(id)
+
         try {
           const res = await fetch(`/api/exercises/${id}`, { method: "DELETE" });
     
@@ -86,12 +88,12 @@ export const Exercise = ({exercise, index, view}:Exercise) => {
         <>
                 <h1 className="text-2xl">{exerciseData.title}</h1>
             <div className="">
-                   {/* {exerciseData.image && <Image 
+                   {exerciseData.image && <Image 
                         src={exerciseData.image} 
                         alt={exerciseData.title} 
                         width="1600" 
                         height="900"
-                    />} */}
+                    />}
                     {exerciseData.video && <YouTube embedId={exerciseData.video}/>}
                     {exerciseData.description && <div className="p-5">{exerciseData.description}</div>}
                     {exerciseData.execution && 
@@ -118,6 +120,4 @@ export const Exercise = ({exercise, index, view}:Exercise) => {
             )}
         </>
     )
-}
-
-// to do next: handle edit functionality!
+};
