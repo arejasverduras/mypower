@@ -2,10 +2,11 @@
 import Image from "next/image"
 import Link from "next/link"
 import { YouTube } from "@/app/components/Video/YouTube/YouTube"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { ExerciseProps } from "@/app/api/exercises/route"
 import EditExerciseModal from "../../EditExerciseModal/EditExerciseModal"
+// import { BackButton } from "@/app/components/BackButton/BackButton"
 
 interface Exercise {
     exercise: ExerciseProps,
@@ -17,6 +18,8 @@ export const Exercise = ({exercise, index, view}:Exercise) => {
     const [open, setOpen] = useState(false);
     const [editingId, setEditingId] = useState<number | null>(null);
     const [exerciseData, setExerciseData] = useState<ExerciseProps>(exercise)
+    const [referrer, setReferrer] = useState<string | null>(null);
+
 
     const router = useRouter();
 
@@ -30,6 +33,24 @@ export const Exercise = ({exercise, index, view}:Exercise) => {
         setEditingId(id);
         console.log(editingId);
     }
+
+    // sets referrer for navigating back to the correct page
+    useEffect(()=>{
+        if (document.referrer) {
+            setReferrer(document.referrer)
+            console.log(referrer);
+        }
+    },[]);
+
+    const handleBack = () => {
+        if (referrer) {
+          // Navigate to the previous page
+          window.location.href = referrer;
+        } else {
+          // Fallback to the exercises page
+          router.push("/exercises");
+        }
+      };
 
     // PATCH exercise (update)
     const handleSaveExercise = (updatedExercise: ExerciseProps) => {
@@ -93,8 +114,18 @@ export const Exercise = ({exercise, index, view}:Exercise) => {
     return (
         <div className="">
             {/* create a BackButton instead of link */}
-            <Link href="/exercises">back to exercises</Link>
+            {/* <BackButton fallback={"exercises"}/> */}
+            {/* <Link href={document.referrer ? document.referrer : "/exercises"}>back to exercises</Link> */}
             {/* here */}
+            <Link href="/exercises">
+                <button 
+                    className="py-2 px-4 m-5 bg-white text-primary-color font-semibold rounded-lg shadow-md hover:bg-gray-200"
+                    // onClick={handleBack}
+                >   Go Back
+                </button>
+            </Link>
+            
+                     
             <h1 className="text-2xl p-5">{exerciseData.title}</h1>
             <div className="">
                    {exerciseData.image && <Image 

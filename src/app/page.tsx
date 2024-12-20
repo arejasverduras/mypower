@@ -12,6 +12,8 @@ export default function Home() {
         href="/exercises"
         className="font-bold"
         >Go to exercises</Link>
+    <Link href="/exercises/13">link</Link>
     </div>
+
   );
 }
