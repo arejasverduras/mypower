@@ -1,5 +1,6 @@
 'use client'
 import Image from "next/image"
+import Link from "next/link"
 import { YouTube } from "@/app/components/Video/YouTube/YouTube"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
@@ -13,10 +14,11 @@ interface Exercise {
 }
 
 export const Exercise = ({exercise, index, view}:Exercise) => {
-    const router = useRouter();
     const [open, setOpen] = useState(false);
     const [editingId, setEditingId] = useState<number | null>(null);
     const [exerciseData, setExerciseData] = useState<ExerciseProps>(exercise)
+
+    const router = useRouter();
 
     // list view toggle
     const toggle = () => {
@@ -74,6 +76,14 @@ export const Exercise = ({exercise, index, view}:Exercise) => {
                         {exerciseData.execution && 
                         (<div className="p-5"><h5 className="font-bold">Execution</h5> <div>{exerciseData.execution}</div> </div>)
                             }
+                        <Link href={`/exercises/${exerciseData.id}`}>
+                            <button 
+                                className="py-2 px-4 m-5 bg-white text-primary-color font-semibold rounded-lg shadow-md hover:bg-gray-200"
+                                onClick={()=>{router.push(`/exercises/${exerciseData.id}`)}}
+                            >   Read more
+                            </button>
+                        </Link>
+                        
                     </div>)}
             </div>
         )
@@ -81,8 +91,11 @@ export const Exercise = ({exercise, index, view}:Exercise) => {
     
     // page view
     return (
-        <>
-                <h1 className="text-2xl">{exerciseData.title}</h1>
+        <div className="">
+            {/* create a BackButton instead of link */}
+            <Link href="/exercises">back to exercises</Link>
+            {/* here */}
+            <h1 className="text-2xl p-5">{exerciseData.title}</h1>
             <div className="">
                    {exerciseData.image && <Image 
                         src={exerciseData.image} 
@@ -95,16 +108,16 @@ export const Exercise = ({exercise, index, view}:Exercise) => {
                     {exerciseData.execution && 
                        (<div className="p-5"><h5 className="font-bold">Execution</h5> <div>{exerciseData.execution}</div> </div>)
                         }
-                </div>)
+                </div>
                 <button
                         onClick={() => onEdit(exerciseData.id)}
-                        className="text-blue-400 hover:text-blue-600"
+                        className="text-blue-400 hover:text-blue-600 p-5"
                     >
                         Edit
                     </button>
                     <button
                         onClick={() => handleDeleteExercise(exerciseData.id)}
-                        className="text-red-500 hover:text-red-700"
+                        className="text-red-500 hover:text-red-700 p-5"
                             > Delete 
                     </button>
                     {editingId && (
@@ -114,6 +127,6 @@ export const Exercise = ({exercise, index, view}:Exercise) => {
                 onSave={handleSaveExercise}
               />
             )}
-        </>
+        </div>
     )
 };
