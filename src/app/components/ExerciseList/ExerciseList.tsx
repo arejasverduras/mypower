@@ -55,13 +55,13 @@ export const ExerciseList = () => {
       };
 
 // PATCH exercise (update)
-const handleSaveExercise = (updatedExercise: ExerciseProps) => {
-  setExercises((prev) => 
-    prev.map((exercise) => 
-    exercise.id === updatedExercise.id ? updatedExercise : exercise)
-)
-  setEditingId(null); // close modal
-};
+// const handleSaveExercise = (updatedExercise: ExerciseProps) => {
+//   setExercises((prev) => 
+//     prev.map((exercise) => 
+//     exercise.id === updatedExercise.id ? updatedExercise : exercise)
+// )
+//   setEditingId(null); // close modal
+// };
 
    
 
@@ -75,13 +75,13 @@ const handleSaveExercise = (updatedExercise: ExerciseProps) => {
             {/* keep this here */}
             <AddExerciseForm onAdd={handleAddExercise}/>
             
-            {editingId && (
+            {/* {editingId && (
               <EditExerciseModal
                 exerciseId={editingId}
                 onClose={()=> setEditingId(null)}
                 onSave={handleSaveExercise}
               />
-            )}
+            )} */}
         </>
     )
 } 

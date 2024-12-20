@@ -4,6 +4,7 @@ import { YouTube } from "@/app/components/Video/YouTube/YouTube"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { ExerciseProps } from "@/app/api/exercises/route"
+import EditExerciseModal from "../../EditExerciseModal/EditExerciseModal"
 
 
 
@@ -16,13 +17,24 @@ interface Exercise {
 export const Exercise = ({exercise, index, view}:Exercise) => {
     const router = useRouter();
     const [open, setOpen] = useState(false);
-    // const [isEditing, setIsEditing] = useState(false);
+    const [editingId, setEditingId] = useState<number | null>(null);
+    const [exerciseData, setExerciseData] = useState<ExerciseProps>(exercise)
 
     const toggle = () => {
         setOpen(!open);
     }
 
-    // const onEdit = ()=> !setIsEditing;
+    const onEdit = (id: ExerciseProps["id"]) => {
+        setEditingId(id);
+        console.log(editingId);
+    }
+
+    // PATCH exercise (update)
+    const handleSaveExercise = (updatedExercise: ExerciseProps) => {
+        setExerciseData(exerciseData.id ===updatedExercise.id ? updatedExercise : exerciseData );
+        setEditingId(null); // close modal
+    };
+  
 
      //   DELETE exercise
      const handleDeleteExercise = async (id:number) => {
@@ -48,20 +60,20 @@ export const Exercise = ({exercise, index, view}:Exercise) => {
                 <h4 
                     className=" p-5 cursor-pointer"
                     onClick={ toggle}>
-                        {index+1}. {exercise.title}
+                        {index+1}. {exerciseData.title}
                 </h4>
             { open && (
                     <div className="">
-                    {exercise.image && <Image 
-                            src={exercise.image} 
-                            alt={exercise.title} 
+                    {exerciseData.image && <Image 
+                            src={exerciseData.image} 
+                            alt={exerciseData.title} 
                             width="1600" 
                             height="900"
                         />}
-                        {exercise.video && <YouTube embedId={exercise.video}/>}
-                        {exercise.description && <div className="p-5">{exercise.description}</div>}
-                        {exercise.execution && 
-                        (<div className="p-5"><h5 className="font-bold">Execution</h5> <div>{exercise.execution}</div> </div>)
+                        {exerciseData.video && <YouTube embedId={exerciseData.video}/>}
+                        {exerciseData.description && <div className="p-5">{exerciseData.description}</div>}
+                        {exerciseData.execution && 
+                        (<div className="p-5"><h5 className="font-bold">Execution</h5> <div>{exerciseData.execution}</div> </div>)
                             }
                     </div>)}
                     
@@ -72,31 +84,38 @@ export const Exercise = ({exercise, index, view}:Exercise) => {
     // page view
     return (
         <>
-                <h1 className="text-2xl">{exercise.title}</h1>
+                <h1 className="text-2xl">{exerciseData.title}</h1>
             <div className="">
-                   {/* {exercise.image && <Image 
-                        src={exercise.image} 
-                        alt={exercise.title} 
+                   {/* {exerciseData.image && <Image 
+                        src={exerciseData.image} 
+                        alt={exerciseData.title} 
                         width="1600" 
                         height="900"
                     />} */}
-                    {exercise.video && <YouTube embedId={exercise.video}/>}
-                    {exercise.description && <div className="p-5">{exercise.description}</div>}
-                    {exercise.execution && 
-                       (<div className="p-5"><h5 className="font-bold">Execution</h5> <div>{exercise.execution}</div> </div>)
+                    {exerciseData.video && <YouTube embedId={exerciseData.video}/>}
+                    {exerciseData.description && <div className="p-5">{exerciseData.description}</div>}
+                    {exerciseData.execution && 
+                       (<div className="p-5"><h5 className="font-bold">Execution</h5> <div>{exerciseData.execution}</div> </div>)
                         }
                 </div>)
                 <button
-                        onClick={() => onEdit(exercise.id)}
+                        onClick={() => onEdit(exerciseData.id)}
                         className="text-blue-400 hover:text-blue-600"
                     >
                         Edit
                     </button>
                     <button
-                        onClick={() => handleDeleteExercise(exercise.id)}
+                        onClick={() => handleDeleteExercise(exerciseData.id)}
                         className="text-red-500 hover:text-red-700"
                             > Delete 
                     </button>
+                    {editingId && (
+              <EditExerciseModal
+                exerciseId={editingId}
+                onClose={()=> setEditingId(null)}
+                onSave={handleSaveExercise}
+              />
+            )}
         </>
     )
 }

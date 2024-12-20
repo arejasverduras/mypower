@@ -63,7 +63,7 @@ export default function EditExerciseModal({
 
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-midnightblue text-white p-6 rounded-lg shadow-lg w-full max-w-md">
+          <div className="bg-primary-color text-white p-6 rounded-lg shadow-lg w-full max-w-md">
             <h2 className="text-xl font-bold mb-4">Edit Exercise</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
@@ -115,14 +115,14 @@ export default function EditExerciseModal({
               <div className="flex space-x-4">
                 <button
                   type="submit"
-                  className="py-2 px-4 bg-white text-midnightblue font-semibold rounded-lg shadow-md hover:bg-gray-200"
+                  className="py-2 px-4 bg-white text-primary-color font-semibold rounded-lg shadow-md hover:bg-gray-200"
                 >
                   Save
                 </button>
                 <button
                   type="button"
                   onClick={onClose}
-                  className="py-2 px-4 bg-transparent text-white font-semibold border border-white rounded-lg shadow-md hover:bg-white hover:text-midnightblue"
+                  className="py-2 px-4 bg-transparent text-white font-semibold border border-white rounded-lg shadow-md hover:bg-white hover:text-primary-color"
                 >
                   Cancel
                 </button>

@@ -4,11 +4,10 @@ import { ExerciseProps } from "@/app/api/exercises/route"
 
 interface ExerciseListItemsProps {
     filteredData: ExerciseProps [],
-    onEdit: (id: number) => void;
 }
 
 
-export const ExerciseListItems = ({filteredData, onEdit}:ExerciseListItemsProps) => {
+export const ExerciseListItems = ({filteredData}:ExerciseListItemsProps) => {
 
     const listItems = filteredData.map((item, index) => 
            <Exercise 
@@ -16,8 +15,6 @@ export const ExerciseListItems = ({filteredData, onEdit}:ExerciseListItemsProps)
                 key={item.id} 
                 index={index}
                 view="list"
-                // setExercises={setExercises}
-                onEdit={onEdit}
                 />
     )
 
