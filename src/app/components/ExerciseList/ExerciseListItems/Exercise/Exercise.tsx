@@ -2,7 +2,7 @@
 import Image from "next/image"
 import Link from "next/link"
 import { YouTube } from "@/app/components/Video/YouTube/YouTube"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { ExerciseProps } from "@/app/api/exercises/route"
 import EditExerciseModal from "../../EditExerciseModal/EditExerciseModal"
@@ -18,7 +18,7 @@ export const Exercise = ({exercise, index, view}:Exercise) => {
     const [open, setOpen] = useState(false);
     const [editingId, setEditingId] = useState<number | null>(null);
     const [exerciseData, setExerciseData] = useState<ExerciseProps>(exercise)
-    const [referrer, setReferrer] = useState<string | null>(null);
+    // const [referrer, setReferrer] = useState<string | null>(null);
 
 
     const router = useRouter();
@@ -35,22 +35,24 @@ export const Exercise = ({exercise, index, view}:Exercise) => {
     }
 
     // sets referrer for navigating back to the correct page
-    useEffect(()=>{
-        if (document.referrer) {
-            setReferrer(document.referrer)
-            console.log(referrer);
-        }
-    },[]);
+    // useEffect(()=>{
+    //     if (document.referrer) {
+    //         setReferrer(document.referrer)
+    //         console.log("refererr: " + referrer);
+    //     }
+    // },[referrer]);
+    const referrerTest = typeof document !== "undefined" ? document.referrer : "/exercises";
 
-    const handleBack = () => {
-        if (referrer) {
-          // Navigate to the previous page
-          window.location.href = referrer;
-        } else {
-          // Fallback to the exercises page
-          router.push("/exercises");
-        }
-      };
+
+    // const handleBack = () => {
+    //     if (referrer) {
+    //       // Navigate to the previous page
+    //       window.location.href = referrer;
+    //     } else {
+    //       // Fallback to the exercises page
+    //       router.push("/exercises");
+    //     }
+    //   };
 
     // PATCH exercise (update)
     const handleSaveExercise = (updatedExercise: ExerciseProps) => {
@@ -117,14 +119,21 @@ export const Exercise = ({exercise, index, view}:Exercise) => {
             {/* <BackButton fallback={"exercises"}/> */}
             {/* <Link href={document.referrer ? document.referrer : "/exercises"}>back to exercises</Link> */}
             {/* here */}
-            <Link href="/exercises">
+            <Link href={referrerTest || "/exercises"}>
                 <button 
                     className="py-2 px-4 m-5 bg-white text-primary-color font-semibold rounded-lg shadow-md hover:bg-gray-200"
                     // onClick={handleBack}
-                >   Go Back
+                >   Go Back to exercises
                 </button>
             </Link>
-            
+            {/* <button 
+                    className="py-2 px-4 m-5 bg-white text-primary-color font-semibold rounded-lg shadow-md hover:bg-gray-200"
+                    onClick={handleBack}
+                >   Go Back where to you came from
+                </button> */}
+            {/* <button onClick={()=>{router.back()}}>
+                go back using router.back
+            </button> */}
                      
             <h1 className="text-2xl p-5">{exerciseData.title}</h1>
             <div className="">
