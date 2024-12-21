@@ -15,7 +15,7 @@ export async function generateStaticParams() {
 
 export default async function ExercisePage({params}: { params: Promise<{id:string}> }) {
     const { id } = await params;
-    
+
     // Fetch exercise data from API
     const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/exercises/${id}`, {
         next: {revalidate: 10} // ISR every 10 seconds.
