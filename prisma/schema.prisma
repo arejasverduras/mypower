@@ -13,12 +13,113 @@ datasource db {
   url      = "file:./dev.db"
 }
 
+model User {
+  id          Int       @id @default(autoincrement())
+  googleId    String    @unique // Google OAuth2 unique identifier
+  email       String    @unique
+  name        String?
+  picture     String?   // Profile picture URL from Google
+  isSuperuser Boolean   @default(false)
+  createdExercises Exercise[]
+  createdWorkouts  Workout[]
+  createdPrograms  Program[]
+  likedItems       LikedItem[]
+  createdAt   DateTime @default(now()) // Track when the user was created
+  updatedAt   DateTime @updatedAt      // Track the last time the user was updated
+}
+
+
+// model Exercise {
+//   id          Int     @id @default(autoincrement()) // Auto-incremented ID
+//   title       String                                 // Required
+//   image       String?                                // Optional (Image URL)
+//   video       String?                                // Optional (Video URL)
+//   description String?                                // Optional (Text description)
+//   execution   String?                                // Optional (Text description)
+//   createdAt   DateTime @default(now())               // Auto-generated timestamp
+// }
+
 model Exercise {
-  id          Int     @id @default(autoincrement()) // Auto-incremented ID
-  title       String                                 // Required
+  id          Int       @id @default(autoincrement())
+  title       String
   image       String?                                // Optional (Image URL)
-  video       String?                                // Optional (Video URL)
-  description String?                                // Optional (Text description)
+  description String?
   execution   String?                                // Optional (Text description)
+  video       String?
+  tags        Tag[]     @relation("ExerciseTags")
+  isPublic    Boolean   @default(true)
+  createdBy   User      @relation(fields: [createdById], references: [id])
+  createdById Int
   createdAt   DateTime @default(now())               // Auto-generated timestamp
+  likedBy     LikedItem[]
+  workouts    WorkoutExercise[] // Many-to-Many via intermediate table
+
+}
+
+model Workout {
+  id          Int       @id @default(autoincrement())
+  title       String
+  description String?
+  exercises   WorkoutExercise[] // Many-to-Many via intermediate table
+  tags        Tag[]     @relation("WorkoutTags")
+  isPublic    Boolean   @default(true)
+  createdBy   User      @relation(fields: [createdById], references: [id])
+  createdById Int
+  likedBy     LikedItem[]
+  programs    ProgramWorkout[] // Many-to-Many via intermediate table
+}
+
+model Program {
+  id          Int       @id @default(autoincrement())
+  title       String
+  description String?
+  workouts    ProgramWorkout[]
+  tags        Tag[]     @relation("ProgramTags")
+  isPublic    Boolean   @default(true)
+  createdBy   User      @relation(fields: [createdById], references: [id])
+  createdById Int
+  likedBy     LikedItem[]
+}
+
+// Intermediate table for Many-to-Many relationship
+model WorkoutExercise {
+  id          Int       @id @default(autoincrement())
+  workout     Workout   @relation(fields: [workoutId], references: [id])
+  workoutId   Int
+  exercise    Exercise  @relation(fields: [exerciseId], references: [id])
+  exerciseId  Int
+
+  // Composite key to enforce unique pairing of workout and exercise
+  @@unique([workoutId, exerciseId])
+}
+
+// Intermediate table for Many-to-Many relationship
+model ProgramWorkout {
+  id          Int       @id @default(autoincrement())
+  program     Program   @relation(fields: [programId], references: [id])
+  programId   Int
+  workout     Workout   @relation(fields: [workoutId], references: [id])
+  workoutId   Int
+
+  @@unique([programId, workoutId]) // Prevent duplicate program-workout pairings
+}
+
+model Tag {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  exercises Exercise[] @relation("ExerciseTags")
+  workouts  Workout[] @relation("WorkoutTags")
+  programs  Program[] @relation("ProgramTags")
+}
+
+model LikedItem {
+  id          Int       @id @default(autoincrement())
+  user        User      @relation(fields: [userId], references: [id])
+  userId      Int
+  exercise    Exercise? @relation(fields: [exerciseId], references: [id])
+  exerciseId  Int?
+  workout     Workout?  @relation(fields: [workoutId], references: [id])
+  workoutId   Int?
+  program     Program?  @relation(fields: [programId], references: [id])
+  programId   Int?
 }
