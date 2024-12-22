@@ -2,10 +2,12 @@
 import { useState, useEffect } from "react";
 import { ExerciseListItems } from "./ExerciseListItems/ExerciseListItems";
 import { ExerciseProps } from "@/app/api/exercises/route";
-import { AddExerciseForm } from "./AddExerciseForm/AddExerciseForm";
+import { AddExerciseModal } from "./AddExerciseForm/AddExerciseForm";
 
 export const ExerciseList = () => {
     const [exercises, setExercises] = useState<ExerciseProps[]>([]);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
 
      // GET exercises from the API
   useEffect(() => {
@@ -55,7 +57,17 @@ export const ExerciseList = () => {
             <ExerciseListItems
                 filteredData={exercises}
             />
-            <AddExerciseForm onAdd={handleAddExercise}/>
+            <button
+              onClick={()=> setIsModalOpen(true)}
+              className="py-2 px-4 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600"
+              >
+              + Add Exercise +
+            </button>
+            <AddExerciseModal 
+              onAdd={handleAddExercise}
+              isOpen={isModalOpen}
+              onClose={()=> setIsModalOpen(false)}
+              />
         </>
     )
 };
