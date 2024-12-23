@@ -42,8 +42,8 @@ model Exercise {
   createdAt   DateTime @default(now())               // Auto-generated timestamp
   likedBy     LikedItem[]
   workouts    WorkoutExercise[] // Many-to-Many via intermediate table
-
 }
+// unique description for each exercise in a workout ?
 
 model Workout {
   id          Int       @id @default(autoincrement())
@@ -57,6 +57,8 @@ model Workout {
   likedBy     LikedItem[]
   programs    ProgramWorkout[] // Many-to-Many via intermediate table
 }
+
+// unique description for each exercise in a workout ?
 
 model Program {
   id          Int       @id @default(autoincrement())
