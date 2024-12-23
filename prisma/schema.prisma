@@ -28,17 +28,6 @@ model User {
   updatedAt   DateTime @updatedAt      // Track the last time the user was updated
 }
 
-
-// model Exercise {
-//   id          Int     @id @default(autoincrement()) // Auto-incremented ID
-//   title       String                                 // Required
-//   image       String?                                // Optional (Image URL)
-//   video       String?                                // Optional (Video URL)
-//   description String?                                // Optional (Text description)
-//   execution   String?                                // Optional (Text description)
-//   createdAt   DateTime @default(now())               // Auto-generated timestamp
-// }
-
 model Exercise {
   id          Int       @id @default(autoincrement())
   title       String
