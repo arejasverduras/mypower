@@ -49,7 +49,7 @@ model Exercise {
   tags        Tag[]     @relation("ExerciseTags")
   isPublic    Boolean   @default(true)
   createdBy   User      @relation(fields: [createdById], references: [id])
-  createdById Int
+  createdById Int 
   createdAt   DateTime @default(now())               // Auto-generated timestamp
   likedBy     LikedItem[]
   workouts    WorkoutExercise[] // Many-to-Many via intermediate table
