@@ -1,10 +1,9 @@
 import { Auth } from "@auth/core";
 import GoogleProvider from "@auth/core/providers/google";
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import prisma from "@/lib/prisma"; // Ensure your Prisma client is set up
-import { Prisma } from "@prisma/client";
+import prisma from "@/lib/prisma";
 
-const handler = Auth({
+const authOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
     GoogleProvider({
@@ -13,6 +12,19 @@ const handler = Auth({
     }),
   ],
   secret: process.env.AUTH_SECRET, // Ensure this matches your .env
-});
+  callbacks: {
+    async session({ session, user }) {
+      // Include the user's ID in the session object
+      session.user.id = user.id;
+      return session;
+    },
+  },
+}
 
-export { handler as GET, handler as POST };
+export async function GET(request: Request) {
+  return Auth(request, authOptions); // Pass the request and config
+}
+
+export async function POST(request: Request) {
+  return Auth(request, authOptions); // Pass the request and config
+}
