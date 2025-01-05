@@ -1,5 +1,6 @@
-import { PrismaClient } from "@prisma/client";
+// import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
+import prisma from "@/lib/prisma";
 
 export interface ExerciseProps {
     id: number,
@@ -10,7 +11,7 @@ export interface ExerciseProps {
     execution?: string,
 }
 
-const prisma = new PrismaClient();
+// const prisma = new PrismaClient();
 
 // let exercises = [
 
@@ -63,12 +64,14 @@ export async function POST(req: Request) {
     }
 
     const newExercise = await prisma.exercise.create({
+        // update with user info etc
         data: { 
             title: body.title,
             video: body.video || null,
             image: body.image || null,
             description: body.description || null,
-            execution: body.execution || null,    
+            execution: body.execution || null, 
+            // createdBy: 1,
         }
     });
 

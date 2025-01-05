@@ -1,7 +1,8 @@
-import { PrismaClient } from "@prisma/client";
+// import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
+import prisma from "@/lib/prisma";
 
-const prisma = new PrismaClient();
+// const prisma = new PrismaClient();
 
 export async function GET(req:Request, {params}: {params: Promise<{id:string}>}) {
   const { id } = await params;
