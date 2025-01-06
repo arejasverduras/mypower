@@ -14,14 +14,14 @@ datasource db {
 }
 
 model User {
-  id          Int       @id @default(autoincrement())
-  googleId    String    @unique // Google OAuth2 unique identifier
-  email       String    @unique
-  name        String?
-  image       String?   // Profile picture URL from Google
-  isSuperuser Boolean   @default(false)
-  createdAt   DateTime @default(now()) // Track when the user was created
-  updatedAt   DateTime @updatedAt      // Track the last time the user was updated
+  id            Int       @id @default(autoincrement())
+  email         String    @unique
+  emailVerified DateTime?
+  name          String?
+  image         String?   // Profile picture URL from Google
+  isSuperuser   Boolean   @default(false)
+  createdAt     DateTime @default(now()) // Track when the user was created
+  updatedAt     DateTime @updatedAt      // Track the last time the user was updated
   
   // Relations
   createdExercises Exercise[]
