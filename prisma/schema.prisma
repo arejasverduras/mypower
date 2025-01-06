@@ -22,7 +22,7 @@ model User {
   isSuperuser Boolean   @default(false)
   createdAt   DateTime @default(now()) // Track when the user was created
   updatedAt   DateTime @updatedAt      // Track the last time the user was updated
-
+  
   // Relations
   createdExercises Exercise[]
   createdWorkouts  Workout[]
@@ -31,6 +31,43 @@ model User {
   exerciseResults  ExerciseResult[]
   workoutCompletions WorkoutCompletion[]
   programCompletions ProgramCompletion[]
+
+  // OAuth
+  accounts    Account[] // Relation for OAuth accounts
+  sessions    Session[] // Relation for user sessions
+}
+
+model Account {
+  id                 Int      @id @default(autoincrement())
+  userId             Int
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String?  // OAuth refresh token
+  access_token       String?  // OAuth access token
+  expires_at         Int?     // OAuth token expiration
+  token_type         String?  // OAuth token type
+  scope              String?  // OAuth scopes
+  id_token           String?  // OpenID Connect ID Token
+  session_state      String?  // OAuth session state
+  user               User     @relation(fields: [userId], references: [id])
+
+  @@unique([provider, providerAccountId]) // Enforce unique accounts per provider
+}
+
+model Session {
+  id           Int       @id @default(autoincrement())
+  sessionToken String    @unique
+  userId       Int
+  user         User      @relation(fields: [userId], references: [id])
+  expires      DateTime
+}
+
+model VerificationToken {
+  id         Int       @id @default(autoincrement())
+  identifier String    // Email address or phone number
+  token      String    @unique
+  expires    DateTime
 }
 
 model Exercise {
