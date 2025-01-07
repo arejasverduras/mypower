@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -14,15 +8,15 @@ datasource db {
 }
 
 model User {
-  id            Int       @id @default(autoincrement())
+  id            String    @id @default(cuid())
   email         String    @unique
   emailVerified DateTime?
   name          String?
   image         String?   // Profile picture URL from Google
   isSuperuser   Boolean   @default(false)
-  createdAt     DateTime @default(now()) // Track when the user was created
-  updatedAt     DateTime @updatedAt      // Track the last time the user was updated
-  
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
   // Relations
   createdExercises Exercise[]
   createdWorkouts  Workout[]
@@ -38,95 +32,91 @@ model User {
 }
 
 model Account {
-  id                 Int      @id @default(autoincrement())
-  userId             Int
+  id                 String  @id @default(cuid())
+  userId             String
   type               String
   provider           String
   providerAccountId  String
-  refresh_token      String?  // OAuth refresh token
-  access_token       String?  // OAuth access token
-  expires_at         Int?     // OAuth token expiration
-  token_type         String?  // OAuth token type
-  scope              String?  // OAuth scopes
-  id_token           String?  // OpenID Connect ID Token
-  session_state      String?  // OAuth session state
-  user               User     @relation(fields: [userId], references: [id])
+  refresh_token      String?
+  access_token       String?
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String?
+  session_state      String?
+  user               User    @relation(fields: [userId], references: [id])
 
   @@unique([provider, providerAccountId]) // Enforce unique accounts per provider
 }
 
 model Session {
-  id           Int       @id @default(autoincrement())
-  sessionToken String    @unique
-  userId       Int
-  user         User      @relation(fields: [userId], references: [id])
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  user         User     @relation(fields: [userId], references: [id])
   expires      DateTime
 }
 
 model VerificationToken {
-  id         Int       @id @default(autoincrement())
-  identifier String    // Email address or phone number
-  token      String    @unique
-  expires    DateTime
+  id           String   @id @default(cuid())
+  identifier   String
+  token        String   @unique
+  expires      DateTime
 }
 
 model Exercise {
-  id          Int       @id @default(autoincrement())
+  id          String    @id @default(cuid())
   title       String
-  image       String?                                // Optional (Image URL)
+  image       String?
   description String?
-  execution   String?                                // Optional (Text description)
+  execution   String?
   video       String?
   tags        Tag[]     @relation("ExerciseTags")
   isPublic    Boolean   @default(true)
   createdBy   User      @relation(fields: [createdById], references: [id])
-  createdById Int 
-  createdAt   DateTime @default(now())               // Auto-generated timestamp
+  createdById String
+  createdAt   DateTime  @default(now())
   likedBy     LikedItem[]
   workouts    WorkoutExercise[] // Many-to-Many via intermediate table
 }
-// unique description for each exercise in a workout ?
 
 model Workout {
-  id          Int       @id @default(autoincrement())
+  id          String    @id @default(cuid())
   title       String
   description String?
   exercises   WorkoutExercise[] // Many-to-Many via intermediate table
   tags        Tag[]     @relation("WorkoutTags")
   isPublic    Boolean   @default(true)
   createdBy   User      @relation(fields: [createdById], references: [id])
-  createdById Int
+  createdById String
   likedBy     LikedItem[]
   programs    ProgramWorkout[] // Many-to-Many via intermediate table
 }
 
-// unique description for each exercise in a workout ?
-
 model Program {
-  id          Int       @id @default(autoincrement())
+  id          String    @id @default(cuid())
   title       String
   description String?
   workouts    ProgramWorkout[]
   tags        Tag[]     @relation("ProgramTags")
   isPublic    Boolean   @default(true)
   createdBy   User      @relation(fields: [createdById], references: [id])
-  createdById Int
+  createdById String
   likedBy     LikedItem[]
   results     ProgramCompletion[]
 }
 
 // Intermediate table for Many-to-Many relationship
 model WorkoutExercise {
-  id                Int       @id @default(autoincrement())
+  id                String    @id @default(cuid())
   workout           Workout   @relation(fields: [workoutId], references: [id])
-  workoutId         Int
+  workoutId         String
   exercise          Exercise  @relation(fields: [exerciseId], references: [id])
-  exerciseId        Int
-  customDescription String?   // Custom description for this exercise in this workout
+  exerciseId        String
+  customDescription String?
   customSets        Int?
   customRepetitions String?
   results           ExerciseResult[] // One-to-Many relationship
-
 
   // Composite key to enforce unique pairing of workout and exercise
   @@unique([workoutId, exerciseId])
@@ -134,64 +124,64 @@ model WorkoutExercise {
 
 // Intermediate table for Many-to-Many relationship
 model ProgramWorkout {
-  id          Int       @id @default(autoincrement())
+  id          String    @id @default(cuid())
   program     Program   @relation(fields: [programId], references: [id])
-  programId   Int
+  programId   String
   workout     Workout   @relation(fields: [workoutId], references: [id])
-  workoutId   Int
+  workoutId   String
   results     WorkoutCompletion[]
   @@unique([programId, workoutId]) // Prevent duplicate program-workout pairings
 }
 
 model Tag {
-  id        Int       @id @default(autoincrement())
+  id        String    @id @default(cuid())
   name      String    @unique
   exercises Exercise[] @relation("ExerciseTags")
-  workouts  Workout[] @relation("WorkoutTags")
-  programs  Program[] @relation("ProgramTags")
+  workouts  Workout[]  @relation("WorkoutTags")
+  programs  Program[]  @relation("ProgramTags")
 }
 
 model LikedItem {
-  id          Int       @id @default(autoincrement())
+  id          String    @id @default(cuid())
   user        User      @relation(fields: [userId], references: [id])
-  userId      Int
+  userId      String
   exercise    Exercise? @relation(fields: [exerciseId], references: [id])
-  exerciseId  Int?
+  exerciseId  String?
   workout     Workout?  @relation(fields: [workoutId], references: [id])
-  workoutId   Int?
+  workoutId   String?
   program     Program?  @relation(fields: [programId], references: [id])
-  programId   Int?
+  programId   String?
 }
 
 model ExerciseResult {
-  id            Int         @id @default(autoincrement())
-  user          User        @relation(fields: [userId], references: [id])
-  userId        Int
+  id              String    @id @default(cuid())
+  user            User      @relation(fields: [userId], references: [id])
+  userId          String
   workoutExercise WorkoutExercise @relation(fields: [workoutExerciseId], references: [id])
-  workoutExerciseId     Int
-  sets          Int         // Number of sets performed
-  reps          Int         // Number of reps per set
-  weight        Float?      // Optional weight lifted
-  notes         String?     // User's notes for this exercise
-  createdAt     DateTime    @default(now())
+  workoutExerciseId String
+  sets            Int
+  reps            Int
+  weight          Float?
+  notes           String?
+  createdAt       DateTime  @default(now())
 }
 
 model WorkoutCompletion {
-  id          Int       @id @default(autoincrement())
-  user        User      @relation(fields: [userId], references: [id])
-  userId      Int
+  id             String    @id @default(cuid())
+  user           User      @relation(fields: [userId], references: [id])
+  userId         String
   programWorkout ProgramWorkout @relation(fields: [programWorkoutId], references: [id])
-  programWorkoutId   Int
-  completedAt DateTime  @default(now())
-  notes       String?   // User notes (optional)
+  programWorkoutId String
+  completedAt    DateTime  @default(now())
+  notes          String?
 }
 
 model ProgramCompletion {
-  id          Int       @id @default(autoincrement())
+  id          String    @id @default(cuid())
   user        User      @relation(fields: [userId], references: [id])
-  userId      Int
-  programWorkout     Program   @relation(fields: [programWorkoutId], references: [id])
-  programWorkoutId   Int
+  userId      String
+  program     Program   @relation(fields: [programId], references: [id])
+  programId   String
   completedAt DateTime  @default(now())
-  notes       String?   // User notes (optional)
+  notes       String?
 }
