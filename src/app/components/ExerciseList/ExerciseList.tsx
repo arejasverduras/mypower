@@ -4,11 +4,14 @@ import { ExerciseListItems } from "./ExerciseListItems/ExerciseListItems";
 import { ExerciseProps } from "@/app/api/exercises/route";
 import { AddExerciseModal } from "./AddExerciseForm/AddExerciseForm";
 // import { auth } from "../../../../auth";
+import { useSession } from "@/context/SessionContext";
 
 export const ExerciseList = () => {
     const [exercises, setExercises] = useState<ExerciseProps[]>([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [session, setSession] = useState(null);
+    // const [session, setSession] = useState(null);
+
+    const { session, loading} = useSession();
 
 
      // GET exercises from the API
@@ -27,23 +30,23 @@ export const ExerciseList = () => {
     fetchExercises();
   }, []);
 
-// check session from the api
-useEffect(() => {
-  const fetchSession = async () => {
-    try {
-      const res = await fetch("/api/session");
-      const data = await res.json();
-      if (data.authenticated) {
-        setSession(data.user);
-      } else {
-        setSession(null);
-      }
-    } catch (error) {
-      console.error("Failed to fetch session:", error);
-    }
-  };
-  fetchSession();
-}, []); // Run once on component mount
+// // check session from the api
+// useEffect(() => {
+//   const fetchSession = async () => {
+//     try {
+//       const res = await fetch("/api/session");
+//       const data = await res.json();
+//       if (data.authenticated) {
+//         setSession(data.user);
+//       } else {
+//         setSession(null);
+//       }
+//     } catch (error) {
+//       console.error("Failed to fetch session:", error);
+//     }
+//   };
+//   fetchSession();
+// }, []); // Run once on component mount
 
 const checkForSignIn = () => {
   if (!session) {
@@ -81,6 +84,7 @@ const checkForSignIn = () => {
         }
       };
 
+
     return (
         <>  
             <h2 className="text-2xl">All exercises</h2>
@@ -98,6 +102,7 @@ const checkForSignIn = () => {
               isOpen={isModalOpen}
               onClose={()=> setIsModalOpen(false)}
               />
+              {loading && <div className="w-full h-full backdrop-blur-3xl">Loading..</div>}
         </>
     )
 };

@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { HeaderJara } from "./components/Header/Header";
 import { Hero } from "./components/Hero/Hero";
+import { SessionProvider } from "@/context/SessionContext";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -30,12 +31,13 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <HeaderJara />
-        <Hero />
-        <main>
-          {children}
-        </main>
-        
+        <SessionProvider>
+          <HeaderJara />
+          <Hero />
+          <main>
+            {children}
+          </main>
+        </SessionProvider>
       </body>
     </html>
   );
