@@ -8,8 +8,8 @@ export async function generateStaticParams() {
 
     const exercises = await res.json();
 
-    return exercises.map((exercise: {id: number}) => ({
-        id: exercise.id.toString(), // Convert ID's to strings
+    return exercises.map((exercise: {id: string}) => ({
+        id: exercise.id, // Convert ID's to strings
     }))
 };
 

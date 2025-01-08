@@ -3,10 +3,12 @@ import { useState, useEffect } from "react";
 import { ExerciseListItems } from "./ExerciseListItems/ExerciseListItems";
 import { ExerciseProps } from "@/app/api/exercises/route";
 import { AddExerciseModal } from "./AddExerciseForm/AddExerciseForm";
+// import { auth } from "../../../../auth";
 
 export const ExerciseList = () => {
     const [exercises, setExercises] = useState<ExerciseProps[]>([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [session, setSession] = useState(null);
 
 
      // GET exercises from the API
@@ -25,6 +27,32 @@ export const ExerciseList = () => {
     fetchExercises();
   }, []);
 
+// check session from the api
+useEffect(() => {
+  const fetchSession = async () => {
+    try {
+      const res = await fetch("/api/session");
+      const data = await res.json();
+      if (data.authenticated) {
+        setSession(data.user);
+      } else {
+        setSession(null);
+      }
+    } catch (error) {
+      console.error("Failed to fetch session:", error);
+    }
+  };
+  fetchSession();
+}, []); // Run once on component mount
+
+const checkForSignIn = () => {
+  if (!session) {
+    alert("You must be signed in to add an exercise")
+  } else {
+    setIsModalOpen(true)
+  }
+}
+
 //   POST exercise
     const handleAddExercise = async (newExercise: {
         title: string;
@@ -34,6 +62,8 @@ export const ExerciseList = () => {
         execution?: string;
       }) => {
 
+       
+
         try {
             const res = await fetch("/api/exercises", {
                 method: "POST",
@@ -41,7 +71,7 @@ export const ExerciseList = () => {
                 body: JSON.stringify(newExercise),
             });
 
-            if (!res.ok) throw new Error("Failed to add exercise");
+            if (!res.ok) throw new Error("Failed to add exercise client");
 
             const addedExercise = await res.json();
             setExercises((prev) => [addedExercise, ...prev]);
@@ -58,7 +88,7 @@ export const ExerciseList = () => {
                 filteredData={exercises}
             />
             <button
-              onClick={()=> setIsModalOpen(true)}
+              onClick={checkForSignIn}
               className="py-2 px-4 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600"
               >
               + Add Exercise +

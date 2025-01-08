@@ -4,7 +4,7 @@ import prisma from "@/lib/prisma";
 import { auth } from "../../../../auth";
 
 export interface ExerciseProps {
-    id: number,
+    id: string,
     title: string,
     image?: string,
     video?: string,
@@ -25,11 +25,15 @@ export async function GET() {
 export const POST = auth(async function POST(req: Request) {
     const body = await req.json();
   
-    if (!req.auth) {
-      return NextResponse.json({ message: "Not authenticated" }, { status: 401 });
-    }
+    // if (!req.auth) {
+    //   return NextResponse.json({ message: "Not authenticated to POST exercise" }, { status: 401 });
+    // }
   
     const session = await auth();
+
+    if (!session) {
+        return NextResponse.json({ error: "Not authenticated to POST exercise" }, { status: 401 });
+      }
   
     if (!body.title) {
       return NextResponse.json({ error: "Title is required" }, { status: 400 });
@@ -57,12 +61,3 @@ export const POST = auth(async function POST(req: Request) {
     }
   });
   
-
-
- 
-// export const POST = auth(function POST(req) {
-//   if (req.auth) return NextResponse.json(req.auth)
-
-
-//   return NextResponse.json({ message: "Not authenticated" }, { status: 401 })
-// })
