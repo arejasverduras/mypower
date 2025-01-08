@@ -6,11 +6,13 @@ import prisma from "@/lib/prisma";
 
 export async function GET(req:Request, {params}: {params: Promise<{id:string}>}) {
   const { id } = await params;
+
+  const exerciseId = id;
   
-  const exerciseId = parseInt(id, 10);  
-  if (isNaN(exerciseId) || exerciseId <=0) {
-    return NextResponse.json({ error: "Invalid exercise Id"}, {status: 400})
-  }
+  // const exerciseId = parseInt(id, 10);  
+  // if (isNaN(exerciseId) || exerciseId <=0) {
+  //   return NextResponse.json({ error: "Invalid exercise Id"}, {status: 400})
+  // }
   
     try {
       const exercise = await prisma.exercise.findUnique({
@@ -31,7 +33,7 @@ export async function GET(req:Request, {params}: {params: Promise<{id:string}>})
 // PATCH (EDIT)
 export async function PATCH(req:Request, {params}: {params: Promise<{id:string}>}) {
   const { id } = await params;  
-  const exerciseID = parseInt(id, 10);
+  const exerciseID = id;
     const body = await req.json();
 
     try {
@@ -55,7 +57,7 @@ export async function PATCH(req:Request, {params}: {params: Promise<{id:string}>
 // DELETE: Remove an exercise
 export async function DELETE(req: Request, { params }: {params: Promise<{id:string}>}) {
   const { id } = await params;  
-  const exerciseId = parseInt(id, 10);
+  const exerciseId = id;
     
   
     try {
