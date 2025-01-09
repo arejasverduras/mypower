@@ -10,6 +10,7 @@ export interface ExerciseProps {
     video?: string,
     description?: string,
     execution?: string,
+    createdBy: object | undefined,
 }
 
 

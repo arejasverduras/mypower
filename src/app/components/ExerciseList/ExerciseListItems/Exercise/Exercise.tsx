@@ -16,7 +16,7 @@ interface Exercise {
 
 export const Exercise = ({exercise, index, view}:Exercise) => {
     const [open, setOpen] = useState(false);
-    const [editingId, setEditingId] = useState<number | null>(null);
+    const [editingId, setEditingId] = useState<string | null>(null);
     const [exerciseData, setExerciseData] = useState<ExerciseProps>(exercise)
     // const [referrer, setReferrer] = useState<string | null>(null);
 
@@ -61,7 +61,7 @@ export const Exercise = ({exercise, index, view}:Exercise) => {
     };
   
      //   DELETE exercise
-     const handleDeleteExercise = async (id:number) => {
+     const handleDeleteExercise = async (id:string) => {
         if (!confirm("Are you sure you want to delete this exercise?")) return;
 
         try {

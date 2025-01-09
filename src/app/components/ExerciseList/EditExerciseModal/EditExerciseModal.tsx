@@ -2,16 +2,17 @@ import { useState, useEffect } from "react";
 import { YouTube } from "../../Video/YouTube/YouTube";
 
 interface Exercise {
-  id: number;
+  id: string;
   title: string;
   image?: string;
   video?: string;
   description?: string;
   execution?: string;
+  createdBy: object | undefined;
 }
 
 interface EditExerciseModalProps {
-  exerciseId: number;
+  exerciseId: string;
   onClose: () => void;
   onSave: (updatedExercise: Exercise) => void;
 }
