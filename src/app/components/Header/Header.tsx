@@ -7,6 +7,7 @@ import { auth } from "../../../../auth"
 export const HeaderJara = async () => {
     // const [headerColor, setHeaderColor ]= useState('bg-black');
     const session = await auth();
+
     
     if (!session?.user)
     return (
