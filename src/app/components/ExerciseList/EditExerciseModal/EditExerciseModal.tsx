@@ -8,7 +8,11 @@ interface Exercise {
   video?: string;
   description?: string;
   execution?: string;
-  createdBy: object | undefined;
+  createdBy: {
+    name: string,
+    id: string,
+    image?:string,
+  } | undefined;
 }
 
 interface EditExerciseModalProps {

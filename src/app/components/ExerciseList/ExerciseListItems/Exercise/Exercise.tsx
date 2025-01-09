@@ -77,6 +77,8 @@ export const Exercise = ({exercise, index, view}:Exercise) => {
         }
       };
 
+console.log(exerciseData)
+
     // List view
     if (view === 'list') {
         return (
@@ -144,7 +146,18 @@ export const Exercise = ({exercise, index, view}:Exercise) => {
                         height="900"
                     />}
                     {exerciseData.video && <YouTube embedId={exerciseData.video}/>}
-                    {exerciseData.description && <div className="p-5">{exerciseData.description}</div>}
+                </div>
+                {exercise.createdBy && (
+                    <div className="text-sm m-5">
+                        Added by:{" "}
+                        <Link href={`/users/${exercise.createdBy.id}`} 
+                            className="text-blue-500 hover:underline">
+                            {exercise.createdBy.name || "Unknown User"}
+                        </Link>
+                    </div>
+                )}
+                <div>
+                {exerciseData.description && <div className="p-5">{exerciseData.description}</div>}
                     {exerciseData.execution && 
                        (<div className="p-5"><h5 className="font-bold">Execution</h5> <div>{exerciseData.execution}</div> </div>)
                         }

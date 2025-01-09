@@ -17,6 +17,11 @@ export async function GET(req:Request, {params}: {params: Promise<{id:string}>})
     try {
       const exercise = await prisma.exercise.findUnique({
           where: { id: exerciseId },
+          include: {
+            createdBy: {
+              select: {id: true, name: true, image: true},
+            }
+          }
         });
     
         if (!exercise) {
