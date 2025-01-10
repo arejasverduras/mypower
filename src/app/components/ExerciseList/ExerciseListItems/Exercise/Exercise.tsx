@@ -2,16 +2,17 @@
 import Image from "next/image"
 import Link from "next/link"
 import { YouTube } from "@/app/components/Video/YouTube/YouTube"
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { ExerciseProps } from "@/app/api/exercises/route"
 import EditExerciseModal from "../../EditExerciseModal/EditExerciseModal"
 import { useSession } from "@/context/SessionContext"
-import { auth } from "../../../../../../auth"
 // import { BackButton } from "@/app/components/BackButton/BackButton"
 
 interface Exercise {
-    exercise: ExerciseProps,
+    exercise: {
+        createdById: string }
+       & ExerciseProps ,
     index: number,
     view: "page" | "list",
 }
@@ -22,8 +23,6 @@ export const Exercise = ({exercise, index, view}:Exercise) => {
     const [exerciseData, setExerciseData] = useState<ExerciseProps>(exercise)
     const [error, setError] = useState("")
     const { session } = useSession();
-
-    // const [isAuthorized, setIsAuthorized] = useState(false);
     // const [referrer, setReferrer] = useState<string | null>(null);
 
     
@@ -59,14 +58,6 @@ export const Exercise = ({exercise, index, view}:Exercise) => {
     //       router.push("/exercises");
     //     }
     //   };
-
-    // useEffect(()=>{
-    //     console.log("sessionID: " + session?.id);
-    //     console.log(exercise.createdById);
-    //     setIsAuthorized(session?.id === exercise.createdById || session?.user?.isSuperuser);
-
-    // },[session, exercise.createdById])
-
 
     // authorization for edit and delete
     const isAuthorized = session?.id === exercise.createdById || session?.user?.isSuperuser;
