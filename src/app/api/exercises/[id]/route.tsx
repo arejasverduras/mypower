@@ -1,6 +1,7 @@
 // import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { auth } from "../../../../../auth";
 
 // const prisma = new PrismaClient();
 
@@ -8,11 +9,6 @@ export async function GET(req:Request, {params}: {params: Promise<{id:string}>})
   const { id } = await params;
 
   const exerciseId = id;
-  
-  // const exerciseId = parseInt(id, 10);  
-  // if (isNaN(exerciseId) || exerciseId <=0) {
-  //   return NextResponse.json({ error: "Invalid exercise Id"}, {status: 400})
-  // }
   
     try {
       const exercise = await prisma.exercise.findUnique({
@@ -41,6 +37,10 @@ export async function PATCH(req:Request, {params}: {params: Promise<{id:string}>
   const exerciseID = id;
     const body = await req.json();
 
+    // const session = await auth(req);
+
+
+
     try {
         const updatedExercise = await prisma.exercise.update({
             where: {id: exerciseID}, 
@@ -60,12 +60,33 @@ export async function PATCH(req:Request, {params}: {params: Promise<{id:string}>
 }
 
 // DELETE: Remove an exercise
-export async function DELETE(req: Request, { params }: {params: Promise<{id:string}>}) {
+export const DELETE = auth( async function DELETE(req, { params }: {params: Promise<{id:string}>}) {
   const { id } = await params;  
   const exerciseId = id;
-    
+   
+    // Ensure the user is authenticated
+    if (!req.auth) {
+      return NextResponse.json({ message: "Not authenticated" }, { status: 401 });
+    }
   
     try {
+      // Fetch the exercise to check ownership
+      const exercise = await prisma.exercise.findUnique({
+          where: { id },
+          select: { createdById: true },
+        });
+
+        if (!exercise) {
+          return NextResponse.json({ error: "Exercise not found" }, { status: 404 });
+        }
+
+        // Check if the user is the creator or a superuser
+      if (exercise.createdById !== req.auth.user.id && !req.auth.user.isSuperuser) {
+        return NextResponse.json({ error: "Not authorized" }, { status: 403 });
+      }
+
+
+
       await prisma.exercise.delete({
         where: { id: exerciseId },
       });
@@ -73,6 +94,6 @@ export async function DELETE(req: Request, { params }: {params: Promise<{id:stri
       return NextResponse.json({ message: "Exercise deleted successfully" }, { status: 200 });
     } catch (error) {
       console.log(error);
-      return NextResponse.json({ error: "Exercise not found or delete failed" }, { status: 404 });
+      return NextResponse.json({ error: "Failed to delete exercise" }, { status: 500 });
     }
-  }
+  })

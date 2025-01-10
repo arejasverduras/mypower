@@ -2,10 +2,12 @@
 import Image from "next/image"
 import Link from "next/link"
 import { YouTube } from "@/app/components/Video/YouTube/YouTube"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { ExerciseProps } from "@/app/api/exercises/route"
 import EditExerciseModal from "../../EditExerciseModal/EditExerciseModal"
+import { useSession } from "@/context/SessionContext"
+import { auth } from "../../../../../../auth"
 // import { BackButton } from "@/app/components/BackButton/BackButton"
 
 interface Exercise {
@@ -18,8 +20,13 @@ export const Exercise = ({exercise, index, view}:Exercise) => {
     const [open, setOpen] = useState(false);
     const [editingId, setEditingId] = useState<string | null>(null);
     const [exerciseData, setExerciseData] = useState<ExerciseProps>(exercise)
+    const [error, setError] = useState("")
+    const { session } = useSession();
+
+    // const [isAuthorized, setIsAuthorized] = useState(false);
     // const [referrer, setReferrer] = useState<string | null>(null);
 
+    
 
     const router = useRouter();
 
@@ -31,7 +38,6 @@ export const Exercise = ({exercise, index, view}:Exercise) => {
     // opens editing modal
     const onEdit = (id: ExerciseProps["id"]) => {
         setEditingId(id);
-        console.log(editingId);
     }
 
     // sets referrer for navigating back to the correct page
@@ -54,6 +60,18 @@ export const Exercise = ({exercise, index, view}:Exercise) => {
     //     }
     //   };
 
+    // useEffect(()=>{
+    //     console.log("sessionID: " + session?.id);
+    //     console.log(exercise.createdById);
+    //     setIsAuthorized(session?.id === exercise.createdById || session?.user?.isSuperuser);
+
+    // },[session, exercise.createdById])
+
+
+    // authorization for edit and delete
+    const isAuthorized = session?.id === exercise.createdById || session?.user?.isSuperuser;
+
+    // console.log(isAuthorized);
     // PATCH exercise (update)
     const handleSaveExercise = (updatedExercise: ExerciseProps) => {
         setExerciseData(exerciseData.id ===updatedExercise.id ? updatedExercise : exerciseData );
@@ -62,6 +80,14 @@ export const Exercise = ({exercise, index, view}:Exercise) => {
   
      //   DELETE exercise
      const handleDeleteExercise = async (id:string) => {
+        
+        if (!isAuthorized) {
+            setError("You are not authorized to delete this exercise.");
+            return;
+          }
+      
+        
+        
         if (!confirm("Are you sure you want to delete this exercise?")) return;
 
         try {
@@ -77,7 +103,6 @@ export const Exercise = ({exercise, index, view}:Exercise) => {
         }
       };
 
-console.log(exerciseData)
 
     // List view
     if (view === 'list') {
@@ -162,7 +187,9 @@ console.log(exerciseData)
                        (<div className="p-5"><h5 className="font-bold">Execution</h5> <div>{exerciseData.execution}</div> </div>)
                         }
                 </div>
-                <button
+               {isAuthorized && (
+                <>
+                 <button
                         onClick={() => onEdit(exerciseData.id)}
                         className="text-blue-400 hover:text-blue-600 p-5"
                     >
@@ -173,6 +200,11 @@ console.log(exerciseData)
                         className="text-red-500 hover:text-red-700 p-5"
                             > Delete 
                     </button>
+                </>
+               )}
+               {error && <p className="text-red-500">{error}</p>}
+               
+
                     {editingId && (
               <EditExerciseModal
                 exerciseId={editingId}
