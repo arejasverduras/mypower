@@ -1,9 +1,10 @@
 "use client"
-import { SignOutButton } from "../components/SignOutButton/SignOutButton2"
-import UserAvatar from "../components/UserAvatar/UserAvatar"
-import { auth } from "../../../auth"
+
 import { useSession } from "@/context/SessionContext"
-import SignIn from "../components/SignInButton/SignInButton"
+// components
+import UserAvatar from "../components/UserAvatar/UserAvatar"
+import SignInButton from "../components/SignInButton/SignInButton"
+import { SignOutButton } from "../components/SignOutButton/SignOutButton"
 
 export default function DashboardPage() {
     const {session, loading} = useSession();
@@ -15,21 +16,17 @@ export default function DashboardPage() {
     if (!session) return (   
         <>
             <div>Not authenticated. Please sign in</div>
-            <SignIn/>
+            <SignInButton/>
         </>
     )
-
 
     return (
         <>
             <h1>Dashboard</h1>
             <p>Hello logged in user!</p>
             <UserAvatar/>
-            
             <pre>{JSON.stringify(session, null, 2)}</pre>
             <SignOutButton/>
-
         </>
-        
     )
-}
+};

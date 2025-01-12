@@ -1,15 +1,13 @@
 "use client";
 
-import { signIn } from "next-auth/react";
+import { useSession } from "@/context/SessionContext";
 
-export default function SignIn() {
-  const handleSignIn = () => {
-    signIn("google", { callbackUrl: "/dashboard" });
-  };
+export default function SignInButton() {
+  const { signIn } = useSession();
 
   return (
     <button
-      onClick={handleSignIn}
+      onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
       className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
     >
       Sign In with Google

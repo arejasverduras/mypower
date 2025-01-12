@@ -1,6 +1,6 @@
 "use client"
-import SignIn from "../SignInButton/SignInButton"
-import { SignOutButton } from "../SignOutButton/SignOutButton2"
+import SignInButton from "../SignInButton/SignInButton"
+import { SignOutButton } from "../SignOutButton/SignOutButton"
 import UserAvatar from "../UserAvatar/UserAvatar"
 import { useSession } from "@/context/SessionContext"
 
@@ -24,7 +24,7 @@ export const HeaderJara = () => {
 
   return (
     <div className="border flex w-full p-5 max-h-24 justify-between items-center">
-        <SignIn />
+        <SignInButton />
     </div>
   );
 }
