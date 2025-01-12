@@ -86,9 +86,7 @@ export const Exercise = ({exercise, index, view}:Exercise) => {
             setError("You are not authorized to delete this exercise.");
             return;
           }
-      
-        
-        
+
         if (!confirm("Are you sure you want to delete this exercise?")) return;
 
         try {
