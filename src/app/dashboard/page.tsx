@@ -1,9 +1,9 @@
 "use client"
-import { SignOutButton } from "../components/SignOutButton2/SignOutButton2"
+import { SignOutButton } from "../components/SignOutButton/SignOutButton2"
 import UserAvatar from "../components/UserAvatar/UserAvatar"
 import { auth } from "../../../auth"
 import { useSession } from "@/context/SessionContext"
-import SignIn from "../components/SignInButton2/SignInButton"
+import SignIn from "../components/SignInButton/SignInButton"
 
 export default function DashboardPage() {
     const {session, loading} = useSession();

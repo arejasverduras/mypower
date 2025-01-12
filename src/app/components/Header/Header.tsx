@@ -1,6 +1,6 @@
 "use client"
-import SignIn from "../SignInButton2/SignInButton"
-import { SignOutButton } from "../SignOutButton2/SignOutButton2"
+import SignIn from "../SignInButton/SignInButton"
+import { SignOutButton } from "../SignOutButton/SignOutButton2"
 import UserAvatar from "../UserAvatar/UserAvatar"
 import { useSession } from "@/context/SessionContext"
 
