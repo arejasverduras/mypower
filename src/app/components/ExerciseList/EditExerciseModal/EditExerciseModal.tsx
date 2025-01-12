@@ -28,6 +28,7 @@ export default function EditExerciseModal({
 }: EditExerciseModalProps): JSX.Element {
   const [formData, setFormData] = useState<Partial<Exercise>>({});
   const [loading, setLoading] = useState(true); // To handle loading state
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchExerciseDetails = async () => {

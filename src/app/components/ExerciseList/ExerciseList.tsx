@@ -10,6 +10,7 @@ export const ExerciseList = () => {
     const [exercises, setExercises] = useState<ExerciseProps[]>([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const { session, loading} = useSession();
+    const [isAuthorized, setIsAuthorized] = useState(false)
 
      // GET exercises from the API
   useEffect(() => {
@@ -26,6 +27,7 @@ export const ExerciseList = () => {
 
     fetchExercises();
   }, []);
+
 
 
 const checkForSignIn = () => {

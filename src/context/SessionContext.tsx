@@ -1,17 +1,22 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
+import { signOut } from "next-auth/react";
 
 interface Session {
   id: string;
   name: string;
   email: string;
   image: string;
+  isSuperuser: boolean;
+  user: object;
 }
 
 interface SessionContextValue {
   session: Session | null;
   loading: boolean;
+  setSession: (session: Session | null) => void; // Add setSession for updates
+
 }
 
 const SessionContext = createContext<SessionContextValue | undefined>(undefined);
@@ -41,7 +46,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <SessionContext.Provider value={{ session, loading }}>
+    <SessionContext.Provider value={{ session, loading, setSession }}>
       {children}
     </SessionContext.Provider>
   );
@@ -52,5 +57,14 @@ export function useSession() {
   if (!context) {
     throw new Error("useSession must be used within a SessionProvider");
   }
-  return context;
+
+  const { setSession } = context;
+
+  const logout = async () => {
+    await signOut({ redirect: false }); // Prevent unnecessary page reloads
+    setSession(null); // Clear session locally
+  };
+
+
+  return { ...context, logout };
 }

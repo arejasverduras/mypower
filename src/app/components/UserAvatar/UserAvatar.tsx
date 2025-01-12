@@ -1,20 +1,24 @@
+"use client"
 import { auth } from "../../../../auth";
+import { useSession } from "@/context/SessionContext";
 import Link from "next/link";
 
-export default async function UserAvatar() {
-    const session = await auth()
+export default function UserAvatar() {
+    const {session, loading} = useSession();
    
-    if (!session?.user) return null
+    if (!session) return null
 
-    console.log(session.user);
+    // console.log("user avatar: " + Object.keys(session));
    
     return (
       <div className="flex items-center">
-        {session.user.image && (        
-          <img src={session.user.image} alt="User Avatar" className="rounded-full" />
+        {session.image && (        
+          <img src={session.image} alt="User Avatar" className="rounded-full" />
 )}
         <p className="mx-5">
-          <Link href={`/users/${session.user.id}`}>{session.user.name}</Link></p>
+          <Link href={`/users/${session.id}`}>{session.name}</Link>
+          {session.isSuperuser && (" SUPERUSER")}
+        </p>
         {/* <pre>{session.user}</pre> */}
       </div>
     )
