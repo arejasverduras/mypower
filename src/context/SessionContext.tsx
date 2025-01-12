@@ -54,7 +54,6 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     setSession(null); // Clear session locally
   };
 
-
   return (
     <SessionContext.Provider value={{ session, loading, signIn, logout }}>
       {children}
@@ -68,6 +67,5 @@ export function useSession() {
     throw new Error("useSession must be used within a SessionProvider");
   }
 
-
   return context;
-}
+};
