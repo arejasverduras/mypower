@@ -1,16 +1,10 @@
 "use client"
-// import { useState } from "react";
-// import SignIn from "../SignInButton/SignInButton"
 import SignIn from "../SignInButton2/SignInButton"
-// import { SignOutButton } from "../SignOutButton/SignOutButton"
 import { SignOutButton } from "../SignOutButton2/SignOutButton2"
 import UserAvatar from "../UserAvatar/UserAvatar"
-// import { auth } from "../../../../auth"
 import { useSession } from "@/context/SessionContext"
 
 export const HeaderJara = () => {
-    // const [headerColor, setHeaderColor ]= useState('bg-black');
-    // const session = await auth();
     const { session, loading } = useSession();
 
     if (loading) {
