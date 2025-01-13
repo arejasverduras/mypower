@@ -4,6 +4,7 @@ import Image from "next/image";
 
 export default async function UserProfilePage({ params }: { params: Promise<{id: string}>}) {
   
+  // move this to API route
   const { id } = await params;
   
   const user = await prisma.user.findUnique({
@@ -12,8 +13,8 @@ export default async function UserProfilePage({ params }: { params: Promise<{id:
       createdExercises: true, // Include all exercises created by this user
     },
   });
+ // move this to API route
 
-  // const user = null;
 
   if (!user) {
     return <p>User not found</p>;
