@@ -2,13 +2,18 @@ import prisma from "@/lib/prisma";
 import Link from "next/link";
 import Image from "next/image";
 
-export default async function UserProfilePage({ params }: { params: { id: string } }) {
+export default async function UserProfilePage({ params }: { params: Promise<{id: string}>}) {
+  
+  const { id } = await params;
+  
   const user = await prisma.user.findUnique({
-    where: { id: params.id },
+    where: { id },
     include: {
       createdExercises: true, // Include all exercises created by this user
     },
   });
+
+  // const user = null;
 
   if (!user) {
     return <p>User not found</p>;
