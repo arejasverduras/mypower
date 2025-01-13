@@ -7,7 +7,7 @@ export async function GET () {
             orderBy: {createdAt: "desc"}
         })
 
-        if (!users) return NextResponse.json({error: "No users found"}, {status: 404});
+        // if (!users) return NextResponse.json({error: "No users found"}, {status: 404});
 
         return NextResponse.json({ users }, {status: 200})
     } catch (error) {
