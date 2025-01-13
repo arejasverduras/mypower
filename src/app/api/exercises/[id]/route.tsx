@@ -31,33 +31,6 @@ export async function GET(req:Request, {params}: {params: Promise<{id:string}>})
       }
 }
 
-// // PATCH (EDIT)
-// export async function PATCH(req:Request, {params}: {params: Promise<{id:string}>}) {
-//   const { id } = await params;  
-//   const exerciseID = id;
-//     const body = await req.json();
-
-//     // const session = await auth(req);
-
-
-
-//     try {
-//         const updatedExercise = await prisma.exercise.update({
-//             where: {id: exerciseID}, 
-//             data: { 
-//                 title: body.title,
-//                 video: body.video || null,
-//                 image: body.image || null,
-//                 description: body.description || null,
-//                 execution: body.execution || null,    
-//             }
-//         })
-//         return NextResponse.json(updatedExercise, { status: 200});
-//     } catch (error) {
-//         console.log(error);
-//         return NextResponse.json({error: "Exercise not found or update failed"}, {status: 404});
-//     }
-// }
 
 export const PATCH = auth(async function PATCH(req, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params; // Await params because it's now a Promise

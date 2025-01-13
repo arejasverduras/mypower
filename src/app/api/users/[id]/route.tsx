@@ -1,10 +1,38 @@
 import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 import prisma from "@/lib/prisma";
 import { auth } from "../../../../../auth";
+import type { AppRouteHandlerFn, AppRouteRouteHandlerContext } from "next/dist/server/route-modules/app-route/module";
+import { Session } from "next-auth";
+import type { PagesRouteHandlerContext } from "next/dist/server/route-modules/pages/module.compiled";
 
-export const GET = auth(async function GET (req: Request, {params}: {params: Promise<{id:string}>}) {
+// declare global {
+//     interface Request {
+//         auth?: {
+//             user: {
+//                 id: string,
+//                 isSuperuser: boolean,
+//             }
+//         }
+//     }
+// }
+
+declare global {
+    interface Request {
+      auth?: Session | null;
+    }
+  }
+
+
+
+export const GET = auth(async function GET (
+    req: Request, 
+    // ctx: {params: Promise<{id:string}>}
+    ctx: AppRouteHandlerFn
+) {
     // wrapping in auth populates the req.auth object
-    const { id } = await params;
+    const params = await ctx.params;
+    const { id } = params as { id: string}
 
 
     if (!req.auth) return NextResponse.json({error: "Not authorized"}, {status: 401})
