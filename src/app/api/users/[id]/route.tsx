@@ -2,20 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import prisma from "@/lib/prisma";
 import { auth } from "../../../../../auth";
-import type { AppRouteHandlerFn, AppRouteRouteHandlerContext } from "next/dist/server/route-modules/app-route/module";
-import { Session } from "next-auth";
-import type { PagesRouteHandlerContext } from "next/dist/server/route-modules/pages/module.compiled";
-
-// declare global {
-//     interface Request {
-//         auth?: {
-//             user: {
-//                 id: string,
-//                 isSuperuser: boolean,
-//             }
-//         }
-//     }
-// }
+import { Session, User } from "next-auth";
 
 declare global {
     interface Request {
@@ -23,61 +10,134 @@ declare global {
     }
   }
 
+  export async function GET(
+    req: NextRequest,
+    context: { params: { id: string } },
+  ): Promise<Response> 
+  
+  {
+    return auth(async (
+        authreq: any & { auth?: { user?: User } }
+    ) => {
+          
+        console.log('ID:', context?.params?.id);
+  
+        // 1. checks for a logged in user
+        if (!authreq?.auth?.user) {
+        return NextResponse.json(
+          { error: 'Unauthorized' },
+          {
+            status: 401,
+            statusText: 'You must be logged in to perform this action',
+          },
+        );
+      }
+        
+        const { id} = context.params;
 
+        //   2. Full data: User requests own data or superuser request?
+        if (authreq.auth.user.id === id || authreq.auth.user.isSuperuser) {
+            try {
+                const user = await prisma.user.findUnique({
+                    where: {
+                        id: id
+                    }
+                })
+        
+                if (!user) return NextResponse.json({error: "User not found"}, {status: 404})
+        
+                return NextResponse.json(user, {status: 200})
+        
+            } catch (error) {
+                console.log(error);
+                return NextResponse.json({error: "Internal Server Error"}, {status: 500})
+            }
+        }
 
-export const GET = auth(async function GET (
-    req: Request, 
-    // ctx: {params: Promise<{id:string}>}
-    ctx: AppRouteHandlerFn
-) {
-    // wrapping in auth populates the req.auth object
-    const params = await ctx.params;
-    const { id } = params as { id: string}
-
-
-    if (!req.auth) return NextResponse.json({error: "Not authorized"}, {status: 401})
-
-    // full access to data for superusers or the requesting' users own data
-    if (req.auth.user.id === id || req.auth.user.isSuperuser){
+        // 3. User request another users data and is not a superuser : partial data
+            // regular authenticated users don't see sensitive information
         try {
             const user = await prisma.user.findUnique({
+                select: {
+                    id: true,
+                    name: true,
+                    image: true,
+                    isSuperuser: true, // security risk?
+                    createdAt: true,
+                    updatedAt: true,
+                },
                 where: {
                     id: id
                 }
             })
-    
+
             if (!user) return NextResponse.json({error: "User not found"}, {status: 404})
-    
+
             return NextResponse.json(user, {status: 200})
-    
+
         } catch (error) {
             console.log(error);
             return NextResponse.json({error: "Internal Server Error"}, {status: 500})
-        }
+        } 
     }
+            )(req, context) as Promise<Response>;
+  }
 
-    // regular authenticated users don't see sensitive information
-    try {
-        const user = await prisma.user.findUnique({
-            select: {
-                id: true,
-                name: true,
-                image: true,
-                isSuperuser: true, // security risk?
-                createdAt: true,
-                updatedAt: true,
-            },
-            where: {
-                id: id
-            }
-        })
 
-        if (!user) return NextResponse.json({error: "User not found"}, {status: 404})
+  // export const GET = auth(async function GET (
+//     req: NextRequest, 
+//     // ctx: {params: Promise<{id:string}>}
+//     context: { params: Promise<{ id: string }> } // Explicitly declare `params` as a Promise
 
-        return NextResponse.json(user, {status: 200})
+// ) {
+//     // wrapping in auth populates the req.auth object
+   
+//     const { id } = await params;
 
-    } catch (error) {
-        console.log(error);
-        return NextResponse.json({error: "Internal Server Error"}, {status: 500})
-    }
-});
+
+//     if (!req.auth) return NextResponse.json({error: "Not authorized"}, {status: 401})
+
+//     // full access to data for superusers or the requesting' users own data
+//     if (req.auth.user.id === id || req.auth.user.isSuperuser){
+//         try {
+//             const user = await prisma.user.findUnique({
+//                 where: {
+//                     id: id
+//                 }
+//             })
+    
+//             if (!user) return NextResponse.json({error: "User not found"}, {status: 404})
+    
+//             return NextResponse.json(user, {status: 200})
+    
+//         } catch (error) {
+//             console.log(error);
+//             return NextResponse.json({error: "Internal Server Error"}, {status: 500})
+//         }
+//     }
+
+//     // regular authenticated users don't see sensitive information
+//     try {
+//         const user = await prisma.user.findUnique({
+//             select: {
+//                 id: true,
+//                 name: true,
+//                 image: true,
+//                 isSuperuser: true, // security risk?
+//                 createdAt: true,
+//                 updatedAt: true,
+//             },
+//             where: {
+//                 id: id
+//             }
+//         })
+
+//         if (!user) return NextResponse.json({error: "User not found"}, {status: 404})
+
+//         return NextResponse.json(user, {status: 200})
+
+//     } catch (error) {
+//         console.log(error);
+//         return NextResponse.json({error: "Internal Server Error"}, {status: 500})
+//     }
+// });
