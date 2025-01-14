@@ -19,8 +19,7 @@ declare global {
     return auth(async (
         authreq: any & { auth?: { user?: User } }
     ) => {
-          
-        console.log('ID:', context?.params?.id);
+        const { id } = context.params;
   
         // 1. checks for a logged in user
         if (!authreq?.auth?.user) {
@@ -31,113 +30,41 @@ declare global {
             statusText: 'You must be logged in to perform this action',
           },
         );
-      }
-        
-        const { id} = context.params;
-
-        //   2. Full data: User requests own data or superuser request?
-        if (authreq.auth.user.id === id || authreq.auth.user.isSuperuser) {
-            try {
-                const user = await prisma.user.findUnique({
-                    where: {
-                        id: id
-                    }
-                })
-        
-                if (!user) return NextResponse.json({error: "User not found"}, {status: 404})
-        
-                return NextResponse.json(user, {status: 200})
-        
-            } catch (error) {
-                console.log(error);
-                return NextResponse.json({error: "Internal Server Error"}, {status: 500})
-            }
+      } 
+      
+      try {
+        const isSelfOrSuperuser =
+          authreq.auth.user.id === id || authreq.auth.user.isSuperuser;
+  
+        const user = await prisma.user.findUnique({
+          select: isSelfOrSuperuser
+            ? undefined // Full data for superusers or own profile
+            : {
+                id: true,
+                name: true,
+                image: true,
+                createdAt: true,
+                updatedAt: true,
+              }, // Limited data for others
+          where: { id },
+        });
+  
+        if (!user) {
+          return NextResponse.json(
+            { error: "User not found" },
+            { status: 404 }
+          );
         }
-
-        // 3. User request another users data and is not a superuser : partial data
-            // regular authenticated users don't see sensitive information
-        try {
-            const user = await prisma.user.findUnique({
-                select: {
-                    id: true,
-                    name: true,
-                    image: true,
-                    isSuperuser: true, // security risk?
-                    createdAt: true,
-                    updatedAt: true,
-                },
-                where: {
-                    id: id
-                }
-            })
-
-            if (!user) return NextResponse.json({error: "User not found"}, {status: 404})
-
-            return NextResponse.json(user, {status: 200})
-
-        } catch (error) {
-            console.log(error);
-            return NextResponse.json({error: "Internal Server Error"}, {status: 500})
-        } 
+  
+        return NextResponse.json(user, { status: 200 });
+      } catch (error) {
+        console.error(error);
+        return NextResponse.json(
+          { error: "Internal Server Error" },
+          { status: 500 }
+        );
+      }
     }
             )(req, context) as Promise<Response>;
   }
 
-
-  // export const GET = auth(async function GET (
-//     req: NextRequest, 
-//     // ctx: {params: Promise<{id:string}>}
-//     context: { params: Promise<{ id: string }> } // Explicitly declare `params` as a Promise
-
-// ) {
-//     // wrapping in auth populates the req.auth object
-   
-//     const { id } = await params;
-
-
-//     if (!req.auth) return NextResponse.json({error: "Not authorized"}, {status: 401})
-
-//     // full access to data for superusers or the requesting' users own data
-//     if (req.auth.user.id === id || req.auth.user.isSuperuser){
-//         try {
-//             const user = await prisma.user.findUnique({
-//                 where: {
-//                     id: id
-//                 }
-//             })
-    
-//             if (!user) return NextResponse.json({error: "User not found"}, {status: 404})
-    
-//             return NextResponse.json(user, {status: 200})
-    
-//         } catch (error) {
-//             console.log(error);
-//             return NextResponse.json({error: "Internal Server Error"}, {status: 500})
-//         }
-//     }
-
-//     // regular authenticated users don't see sensitive information
-//     try {
-//         const user = await prisma.user.findUnique({
-//             select: {
-//                 id: true,
-//                 name: true,
-//                 image: true,
-//                 isSuperuser: true, // security risk?
-//                 createdAt: true,
-//                 updatedAt: true,
-//             },
-//             where: {
-//                 id: id
-//             }
-//         })
-
-//         if (!user) return NextResponse.json({error: "User not found"}, {status: 404})
-
-//         return NextResponse.json(user, {status: 200})
-
-//     } catch (error) {
-//         console.log(error);
-//         return NextResponse.json({error: "Internal Server Error"}, {status: 500})
-//     }
-// });
