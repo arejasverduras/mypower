@@ -22,19 +22,19 @@ declare global {
         const { id } = context.params;
   
         // 1. checks for a logged in user
-        if (!authreq?.auth?.user) {
-        return NextResponse.json(
-          { error: 'Unauthorized' },
-          {
-            status: 401,
-            statusText: 'You must be logged in to perform this action',
-          },
-        );
-      } 
+      //   if (!authreq?.auth?.user) {
+      //   return NextResponse.json(
+      //     { error: 'Unauthorized' },
+      //     {
+      //       status: 401,
+      //       statusText: 'You must be logged in to perform this action',
+      //     },
+      //   );
+      // } 
       
       try {
         const isSelfOrSuperuser =
-          authreq.auth.user.id === id || authreq.auth.user.isSuperuser;
+          authreq?.auth?.user.id === id || authreq?.auth?.user.isSuperuser;
   
         const user = await prisma.user.findUnique({
           select: isSelfOrSuperuser
@@ -44,9 +44,10 @@ declare global {
                 name: true,
                 image: true,
                 createdAt: true,
-                updatedAt: true,
+                createdExercises: true,
               }, // Limited data for others
           where: { id },
+
         });
   
         if (!user) {

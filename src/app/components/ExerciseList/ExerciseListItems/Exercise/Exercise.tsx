@@ -9,7 +9,7 @@ import EditExerciseModal from "../../EditExerciseModal/EditExerciseModal"
 import { useSession } from "@/context/SessionContext"
 // import { BackButton } from "@/app/components/BackButton/BackButton"
 
-interface Exercise {
+export interface Exercise {
     exercise: {
         createdById: string }
        & ExerciseProps ,
