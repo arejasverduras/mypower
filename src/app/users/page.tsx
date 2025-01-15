@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useSession } from "@/context/SessionContext";
 import SignInButton from "../components/SignInButton/SignInButton";
+import Link from "next/link";
 
 interface User {
   id: string;
@@ -65,7 +66,7 @@ export default function UsersPage() {
             alt={user.name || "Anonymous"}
             className="w-8 h-8 rounded-full inline-block"
           />
-          <span className="ml-2">{user.name || "Anonymous"}</span>
+          <Link href={`/users/${user.id}`}><span className="ml-2">{user.name || "Anonymous"}</span></Link>
           {session?.isSuperuser && <div>{user.email}</div>}
           <button className="ml-4 bg-green-500 text-white px-3 py-1 rounded">
             Follow
