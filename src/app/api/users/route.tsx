@@ -3,15 +3,15 @@ import { auth } from "../../../../auth";
 import prisma from "@/lib/prisma";
 
 export const GET = auth(async (req) => {
-  if (!req.auth?.user) {
-    return NextResponse.json(
-      { error: "Unauthorized" },
-      { status: 401, statusText: "You must be logged in to perform this action" }
-    );
-  }
+  // if (!req.auth?.user) {
+  //   return NextResponse.json(
+  //     { error: "Unauthorized" },
+  //     { status: 401, statusText: "You must be logged in to perform this action" }
+  //   );
+  // }
 
   try {
-    const isSuperuser = req.auth.user.isSuperuser;
+    const isSuperuser = req.auth?.user.isSuperuser;
 
     const users = await prisma.user.findMany({
       select: isSuperuser
