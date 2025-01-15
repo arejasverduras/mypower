@@ -2,15 +2,13 @@
 import { useState, useEffect } from "react";
 import { ExerciseListItems } from "./ExerciseListItems/ExerciseListItems";
 import { ExerciseProps } from "@/app/api/exercises/route";
-import { AddExerciseModal } from "./AddExerciseForm/AddExerciseForm";
-// import { auth } from "../../../../auth";
+import { AddExerciseModal } from "./AddExerciseForm/AddExerciseForm";;
 import { useSession } from "@/context/SessionContext";
 
 export const ExerciseList = () => {
     const [exercises, setExercises] = useState<ExerciseProps[]>([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const { session, loading} = useSession();
-    const [isAuthorized, setIsAuthorized] = useState(false)
 
      // GET exercises from the API
   useEffect(() => {
