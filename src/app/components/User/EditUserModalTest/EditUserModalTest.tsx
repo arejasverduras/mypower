@@ -1,10 +1,11 @@
 "use client"
 import { useState } from "react";
+import { useSession } from "@/context/SessionContext";
 
 export default function EditUserModalTest ({userId}: {userId: string}){
     const [response, setResponse] = useState<string | undefined>();
     const [testName, setTestName] = useState<string>("")
-
+    const { session, loading } = useSession();
 
     const testBody = {
         name: testName || "ultra user",
@@ -42,15 +43,23 @@ export default function EditUserModalTest ({userId}: {userId: string}){
 
     return (
         <div>
-            <button onClick={routeTest} className="bg-blue-500 text-white px-4 py-2 rounded">
-                TEST NAME EDIT
-            </button>
-            <input 
-                type="text" 
-                value={testName} 
-                onChange={(e)=> setTestName(e.target.value)}
-                className="text-black "/>
-            <div className="mt-4 ">{response}</div>
+            {loading ? <div>Loading..</div> : session && 
+                (
+                    <>
+                        <button onClick={routeTest} className="bg-blue-500 text-white px-4 py-2 rounded">
+                        TEST NAME EDIT
+                        </button>
+
+                        <input 
+                            type="text" 
+                            value={testName} 
+                            onChange={(e)=> setTestName(e.target.value)}
+                            className="text-black "/>
+                        <div className="mt-4 ">{response}</div>
+                </>
+            )
+            }
+            
     </div>
     )
 };
