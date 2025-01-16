@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ExerciseProps } from "@/app/api/exercises/route";
 import { notFound } from "next/navigation";
+import EditUserModalTest from "@/app/components/User/EditUserModalTest/EditUserModalTest";
 
 export async function generateStaticParams() {
   const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/users`);
@@ -40,7 +41,7 @@ export default async function UserProfilePage({ params }: { params: Promise<{id:
   return (
     <>
         {user.image && <Image className="rounded-r-full my-5 " src={user.image} width='100' height='100' alt="user image"/>}
-
+        <EditUserModalTest userId={id}/>
         <div className="p-4">
         <h1 className="text-2xl font-bold">{user.name || "User's Profile"}</h1>
         <h2 className="text-xl font-semibold mt-6">Added Exercises:</h2>
