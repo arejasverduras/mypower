@@ -1,10 +1,10 @@
 'use client'
 
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 
 interface BackButtonProps {
-    fallback: "exercises" | "workouts"
+    fallback: "/exercises" | "/workouts" | "/users";
 }
 
 export const BackButton = ({fallback}: BackButtonProps) => {

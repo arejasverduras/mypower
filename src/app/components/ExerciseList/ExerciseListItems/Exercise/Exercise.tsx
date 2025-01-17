@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation"
 import { ExerciseProps } from "@/app/api/exercises/route"
 import EditExerciseModal from "../../EditExerciseModal/EditExerciseModal"
 import { useSession } from "@/context/SessionContext"
-// import { BackButton } from "@/app/components/BackButton/BackButton"
+import { BackButton } from "@/app/components/BackButton/BackButton"
 
 export interface Exercise {
     exercise: {
@@ -145,6 +145,7 @@ export const Exercise = ({exercise, index, view}:Exercise) => {
             {/* <BackButton fallback={"exercises"}/> */}
             {/* <Link href={document.referrer ? document.referrer : "/exercises"}>back to exercises</Link> */}
             {/* here */}
+            <BackButton fallback="/exercises"/>
             <Link href={referrerTest || "/exercises"}>
                 <button 
                     className="py-2 px-4 m-5 bg-white text-primary-color font-semibold rounded-lg shadow-md hover:bg-gray-200"

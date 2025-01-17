@@ -3,6 +3,7 @@ import Image from "next/image";
 import { ExerciseProps } from "@/app/api/exercises/route";
 import { notFound, redirect  } from "next/navigation";
 import EditUserModalTest from "@/app/components/User/EditUserModalTest/EditUserModalTest";
+import { BackButton } from "@/app/components/BackButton/BackButton";
 
 export async function generateStaticParams() {
   const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/users`);
@@ -34,17 +35,13 @@ export default async function UserProfilePage({ params }: { params: Promise<{id:
     
         const user = await res.json();
 
-
-    const handleBack = () => {
-      redirect("/users")
-    }
   if (!user) {
     return <p>User not found</p>;
   }
   // create <User/> component, so in it useSession can be called to conditionally render UI functions (edit / delete)
   return (
     <>
-        {/* <button onClick={handleBack}>Back to Users</button> */}
+        <BackButton fallback="/users"/>
         
         {user.image && <Image className="rounded-r-full my-5 " src={user.image} width='100' height='100' alt="user image"/>}
         <EditUserModalTest userId={id}/>
