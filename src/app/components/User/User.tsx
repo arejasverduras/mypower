@@ -33,6 +33,7 @@ export const User = ({id, data}: UserProps) => {
     // triggers editing modal
     const onEdit = (id: ExerciseProps["id"]) => {
         setEditingId(id);
+        console.log("id " + editingId)
     }
     // PATCH exercise (update)
     const handleSaveExercise = (updatedUser: UserProps["data"]) => {
@@ -72,27 +73,35 @@ export const User = ({id, data}: UserProps) => {
         <>
             {userData.image && <Image className="rounded-r-full my-5 " src={userData.image} width='100' height='100' alt="user image"/>}
             <div className="p-4">
-            <h1 className="text-2xl font-bold my-5">{userData.name || "User's Profile"}</h1>
-            {/* <EditUserModalTest userId={id}/> */}
-            {isAuthorized &&
-                <EditDeleteButtons
-                id={id}
-                onEdit={onEdit}
-                handleDelete={handleDeleteUser}
-                />
-            }
-            
-            <h2 className="text-xl font-semibold mt-6">Added Exercises:</h2>
-            <ul>
-                {userData.createdExercises.map((exercise: ExerciseProps) => (
-                <li key={exercise.id} className="mt-2">
-                    <Link href={`/exercises/${exercise.id}`} className="text-blue-500 hover:underline">
-                    {exercise.title}
-                    </Link>
-                </li>
-                ))}
-            </ul>
+                <h1 className="text-2xl font-bold my-5">{userData.name || "User's Profile"}</h1>
+                {/* <EditUserModalTest userId={id}/> */}
+                {isAuthorized &&
+                    <EditDeleteButtons
+                    id={id}
+                    onEdit={onEdit}
+                    handleDelete={handleDeleteUser}
+                    />
+                }
+                {error && <div className="text-red-500">{error}</div>}
+                <h2 className="text-xl font-semibold mt-6">Added Exercises:</h2>
+                <ul>
+                    {userData.createdExercises.map((exercise: ExerciseProps) => (
+                    <li key={exercise.id} className="mt-2">
+                        <Link href={`/exercises/${exercise.id}`} className="text-blue-500 hover:underline">
+                        {exercise.title}
+                        </Link>
+                    </li>
+                    ))}
+                </ul>
             </div>
+            {editingId && (
+            //   <EditUserModal
+            //     exerciseId={editingId}
+            //     onClose={()=> setEditingId(null)}
+            //     onSave={handleSaveExercise}
+            //   />
+            <div>Edit User modal</div>
+            )}
         </>
     )
 }

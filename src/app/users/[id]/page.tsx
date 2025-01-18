@@ -16,6 +16,7 @@ export async function generateStaticParams() {
   return users.users.map((user: {id: string}) => ({
       id: user.id, // Convert ID's to strings
   }))
+
 };
 
 export default async function UserProfilePage({ params }: { params: Promise<{id: string}>}) {
