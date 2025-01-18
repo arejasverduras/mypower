@@ -3,7 +3,7 @@ import Image from "next/image";
 import { ExerciseProps } from "@/app/api/exercises/route";
 import { notFound, redirect  } from "next/navigation";
 import EditUserModalTest from "@/app/components/User/EditUserModalTest/EditUserModalTest";
-import { BackButton } from "@/app/components/BackButton/BackButton";
+import { BackButton } from "@/app/components/UI functions/BackButton/BackButton";
 import { User } from "@/app/components/User/User";
 
 export async function generateStaticParams() {
@@ -39,26 +39,10 @@ export default async function UserProfilePage({ params }: { params: Promise<{id:
   if (!user) {
     return <p>User not found</p>;
   }
-  // create <User/> component, so in it useSession can be called to conditionally render UI functions (edit / delete)
   return (
     <>
         <BackButton fallback="/users"/>
-        <User userData={user} id={id}/>
-        {/* {user.image && <Image className="rounded-r-full my-5 " src={user.image} width='100' height='100' alt="user image"/>} */}
-        {/* <EditUserModalTest userId={id}/>
-        <div className="p-4">
-        <h1 className="text-2xl font-bold">{user.name || "User's Profile"}</h1>
-        <h2 className="text-xl font-semibold mt-6">Added Exercises:</h2>
-        <ul>
-            {user.createdExercises.map((exercise: ExerciseProps) => (
-            <li key={exercise.id} className="mt-2">
-                <Link href={`/exercises/${exercise.id}`} className="text-blue-500 hover:underline">
-                {exercise.title}
-                </Link>
-            </li>
-            ))}
-        </ul>
-        </div> */}
+        <User data={user} id={id}/>
     </>
   );
 }

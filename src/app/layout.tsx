@@ -33,7 +33,7 @@ export default function RootLayout({
       >
         <SessionProvider>
           <HeaderJara />
-          <Hero />
+          {/* <Hero /> */}
           <main>
             {children}
           </main>

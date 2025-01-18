@@ -7,7 +7,8 @@ import { useRouter } from "next/navigation"
 import { ExerciseProps } from "@/app/api/exercises/route"
 import EditExerciseModal from "../../EditExerciseModal/EditExerciseModal"
 import { useSession } from "@/context/SessionContext"
-import { BackButton } from "@/app/components/BackButton/BackButton"
+import { BackButton } from "@/app/components/UI functions/BackButton/BackButton"
+import { EditDeleteButtons } from "@/app/components/UI functions/EditDeleteButtons/EditDeleteButtons"
 
 export interface Exercise {
     exercise: {
@@ -75,7 +76,7 @@ export const Exercise = ({exercise, index, view}:Exercise) => {
             return;
           }
         
-        setExerciseData(exerciseData.id ===updatedExercise.id ? updatedExercise : exerciseData );
+        setExerciseData(exerciseData.id === updatedExercise.id ? updatedExercise : exerciseData );
         setEditingId(null); // close modal
     };
   
@@ -141,8 +142,6 @@ export const Exercise = ({exercise, index, view}:Exercise) => {
     // page view
     return (
         <div className="">
-            {/* create a BackButton instead of link */}
-            {/* <BackButton fallback={"exercises"}/> */}
             {/* <Link href={document.referrer ? document.referrer : "/exercises"}>back to exercises</Link> */}
             {/* here */}
             <BackButton fallback="/exercises"/>
@@ -172,38 +171,30 @@ export const Exercise = ({exercise, index, view}:Exercise) => {
                     />}
                     {exerciseData.video && <YouTube embedId={exerciseData.video}/>}
                 </div>
-                {exercise.createdBy && (
-                    <div className="text-sm m-5">
-                        Added by:{" "}
-                        <Link href={`/users/${exercise.createdBy.id}`} 
-                            className="text-blue-500 hover:underline">
-                            {exercise.createdBy.name || "Unknown User"}
-                        </Link>
+                <div className="p-5">
+                    {exercise.createdBy && (
+                        <div className="text-sm my-5">
+                            Added by:{" "}
+                            <Link href={`/users/${exercise.createdBy.id}`} 
+                                className="text-blue-500 hover:underline">
+                                {exercise.createdBy.name || "Unknown User"}
+                            </Link>
+                        </div>
+                    )}
+                    <div>
+                    {exerciseData.description && <div className="my-5"><h5 className="font-bold">Description</h5>{exerciseData.description}</div>}
+                        {exerciseData.execution && 
+                        (<div className="my-5"><h5 className="font-bold">Execution</h5> <div>{exerciseData.execution}</div> </div>)
+                            }
                     </div>
+                {isAuthorized && (
+                    <EditDeleteButtons 
+                        id={exerciseData.id} 
+                        onEdit={onEdit} 
+                        handleDelete={handleDeleteExercise}/>
                 )}
-                <div>
-                {exerciseData.description && <div className="p-5">{exerciseData.description}</div>}
-                    {exerciseData.execution && 
-                       (<div className="p-5"><h5 className="font-bold">Execution</h5> <div>{exerciseData.execution}</div> </div>)
-                        }
-                </div>
-               {isAuthorized && (
-                <>
-                 <button
-                        onClick={() => onEdit(exerciseData.id)}
-                        className="text-blue-400 hover:text-blue-600 p-5"
-                    >
-                        Edit
-                    </button>
-                    <button
-                        onClick={() => handleDeleteExercise(exerciseData.id)}
-                        className="text-red-500 hover:text-red-700 p-5"
-                            > Delete 
-                    </button>
-                </>
-               )}
-               {error && <p className="text-red-500">{error}</p>}
-               
+                {error && <p className="text-red-500 m-5">{error}</p>}
+               </div>
 
                     {editingId && (
               <EditExerciseModal
