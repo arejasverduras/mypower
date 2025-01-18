@@ -104,14 +104,9 @@ export async function DELETE(
       return NextResponse.json({ error: "Not authorized" }, { status: 403 });
   }
 
-  // const body = await req.json();
-
-  // 4. Update the user
+  // 4. Deletethe user
       try {
-          // const updatedUser = await prisma.user.update({
-          //   where: { id },
-          //   data: body,
-          // });
+
         await prisma.user.delete({
           where: {id}
         })
