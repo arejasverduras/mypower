@@ -1,8 +1,4 @@
-import Link from "next/link";
-import Image from "next/image";
-import { ExerciseProps } from "@/app/api/exercises/route";
-import { notFound, redirect  } from "next/navigation";
-import EditUserModalTest from "@/app/components/User/EditUserModalTest/EditUserModalTest";
+import { notFound } from "next/navigation";
 import { BackButton } from "@/app/components/UI functions/BackButton/BackButton";
 import { User } from "@/app/components/User/User";
 

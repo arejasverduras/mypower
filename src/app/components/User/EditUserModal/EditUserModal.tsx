@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import type { User } from "@prisma/client";
+import { ExerciseProps } from "@/app/api/exercises/route";
 
 
 interface EditUserModalProps {
     userId: string;
     onClose: () => void;
-    onSave: (updatedUser: User) => void;
+    onSave: (updatedUser: User & {createdExercises: ExerciseProps[]}) => void;
   }
 
   export const EditUserModal = ({userId, onClose, onSave}: EditUserModalProps) => {
@@ -30,35 +31,37 @@ interface EditUserModalProps {
         fetchUserDetails();
       }, [userId]);
     
-    //   const handleFormChange = (field: keyof Exercise, value: string) => {
-    //     setFormData((prev) => ({ 
-    //       ...prev, 
-    //       [field]: field ==="video" ?  getYouTubeId(value): value }));
-    //   };
+      const handleFormChange = (field: keyof User, value: string) => {
+        setFormData((prev) => ({ 
+          ...prev, 
+          [field]: value }));
+      };
     
-    //   const handleSubmit = async (e: React.FormEvent) => {
-    //     e.preventDefault();
+      const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
     
-    //     try {
-    //       const res = await fetch(`/api/exercises/${exerciseId}`, {
-    //         method: "PATCH",
-    //         headers: { "Content-Type": "application/json" },
-    //         body: JSON.stringify(formData),
-    //       });
+        try {
+          const res = await fetch(`/api/users/${userId}/edit`, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(formData),
+          });
     
-    //       if (!res.ok) throw new Error("Failed to update exercise");
+          if (!res.ok) throw new Error("Failed to update user");
     
-    //       const updatedExercise = await res.json();
-    //       onSave(updatedExercise);
-    //       onClose();
-    //     } catch (err) {
-    //       console.error(err);
-    //     }
-    //   };
+          const updatedUser = await res.json();
+          onSave(updatedUser);
+          onClose();
+        } catch (err) {
+          console.error(err);
+        }
+      };
 
     return (
         <>
-
+            
+            <div>Edit User modal</div>
+            <button onClick={onClose}>Close</button>
         </>
     )
   };
