@@ -43,6 +43,8 @@ declare global {
                 id: true,
                 name: true,
                 image: true,
+                bio: true,
+                quote: true,
                 createdAt: true,
                 createdExercises: true,
               }, // Limited data for others

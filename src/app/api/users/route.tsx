@@ -20,6 +20,8 @@ export const GET = auth(async (req) => {
             id: true,
             name: true,
             image: true,
+            bio: true,
+            quote: true,
             createdAt: true,
           }, // Regular users get limited fields
       orderBy: { createdAt: "desc" },

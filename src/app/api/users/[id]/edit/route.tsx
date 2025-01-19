@@ -48,7 +48,7 @@ export async function PATCH(
               }
             });
 
-
+            if (!updatedUser) return NextResponse.json({error: "Update failed"}, { status: 400})
   
         return NextResponse.json(updatedUser, { status: 200 });
       } catch (error) {

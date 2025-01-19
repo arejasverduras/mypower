@@ -11,8 +11,10 @@ model User {
   id            String    @id @default(cuid())
   email         String    @unique
   emailVerified DateTime?
-  name          String?
+  name          String?   @unique
   image         String?   // Profile picture URL from Google
+  bio           String?
+  quote         String?   @default("Push it to the limit!")
   isSuperuser   Boolean   @default(false)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
