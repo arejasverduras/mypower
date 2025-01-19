@@ -12,6 +12,8 @@ interface EditUserModalProps {
   export const EditUserModal = ({userId, onClose, onSave}: EditUserModalProps) => {
     const [formData, setFormData] = useState<Partial<User>>({});
     const [loading, setLoading] = useState(true); // To handle loading state
+    const [usernameAvailable, setUsernameAvailable] = useState<boolean | null>(null);
+    const [validationLoading, setValidationLoading] = useState(false);
 
 
     useEffect(() => {
@@ -31,14 +33,52 @@ interface EditUserModalProps {
         fetchUserDetails();
       }, [userId]);
     
-      const handleFormChange = (field: keyof User, value: string) => {
+    const handleFormChange = (field: keyof User, value: string) => {
         setFormData((prev) => ({ 
           ...prev, 
           [field]: value }));
+
+        // Trigger real-time validation for username changes
+        if (field === "name") {
+            validateUsername(value);
+        }
+
+    };
+
+    const validateUsername = (name: string) => {
+        if (!name || name === formData.name) {
+          setUsernameAvailable(null);
+          return;
+        }
+    
+        setValidationLoading(true);
+        const timeout = setTimeout(async () => {
+          try {
+            const res = await fetch(`/api/users/${userId}/check-username?name=${encodeURIComponent(name)}`);
+            if (!res.ok) throw new Error("Failed to validate username");
+            const data = await res.json();
+            setUsernameAvailable(!data.exists);
+          } catch (err) {
+            console.error(err);
+            setUsernameAvailable(false);
+          } finally {
+            setValidationLoading(false);
+          }
+        }, 500);
+    
+        return () => clearTimeout(timeout); // Debounce for API calls
       };
+        
+
     
       const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        if (usernameAvailable === false) {
+            alert("Username is already taken. Please choose another.");
+            return;
+          }
+      
     
         try {
           const res = await fetch(`/api/users/${userId}/edit`, {
@@ -70,16 +110,21 @@ interface EditUserModalProps {
           <div className="bg-primary-color text-white p-6 rounded-lg shadow-lg w-full max-w-md">
             <h2 className="text-xl font-bold mb-4">Edit User</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
+            <div>
                 <label className="block text-sm font-medium">Username</label>
                 <input
-                  type="text"
-                  value={formData.name || ""}
-                  onChange={(e) => handleFormChange("name", e.target.value)}
-                  required
-                  className="w-full mt-1 p-2 bg-transparent border border-white rounded-lg focus:outline-none focus:ring-2 focus:ring-white"
+                type="text"
+                value={formData.name || ""}
+                onChange={(e) => handleFormChange("name", e.target.value)}
+                required
+                className={`w-full mt-1 p-2 bg-transparent border rounded-lg focus:outline-none focus:ring-2 ${
+                    usernameAvailable === false ? "border-red-500" : "border-white"
+                }`}
                 />
-              </div>
+                {validationLoading && <p className="text-sm text-gray-300">Validating username...</p>}
+                {usernameAvailable === false && <p className="text-sm text-red-500">Username is taken.</p>}
+                {usernameAvailable === true && <p className="text-sm text-green-500">Username is available!</p>}
+            </div>
               <div>
                 <label className="block text-sm font-medium">Image URL</label>
                 <input
