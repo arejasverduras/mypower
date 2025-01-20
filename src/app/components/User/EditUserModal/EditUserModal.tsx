@@ -64,7 +64,7 @@ interface EditUserModalProps {
           } finally {
             setValidationLoading(false);
           }
-        }, 500);
+        }, 1000);
     
         return () => clearTimeout(timeout); // Debounce for API calls
       };
