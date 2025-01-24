@@ -15,6 +15,12 @@ declare module "next-auth" {
   }
 }
 
+declare module "@auth/core/adapters" {
+  interface AdapterUser {
+    isSuperuser: boolean;
+  }
+}
+
  
 export const { handlers, signIn, signOut, auth } = NextAuth({
     adapter: PrismaAdapter(prisma),
@@ -34,7 +40,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if (session.user) {
         session.user.id = user.id;
         // session.user.isSuperuser = user.isSuperuser;
-        session.isSuperuser = user.isSuperuser;
+        session.user.isSuperuser = user.isSuperuser;
       }
       
       return session;
