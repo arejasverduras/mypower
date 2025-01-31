@@ -1,11 +1,9 @@
+import {expect, test} from 'vitest'
+import { render, screen } from '@testing-library/react'
+import Home from '../page'
 
-import { screen, render } from '@testing-library/react';
+test('Home page', () => {
+  render(<Home />)
+  expect(screen.getByRole('heading', { level: 2 })).toBeDefined()
 
-import Home from '@/app/page';
-
-describe('<Home />', () => {
-  test('It renders', () => {
-    render(<Home />);
-    expect(screen.getByText(/mypower/i)).toBeInTheDocument();
-  });
-});
+})
