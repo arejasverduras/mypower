@@ -16,7 +16,10 @@ export const ExerciseList = () => {
     const fetchExercises = async () => {
       try {
         const res = await fetch("/api/exercises", { method: "GET" });
-        if (!res.ok) throw new Error("Failed to fetch exercises");
+        if (!res.ok)  {
+          setError("Failed to load exercises");
+          return;
+        }
         const data = await res.json();
         setExercises(data);
       } catch (err) {

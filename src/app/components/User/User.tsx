@@ -21,7 +21,7 @@ export const User = ({id, data}: UserProps) => {
     const [editingId, setEditingId] = useState<string | null>(null);
     
 
-    const {session, loading} = useSession();
+    const {session} = useSession();
     const router = useRouter();
 
     const isAuthorized = session?.id === id || session?.isSuperuser;
@@ -72,7 +72,7 @@ export const User = ({id, data}: UserProps) => {
             {userData.image && <Image className="rounded-r-full my-5 " src={userData.image} width='100' height='100' alt="user image"/>}
             <div className="p-4">
                 <h1 className="text-2xl font-bold my-5">{userData.name || "User's Profile"}</h1>
-                <p className="italic ">"{userData.quote}"</p>
+                <p className="italic ">`&quot;`{userData.quote}`&quot;`</p>
                 {userData.bio && <p className="my-5  rounded-md">{userData.bio}</p>}
                 
                 {isAuthorized &&
