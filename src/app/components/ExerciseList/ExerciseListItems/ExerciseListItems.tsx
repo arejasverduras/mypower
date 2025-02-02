@@ -13,13 +13,17 @@ export const ExerciseListItems = ({filteredData}:ExerciseListItemsProps) => {
                 key={item.id} 
                 index={index}
                 view="list"
+                
                 />
     )
 
     return (
         <>
             <h3 className="text-lg"><i>Component: ExerciseListItems</i></h3>
-            {listItems}
+            <ul id="exercise-list-items">
+                {listItems}
+            </ul>
+            
         </>
     )
 };

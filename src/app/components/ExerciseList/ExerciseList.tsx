@@ -7,6 +7,7 @@ import { useSession } from "@/context/SessionContext";
 
 export const ExerciseList = () => {
     const [exercises, setExercises] = useState<ExerciseProps[]>([]);
+    const [error, setError] = useState<string | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const { session, loading} = useSession();
 
@@ -20,6 +21,7 @@ export const ExerciseList = () => {
         setExercises(data);
       } catch (err) {
         console.error(err);
+        setError("Failed to load exercises");
       }
     };
 
@@ -66,6 +68,8 @@ const checkForSignIn = () => {
     return (
         <>  
             <h2 className="text-2xl">All exercises</h2>
+            {exercises.length === 0 && <p>No exercises available</p>}
+            {error && <p>{error}</p>}
             <ExerciseListItems
                 filteredData={exercises}
             />
