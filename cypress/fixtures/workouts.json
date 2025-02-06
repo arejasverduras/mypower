@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "title": "Morning Yoga",
+    "description": "A relaxing morning yoga session to start your day.",
+    "duration": 30,
+    "difficulty": "Easy"
+  },
+  {
+    "id": 2,
+    "title": "HIIT Workout",
+    "description": "A high-intensity interval training workout to burn calories.",
+    "duration": 45,
+    "difficulty": "Hard"
+  },
+  {
+    "id": 3,
+    "title": "Strength Training",
+    "description": "A strength training session to build muscle.",
+    "duration": 60,
+    "difficulty": "Medium"
+  }
+]

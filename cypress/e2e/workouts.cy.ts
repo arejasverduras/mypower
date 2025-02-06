@@ -10,7 +10,12 @@ describe('Workouts Page', () => {
         cy.contains('Workouts').should('be.visible');
     });
 
+    // it('should display a list of workouts', () => {
+    //     cy.get('[data-cy=workout-card]').should('have.length.greaterThan', 0);
+    // });
     it('should display a list of workouts', () => {
+        cy.intercept('GET', '/api/workouts', { fixture: 'workouts.json' });
+        cy.reload();
         cy.get('[data-cy=workout-card]').should('have.length.greaterThan', 0);
     });
 
