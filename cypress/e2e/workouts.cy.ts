@@ -19,6 +19,15 @@ describe('Workouts Page', () => {
         cy.contains('No workouts found').should('be.visible');
     })
 
+    it('should handle errors when fetching workouts', () => {
+        cy.intercept('GET', '/api/workouts', {
+            statusCode: 500,
+            body: 'Internal Server Error',
+        });
+        cy.reload();
+        cy.contains('Failed to load workouts').should('be.visible');
+    });
+
 
     // it('should allow users to create a workout', () => {
     //     cy.get('[data-cy=create-workout-button]').click();
