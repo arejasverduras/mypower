@@ -35,3 +35,14 @@
 //     }
 //   }
 // }
+
+Cypress.Commands.add("login", () => {
+    cy.request("POST", "/api/auth/signin", { email: "user@example.com" });
+    cy.setCookie("auth", "valid-session-cookie");
+  });
+  
+  Cypress.Commands.add("loginAsOtherUser", () => {
+    cy.request("POST", "/api/auth/signin", { email: "otheruser@example.com" });
+    cy.setCookie("auth", "other-user-session");
+  });
+  

@@ -3,31 +3,33 @@ describe ('Exercises page', () => {
     //     cy.visit('http://localhost:3000/exercises')
     //     cy.contains('exercises')
     // })
-    
+    beforeEach(() => {
+        cy.visit('http://localhost:3000/exercises');
+    });
    
    
     it('should display a list of exercises', () => {
-        cy.visit('http://localhost:3000/exercises')
+        // cy.visit('http://localhost:3000/exercises')
         // cy.get('#exercise-list-items').should('exist')
         cy.get('#exercise-list-items').find('div').should('have.length.to.be.greaterThan', 5)
 
     })
 
     it ('clicking a list items should display a read more button', () => {
-        cy.visit('http://localhost:3000/exercises')
+        // cy.visit('http://localhost:3000/exercises')
         cy.get('#exercise-list-items').find('div').first().click()
         cy.get('button').contains('Read more').should('exist')
     })
 
     it ('clicking a read more button should display the exercise details', () => {
-        cy.visit('http://localhost:3000/exercises')
+        // cy.visit('http://localhost:3000/exercises')
         cy.get('#exercise-list-items').find('div').first().click()
         cy.get('button').contains('Read more').click()
         cy.contains('Go Back to exercises').should('exist')
     })
 
     it ('clicking the back button should return to the exercises page', () => {
-        cy.visit('http://localhost:3000/exercises')
+        // cy.visit('http://localhost:3000/exercises')
         cy.get('#exercise-list-items').find('div').first().click()
         cy.get('button').contains('Read more').click()
         cy.get('button').contains('Go Back to exercises').click()
