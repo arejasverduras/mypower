@@ -1,23 +1,86 @@
 [
   {
-    "id": 1,
-    "title": "Morning Yoga",
-    "description": "A relaxing morning yoga session to start your day.",
-    "duration": 30,
-    "difficulty": "Easy"
-  },
-  {
-    "id": 2,
-    "title": "HIIT Workout",
-    "description": "A high-intensity interval training workout to burn calories.",
-    "duration": 45,
-    "difficulty": "Hard"
-  },
-  {
-    "id": 3,
-    "title": "Strength Training",
-    "description": "A strength training session to build muscle.",
-    "duration": 60,
-    "difficulty": "Medium"
+    "id": "workout_1",
+    "title": "Full Body Strength",
+    "description": "A full-body workout focusing on strength.",
+    "isPublic": true,
+    "createdById": "user_1",
+    "createdBy": {
+      "id": "user_1",
+      "name": "John Doe",
+      "email": "johndoe@example.com"
+    },
+    "exercises": [
+      {
+        "id": "workout_exercise_1",
+        "workoutId": "workout_1",
+        "exerciseId": "exercise_1",
+        "customDescription": "Modified to include extra reps",
+        "customSets": 4,
+        "customRepetitions": "12-15",
+        "exercise": {
+          "id": "exercise_1",
+          "title": "Bench Press",
+          "muscleGroup": "Chest",
+          "difficulty": "Intermediate",
+          "results": [
+            {
+              "id": "result_1",
+              "workoutExerciseId": "workout_exercise_1",
+              "weight": 100,
+              "reps": 12,
+              "date": "2024-02-07T12:00:00Z"
+            }
+          ]
+        }
+      },
+      {
+        "id": "workout_exercise_2",
+        "workoutId": "workout_1",
+        "exerciseId": "exercise_2",
+        "customDescription": "Modified to include extra reps",
+        "customSets": 4,
+        "customRepetitions": "12-15",
+        "exercise": {
+          "id": "exercise_2",
+          "title": "Body Rows",
+          "muscleGroup": "back, biceps",
+          "difficulty": "Intermediate",
+          "results": [
+            {
+              "id": "result2",
+              "workoutExerciseId": "workout_exercise_2",
+              "weight": 100,
+              "reps": 15,
+              "date": "2024-02-07T12:00:00Z"
+            }
+          ]
+        }
+      }
+    ],
+    "tags": [
+      {
+        "id": "tag_1",
+        "name": "Strength"
+      },
+      {
+        "id": "tag_2",
+        "name": "Full Body"
+      }
+    ],
+    "likedBy": [
+      {
+        "id": "like_1",
+        "userId": "user_2",
+        "workoutId": "workout_1"
+      }
+    ],
+    "programs": [
+      {
+        "id": "programWorkout_1",
+        "programId": "program_1",
+        "workoutId": "workout_1"
+      }
+    ]
   }
 ]

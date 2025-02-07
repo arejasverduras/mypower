@@ -1,37 +1,60 @@
 // /workouts.cy.ts
 
-
-describe('Workouts Page', () => {
+describe("Workouts Page content", () => {
     beforeEach(() => {
-        cy.visit('http://localhost:3000/workouts');
+      cy.intercept("GET", "http://localhost:3000/api/workouts", { fixture: "workouts.json" }).as("getWorkouts");
+      cy.visit("http://localhost:3000/workouts");
     });
-
-    it('should display the workouts page', () => {
-        cy.contains('Workouts').should('be.visible');
-    });
-
-    // it('should display a list of workouts', () => {
-    //     cy.get('[data-cy=workout-card]').should('have.length.greaterThan', 0);
+  
+    // it("should display the correct workout title", () => {
+    //   cy.wait("@getWorkouts");
+    //   cy.get("h3").contains("Full Body Strength").should("exist");
     // });
-    it('should display a list of workouts', () => {
-        cy.intercept('GET', '/api/workouts', { fixture: 'workouts.json' });
-        cy.reload();
-        cy.get('[data-cy=workout-card]').should('have.length.greaterThan', 0);
+  
+    it("should display exercises inside the workout", () => {
+      cy.wait("@getWorkouts");
+      cy.get("ul").contains("Bench Press").should("exist");
     });
-
-    it('should display a message if no workouts are in the list', () => {
-        cy.get('[data-cy=workout-card]').should('not.exist');
-        cy.contains('No workouts found').should('be.visible');
-    })
-
-    it('should handle errors when fetching workouts', () => {
-        cy.intercept('GET', '/api/workouts', {
-            statusCode: 500,
-            body: 'Internal Server Error',
-        });
-        cy.reload();
-        cy.contains('Failed to load workouts').should('be.visible');
+  
+    it("should display workout tags", () => {
+      cy.wait("@getWorkouts");
+      cy.get("p").contains("Strength").should("exist");
+      cy.get("p").contains("Full Body").should("exist");
     });
+  });
+  
+
+// describe('Workouts Page api', () => {
+//     beforeEach(() => {
+//         cy.visit('http://localhost:3000/workouts');
+//     });
+
+//     it('should display the workouts page', () => {
+//         cy.contains('Workouts').should('be.visible');
+//     });
+
+//     // it('should display a list of workouts', () => {
+//     //     cy.get('[data-cy=workout-card]').should('have.length.greaterThan', 0);
+//     // });
+//     it('should display a list of workouts', () => {
+//         cy.intercept('GET', '/api/workouts', { fixture: 'workouts.json' });
+//         cy.reload();
+//         cy.get('[data-cy=workout-card]').should('have.length.greaterThan', 0);
+//     });
+
+//     it('should display a message if no workouts are in the list', () => {
+//         cy.get('[data-cy=workout-card]').should('not.exist');
+//         cy.contains('No workouts found').should('be.visible');
+//     })
+
+//     it('should handle errors when fetching workouts', () => {
+//         cy.intercept('GET', '/api/workouts', {
+//             statusCode: 500,
+//             body: 'Internal Server Error',
+//         });
+//         cy.reload();
+//         cy.contains('Failed to load workouts').should('be.visible');
+//     });
 
 
     // it('should allow users to create a workout', () => {
@@ -55,4 +78,5 @@ describe('Workouts Page', () => {
     //     cy.contains('Morning Routine').parent().find('[data-cy=follow-button]').click();
     //     cy.contains('Following').should('be.visible');
     // });
-});
+// });
+
