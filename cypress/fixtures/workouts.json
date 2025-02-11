@@ -82,5 +82,89 @@
         "workoutId": "workout_1"
       }
     ]
+  },
+  {
+    "id": "workout_2",
+    "title": "Cardio Blast",
+    "description": "A high-intensity cardio workout.",
+    "isPublic": true,
+    "createdById": "user_2",
+    "createdBy": {
+      "id": "user_2",
+      "name": "Jane Smith",
+      "email": "janesmith@example.com"
+    },
+    "exercises": [
+      {
+        "id": "workout_exercise_3",
+        "workoutId": "workout_2",
+        "exerciseId": "exercise_3",
+        "customDescription": "Modified to include longer duration",
+        "customSets": 1,
+        "customRepetitions": "30 minutes",
+        "exercise": {
+          "id": "exercise_3",
+          "title": "Running",
+          "muscleGroup": "Legs, Cardio",
+          "difficulty": "Beginner",
+          "results": [
+            {
+              "id": "result_3",
+              "workoutExerciseId": "workout_exercise_3",
+              "distance": 5,
+              "time": "30:00",
+              "date": "2024-02-08T12:00:00Z"
+            }
+          ]
+        }
+      },
+      {
+        "id": "workout_exercise_4",
+        "workoutId": "workout_2",
+        "exerciseId": "exercise_4",
+        "customDescription": "Modified to include more intervals",
+        "customSets": 5,
+        "customRepetitions": "1 minute",
+        "exercise": {
+          "id": "exercise_4",
+          "title": "Jump Rope",
+          "muscleGroup": "Full Body, Cardio",
+          "difficulty": "Intermediate",
+          "results": [
+            {
+              "id": "result_4",
+              "workoutExerciseId": "workout_exercise_4",
+              "intervals": 5,
+              "time": "1:00",
+              "date": "2024-02-08T12:00:00Z"
+            }
+          ]
+        }
+      }
+    ],
+    "tags": [
+      {
+        "id": "tag_3",
+        "name": "Cardio"
+      },
+      {
+        "id": "tag_4",
+        "name": "High Intensity"
+      }
+    ],
+    "likedBy": [
+      {
+        "id": "like_2",
+        "userId": "user_3",
+        "workoutId": "workout_2"
+      }
+    ],
+    "programs": [
+      {
+        "id": "programWorkout_2",
+        "programId": "program_2",
+        "workoutId": "workout_2"
+      }
+    ]
   }
 ]
