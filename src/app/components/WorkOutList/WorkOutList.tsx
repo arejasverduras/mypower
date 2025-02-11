@@ -1,6 +1,9 @@
 "use client"
 import { useEffect, useState } from "react";
 import { WorkoutWithRelations } from "../../../../types/workout";
+// components
+import { SearchBar } from "../UI functions/SearchBar/SearchBar";
+import { WorkOutCard } from "./WorkOutCard/WorkOutCard";
 
 export const WorkOutList = () => {  
     const [workouts, setWorkouts] = useState<WorkoutWithRelations[]>([]);
@@ -35,59 +38,19 @@ export const WorkOutList = () => {
         <div className="bg-background min-h-screen p-6">
           <div className="max-w-4xl mx-auto">
             <h1 className="text-3xl font-heading text-text font-bold mb-6 text-center sm:text-left">All Workouts</h1>
-            
-            <div className="flex flex-col sm:flex-row gap-2 mb-4">
-              <input
-                type="text"
-                value={search}
-                onChange={e => setSearch(e.target.value)}
-                placeholder="Search workouts..."
-                className="border border-gray-300 rounded-xl p-3 w-full sm:w-auto flex-grow"
-              />
-              <button className="bg-primary text-white px-4 py-2 rounded-xl hover:bg-blue-600 transition">
-                Search
-              </button>
-            </div>
-            
+            <SearchBar search={search} setSearch={setSearch} placeholderText="Search workouts..." />
+          
             {loading ? (
               <p className="text-gray-500 text-center">Loading...</p>
-            ) : workoutsList.length === 0 ? (
-              <p className="text-gray-500 text-center">No workouts found</p>
-            ) : (
-              <div className="mt-6 grid gap-4 sm:grid-cols-2 md:grid-cols-3">
-                {workoutsList.map(workout => (
-                  <div key={workout.id} data-cy="workout-card" className="bg-white shadow-card p-5 rounded-xl border border-gray-200">
-                    <h3 className="text-xl font-semibold text-text">{workout.title}</h3>
-                    <p className="text-gray-600">{workout.description}</p>
-                    {workout.tags && (
-                      <p className="text-sm text-gray-500">Tags: {workout.tags.map(tag => tag.name).join(", ")}</p>
-                    )}
-                    <p className="text-sm text-gray-500">Created by: {workout.createdBy.name}</p>
-                    <p className="text-sm text-gray-500">❤️ {workout.likedBy.length} Likes</p>
-                    <p className="text-sm text-gray-500">📌 Part of {workout.programs.length} programs</p>
-                    {workout.exercises && (
-                      <div className="mt-3">
-                        <h4 className="text-lg font-medium text-gray-700">Workout Exercises</h4>
-                        <ul className="list-disc list-inside text-gray-600">
-                          {workout.exercises.map(exercise => (
-                            <li key={exercise.id}>{exercise.exercise.title}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-                    <div className="flex justify-between mt-3">
-                      <button className="bg-secondary text-white px-3 py-2 rounded-xl hover:bg-green-600 transition">
-                        View
-                      </button>
-                      <button className="bg-accent text-white px-3 py-2 rounded-xl hover:bg-yellow-500 transition">
-                        Like
-                      </button>
+                ) : workoutsList.length === 0 ? (
+                <p className="text-gray-500 text-center">No workouts found</p>
+                    ) : (
+                    <div className="mt-6 grid gap-4 sm:grid-cols-2 md:grid-cols-3">
+                        {workoutsList.map(workout => (
+                            <WorkOutCard key={workout.id} workout={workout} />
+                        ))}
                     </div>
-                  </div>
-                ))}
-              </div>
-            )}
-    
+                    )}
             {error && <p className="my-5 text-red-500 text-center">{error}</p>}
           </div>
         </div>
