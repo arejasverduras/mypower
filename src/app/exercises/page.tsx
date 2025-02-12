@@ -4,7 +4,7 @@ import { useSearchParams } from "next/navigation"
 
 export default function ExercisesPage() {
     const searchParams = useSearchParams();
-    const error = searchParams.get("error")
+    const error = searchParams?.get("error")
 
     return (
         <>
