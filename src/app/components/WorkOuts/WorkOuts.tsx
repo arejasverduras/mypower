@@ -45,6 +45,7 @@ export const WorkOuts = () => {
 
     return (
         <>
+            
             <SearchBar search={search} setSearch={setSearch} placeholderText="Search workouts..." />
             {loading ? <p className="text-gray-500 text-center">Loading...</p> 
                 : workoutsList.length === 0 ? <p className="text-gray-500 text-center">No workouts found</p>
