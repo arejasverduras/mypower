@@ -1,9 +1,9 @@
 // /workouts.cy.ts
 
-describe("Workouts Page content", () => {
+describe("Library Workouts Page content", () => {
     beforeEach(() => {
       cy.intercept("GET", "http://localhost:3000/api/workouts", { fixture: "workouts.json" }).as("getWorkouts");
-      cy.visit("http://localhost:3000/workouts");
+      cy.visit("http://localhost:3000/library");
     });
   
     // it("should display the correct workout title", () => {
@@ -24,9 +24,9 @@ describe("Workouts Page content", () => {
   });
   
 
-describe('Workouts Page api', () => {
+describe('Library Workouts component api', () => {
     beforeEach(() => {
-        cy.visit('http://localhost:3000/workouts');
+        cy.visit('http://localhost:3000/library');
     });
 
     it('should display the workouts page', () => {
@@ -43,6 +43,8 @@ describe('Workouts Page api', () => {
     });
 
     it('should display a message if no workouts are in the list', () => {
+        cy.intercept('GET', '/api/workouts', { body: [] });
+        cy.reload();
         cy.get('[data-cy=workout-card]').should('not.exist');
         cy.contains('No workouts found').should('be.visible');
     })
