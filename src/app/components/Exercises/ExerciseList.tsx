@@ -4,12 +4,14 @@ import { ExerciseListItems } from "./ExerciseListItems/ExerciseListItems";
 import { ExerciseProps } from "@/app/api/exercises/route";
 import { AddExerciseModal } from "./AddExerciseForm/AddExerciseForm";;
 import { useSession } from "@/context/SessionContext";
+import { SearchBar } from "../UI functions/SearchBar/SearchBar";
 
 export const ExerciseList = () => {
     const [exercises, setExercises] = useState<ExerciseProps[]>([]);
     const [error, setError] = useState<string | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const { session, loading} = useSession();
+    const [search, setSearch] = useState('');
 
      // GET exercises from the API
   useEffect(() => {
@@ -67,14 +69,22 @@ const checkForSignIn = () => {
         }
       };
 
+    const lowerCaseSearch = search.toLowerCase();
+
+    const filteredExercises = exercises.filter(exercise =>
+      exercise.title.toLowerCase().includes(lowerCaseSearch) ||
+      exercise.description?.toLowerCase().includes(lowerCaseSearch)
+    );
+
 
     return (
         <>  
             <h2 className="text-2xl">All exercises</h2>
             {exercises.length === 0 && <p>No exercises available</p>}
             {error && <p>{error}</p>}
+            <SearchBar search={search} setSearch={setSearch} placeholderText="Search exercises..." />
             <ExerciseListItems
-                filteredData={exercises}
+                filteredData={filteredExercises}
             />
             <button
               onClick={checkForSignIn}

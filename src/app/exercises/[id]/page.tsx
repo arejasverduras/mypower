@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { Exercise } from "@/app/components/ExerciseList/ExerciseListItems/Exercise/Exercise";
+import { Exercise } from "@/app/components/Exercises/ExerciseListItems/Exercise/Exercise";
 
 export async function generateStaticParams() {
     const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/exercises`);

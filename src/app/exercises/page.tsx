@@ -1,5 +1,5 @@
 'use client'
-import { ExerciseList } from "../components/ExerciseList/ExerciseList"
+import { ExerciseList } from "../components/Exercises/ExerciseList"
 import { useSearchParams } from "next/navigation"
 
 export default function ExercisesPage() {

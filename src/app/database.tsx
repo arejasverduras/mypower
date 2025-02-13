@@ -1,4 +1,4 @@
-import { ExerciseProps } from "./components/ExerciseList/ExerciseListItems/Exercise/Exercise";
+import { ExerciseProps } from "./components/Exercises/ExerciseListItems/Exercise/Exercise";
 
 export interface databaseProps {
     exercises: ExerciseProps [],

@@ -1,4 +1,4 @@
-import { WorkOutList } from "../components/WorkOutList/WorkOutList"
+import { WorkOutList } from "../components/WorkOuts/WorkOutList/WorkOutList"
 
 export default function WorkoutsPage () {
 
