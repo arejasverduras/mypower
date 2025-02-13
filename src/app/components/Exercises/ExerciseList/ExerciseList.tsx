@@ -1,11 +1,11 @@
 import { Exercise } from "./Exercise/Exercise"
-import { ExerciseProps } from "@/app/api/exercises/route"
+import { ExerciseWithRelations } from "../../../../../types/exercise"
 
 interface ExerciseListItemsProps {
-    filteredData: ExerciseProps [],
+    filteredData: ExerciseWithRelations [],
 }
 
-export const ExerciseListItems = ({filteredData}:ExerciseListItemsProps) => {
+export const ExerciseList = ({filteredData}:ExerciseListItemsProps) => {
 
     const listItems = filteredData.map((item, index) => 
            <Exercise 

@@ -1,13 +1,13 @@
 'use client'
 import { useState, useEffect } from "react";
-import { ExerciseListItems } from "./ExerciseListItems/ExerciseListItems";
-import { ExerciseProps } from "@/app/api/exercises/route";
+import { ExerciseList } from "./ExerciseList/ExerciseList";
+import { ExerciseWithRelations } from "../../../../types/exercise";
 import { AddExerciseModal } from "./AddExerciseForm/AddExerciseForm";;
 import { useSession } from "@/context/SessionContext";
 import { SearchBar } from "../UI functions/SearchBar/SearchBar";
 
-export const ExerciseList = () => {
-    const [exercises, setExercises] = useState<ExerciseProps[]>([]);
+export const Exercises = () => {
+    const [exercises, setExercises] = useState<ExerciseWithRelations[]>([]);
     const [error, setError] = useState<string | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const { session, loading} = useSession();
@@ -83,7 +83,7 @@ const checkForSignIn = () => {
             {exercises.length === 0 && <p>No exercises available</p>}
             {error && <p>{error}</p>}
             <SearchBar search={search} setSearch={setSearch} placeholderText="Search exercises..." />
-            <ExerciseListItems
+            <ExerciseList
                 filteredData={filteredExercises}
             />
             <button

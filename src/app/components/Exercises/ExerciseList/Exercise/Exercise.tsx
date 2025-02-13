@@ -9,11 +9,10 @@ import EditExerciseModal from "../../EditExerciseModal/EditExerciseModal"
 import { useSession } from "@/context/SessionContext"
 import { BackButton } from "@/app/components/UI functions/BackButton/BackButton"
 import { EditDeleteButtons } from "@/app/components/UI functions/EditDeleteButtons/EditDeleteButtons"
+import { ExerciseWithRelations } from "../../../../../../types/exercise"
 
 export interface Exercise {
-    exercise: {
-        createdById: string }
-       & ExerciseProps ,
+    exercise: ExerciseWithRelations
     index: number,
     view: "page" | "list",
 }
@@ -21,7 +20,7 @@ export interface Exercise {
 export const Exercise = ({exercise, index, view}:Exercise) => {
     const [open, setOpen] = useState(false);
     const [editingId, setEditingId] = useState<string | null>(null);
-    const [exerciseData, setExerciseData] = useState<ExerciseProps>(exercise)
+    const [exerciseData, setExerciseData] = useState<ExerciseWithRelations>(exercise)
     const [error, setError] = useState("")
     const { session } = useSession();
     const [isAuthorized, setIsAuthorized] = useState(false);
@@ -70,7 +69,7 @@ export const Exercise = ({exercise, index, view}:Exercise) => {
 
     // console.log(isAuthorized);
     // PATCH exercise (update)
-    const handleSaveExercise = (updatedExercise: ExerciseProps) => {
+    const handleSaveExercise = (updatedExercise: ExerciseWithRelations) => {
         if (!isAuthorized) {
             setError("You are not authorized to edit this exercise.");
             return;

@@ -1,5 +1,5 @@
 'use client'
-import { ExerciseList } from "../components/Exercises/ExerciseList"
+import { Exercises } from "../components/Exercises/Exercises"
 import { useSearchParams } from "next/navigation"
 
 export default function ExercisesPage() {
@@ -12,7 +12,7 @@ export default function ExercisesPage() {
                 <p className="my-5"><i>Sorry, the exercise you were looking for does not exist!</i></p>
             )}
             <h1>Page: exercises</h1>
-            <ExerciseList />
+            <Exercises />
         </>
         
     )

@@ -1,32 +1,19 @@
 import { useState, useEffect } from "react";
 import { YouTube } from "../../Video/YouTube/YouTube";
-
-interface Exercise {
-  id: string;
-  title: string;
-  image?: string;
-  video?: string;
-  description?: string;
-  execution?: string;
-  createdBy: {
-    name: string,
-    id: string,
-    image?:string,
-  } | undefined;
-}
+import { ExerciseWithRelations } from "../../../../../types/exercise";
 
 interface EditExerciseModalProps {
   exerciseId: string;
   onClose: () => void;
-  onSave: (updatedExercise: Exercise) => void;
+  onSave: (updatedExercise: ExerciseWithRelations) => void;
 }
 
 export default function EditExerciseModal({
   exerciseId,
   onClose,
   onSave,
-}: EditExerciseModalProps): JSX.Element {
-  const [formData, setFormData] = useState<Partial<Exercise>>({});
+}: EditExerciseModalProps) {
+  const [formData, setFormData] = useState<Partial<ExerciseWithRelations>>({});
   const [loading, setLoading] = useState(true); // To handle loading state
   const [error, setError] = useState("");
 
@@ -34,7 +21,7 @@ export default function EditExerciseModal({
     const fetchExerciseDetails = async () => {
       try {
         const res = await fetch(`/api/exercises/${exerciseId}`);
-        if (!res.ok) throw new Error("Failed to fetch exercise details");
+        if (!res.ok) setError("Failed to fetch exercise details");
         const data = await res.json();
         setFormData(data);
       } catch (err) {
@@ -54,7 +41,7 @@ export default function EditExerciseModal({
     return match ? match[1] : "";
   };
 
-  const handleFormChange = (field: keyof Exercise, value: string) => {
+  const handleFormChange = (field: keyof ExerciseWithRelations, value: string) => {
     setFormData((prev) => ({ 
       ...prev, 
       [field]: field ==="video" ?  getYouTubeId(value): value }));
@@ -94,6 +81,7 @@ export default function EditExerciseModal({
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
       <div className="bg-primary-color text-white p-6 rounded-lg shadow-lg w-full max-w-md">
         <h2 className="text-xl font-bold mb-4">Edit Exercise</h2>
+        {error && <p className="text-red-500">{error}</p>}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium">Title</label>
