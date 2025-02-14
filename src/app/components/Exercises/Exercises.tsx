@@ -90,7 +90,7 @@ const checkForSignIn = () => {
             {error && <p>{error}</p>}
             <SearchBar search={search} setSearch={setSearch} placeholderText="Search exercises..." />
             <ExerciseList
-                filteredData={filteredExercises}
+                exercises={filteredExercises}
             />
             <button
               onClick={checkForSignIn}
