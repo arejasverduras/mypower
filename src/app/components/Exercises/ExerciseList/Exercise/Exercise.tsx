@@ -4,7 +4,6 @@ import Link from "next/link"
 import { YouTube } from "@/app/components/Video/YouTube/YouTube"
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-import { ExerciseProps } from "@/app/api/exercises/route"
 import EditExerciseModal from "../../EditExerciseModal/EditExerciseModal"
 import { useSession } from "@/context/SessionContext"
 import { BackButton } from "@/app/components/UI functions/BackButton/BackButton"
@@ -35,7 +34,7 @@ export const Exercise = ({exercise, index, view}:Exercise) => {
     }
 
     // opens editing modal
-    const onEdit = (id: ExerciseProps["id"]) => {
+    const onEdit = (id: ExerciseWithRelations["id"]) => {
         setEditingId(id);
     }
 

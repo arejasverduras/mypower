@@ -1,6 +1,5 @@
 "use client"
-import { ExerciseProps } from "@/app/api/exercises/route"
-// import EditUserModalTest from "./EditUserModalTest/EditUserModalTest"
+
 import { EditUserModal } from "./EditUserModal/EditUserModal"
 import { EditDeleteButtons } from "../UI functions/EditDeleteButtons/EditDeleteButtons"
 import Image from "next/image"
@@ -9,10 +8,11 @@ import { useSession } from "@/context/SessionContext"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { User as UserType } from "@prisma/client"
+import { ExerciseWithRelations } from "../../../../types/exercise"
 
 interface UserProps  {
     id: string,
-    data: UserType & {createdExercises: ExerciseProps[]}    
+    data: UserType & {createdExercises: ExerciseWithRelations[]}    
 }
 
 export const User = ({id, data}: UserProps) => {
@@ -27,14 +27,14 @@ export const User = ({id, data}: UserProps) => {
     const isAuthorized = session?.id === id || session?.isSuperuser;
 
     // triggers editing modal
-    const onEdit = (id: ExerciseProps["id"]) => {
+    const onEdit = (id: ExerciseWithRelations["id"]) => {
         setEditingId(id);
         console.log("id " + editingId)
     }
 
     const onClose = () => setEditingId(null);
     // PATCH exercise (update)
-    const handleSaveExercise = (updatedUser: UserProps["data"]& {createdExercises: ExerciseProps[]}) => {
+    const handleSaveExercise = (updatedUser: UserProps["data"]& {createdExercises: ExerciseWithRelations[]}) => {
         if (!session) {
             setError("You are not authorized to edit this exercise.");
             return;
@@ -85,7 +85,7 @@ export const User = ({id, data}: UserProps) => {
                 {error && <div className="text-red-500">{error}</div>}
                 <h2 className="text-xl font-semibold mt-6">Added Exercises:</h2>
                 <ul>
-                    {userData.createdExercises.map((exercise: ExerciseProps) => (
+                    {userData.createdExercises.map((exercise: ExerciseWithRelations) => (
                     <li key={exercise.id} className="mt-2">
                         <Link href={`/exercises/${exercise.id}`} className="text-blue-500 hover:underline">
                         {exercise.title}

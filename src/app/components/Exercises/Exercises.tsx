@@ -73,8 +73,13 @@ const checkForSignIn = () => {
 
     const filteredExercises = exercises.filter(exercise =>
       exercise.title.toLowerCase().includes(lowerCaseSearch) ||
-      exercise.description?.toLowerCase().includes(lowerCaseSearch)
-    );
+      exercise.description?.toLowerCase().includes(lowerCaseSearch) ||
+      exercise.tags?.some(tag => tag.name.toLowerCase().includes(lowerCaseSearch)) ||
+      exercise.createdBy?.name?.toLowerCase().includes(lowerCaseSearch) ||
+      exercise.workouts?.some(workoutExercise => workoutExercise.workout.title.toLowerCase().includes(lowerCaseSearch))
+  );
+
+  console.log(exercises);
 
 
     return (

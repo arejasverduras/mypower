@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import type { User } from "@prisma/client";
-import { ExerciseProps } from "@/app/api/exercises/route";
+import { ExerciseWithRelations } from "../../../../../types/exercise";
 
 
 interface EditUserModalProps {
     userId: string;
     onClose: () => void;
-    onSave: (updatedUser: User & {createdExercises: ExerciseProps[]}) => void;
+    onSave: (updatedUser: User & {createdExercises: ExerciseWithRelations[]}) => void;
   }
 
   export const EditUserModal = ({userId, onClose, onSave}: EditUserModalProps) => {

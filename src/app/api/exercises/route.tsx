@@ -3,37 +3,21 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { auth } from "../../../../auth";
 
-export interface ExerciseProps {
-    id: string,
-    title: string,
-    image?: string,
-    video?: string,
-    description?: string,
-    execution?: string,
-    createdBy: {
-      name: string,
-      id: string,
-      image?: string,
-    } | undefined;
-}
-
 
 // GET requests
 export async function GET() {
     const exercises = await prisma.exercise.findMany({
-        orderBy: {createdAt: "desc"}
+      include: {
+        createdBy: true,
+      },
+      orderBy: { createdAt: "desc" },
     });
     return NextResponse.json(exercises, {status: 200});
 }
 
 // POST requests
 export const POST = auth(async function POST(req: Request) {
-    const body = await req.json();
-  
-    // if (!req.auth) {
-    //   return NextResponse.json({ message: "Not authenticated to POST exercise" }, { status: 401 });
-    // }
-  
+    const body = await req.json(); 
     const session = await auth();
 
     if (!session) {
