@@ -6,7 +6,7 @@ export const WorkOutList = ({ workouts }: {workouts: WorkoutWithRelations[]}) =>
     return (
         <div className="bg-background min-h-screen p-6">
           <div className="max-w-4xl mx-auto">
-            <h1 className="text-3xl font-heading text-text font-bold mb-6 text-center sm:text-left">All Workouts</h1>
+            <h1 className="text-3xl font-heading text-headertext font-bold mb-6 text-center sm:text-left">All Workouts</h1>
                 {workouts.length === 0 ? (
                 <p className="text-gray-500 text-center">No workouts found</p>
                     ) : (
