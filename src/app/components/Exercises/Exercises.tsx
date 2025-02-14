@@ -78,7 +78,8 @@ const checkForSignIn = () => {
 
 
     return (
-        <>  
+      <div className="bg-background min-h-screen p-6">
+        <div className="max-w-4xl mx-auto"> 
             <h2 className="text-2xl">All exercises</h2>
             {exercises.length === 0 && <p>No exercises available</p>}
             {error && <p>{error}</p>}
@@ -98,6 +99,7 @@ const checkForSignIn = () => {
               onClose={()=> setIsModalOpen(false)}
               />
               {loading && <div className="w-full h-full bg-black backdrop-blur-3xl">Loading..</div>}
-        </>
+          </div>
+        </div>
     )
 };

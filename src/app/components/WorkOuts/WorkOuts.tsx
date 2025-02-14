@@ -44,15 +44,16 @@ export const WorkOuts = () => {
     );
 
     return (
-        <>
-            
-            <SearchBar search={search} setSearch={setSearch} placeholderText="Search workouts..." />
-            {loading ? <p className="text-gray-500 text-center">Loading...</p> 
-                : workoutsList.length === 0 ? <p className="text-gray-500 text-center">No workouts found</p>
-                    : 
-                    <WorkOutList workouts={workoutsList} />
-            }
-            {error && <p className="my-5 text-red-500 text-center">{error}</p>}
-        </>
+        <div className="bg-background min-h-screen p-6">
+            <div className="max-w-4xl mx-auto">
+                <SearchBar search={search} setSearch={setSearch} placeholderText="Search workouts..." />
+                {loading ? <p className="text-gray-500 text-center">Loading...</p> 
+                    : workoutsList.length === 0 ? <p className="text-gray-500 text-center">No workouts found</p>
+                        : 
+                        <WorkOutList workouts={workoutsList} />
+                }
+                {error && <p className="my-5 text-red-500 text-center">{error}</p>}
+            </div>
+        </div>
     )
 };
