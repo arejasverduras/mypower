@@ -5,19 +5,14 @@ import { useSession } from "@/context/SessionContext";
 import SignInButton from "../components/SignInButton/SignInButton";
 import Link from "next/link";
 import Image from "next/image";
+import { SearchBar } from "../components/UI functions/SearchBar/SearchBar";
 import { User } from "@prisma/client";
 
-// interface User {
-//   id: string;
-//   name: string | undefined;
-//   image: string | undefined;
-//   email?: string;
-// }
 
 export default function UsersPage() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [search, setSearch] = useState("");
   const [error, setError] = useState("");
 
   const { session, loading: sessionLoading } = useSession();
@@ -61,6 +56,8 @@ export default function UsersPage() {
     </div>
   );
 
+  
+
   // List of users
   const userList =
     users.length > 0 ? (
@@ -85,23 +82,7 @@ export default function UsersPage() {
       ) : (
         <>
           <h1 className="text-xl font-bold mb-4">Users</h1>
-
-          <div className="mb-4">
-            <input
-              type="text"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Search users"
-              className="border rounded p-2"
-            />
-            <button
-              onClick={() => {}}
-              className="ml-2 bg-blue-500 text-white px-4 py-2 rounded"
-            >
-              Search
-            </button>
-          </div>
-
+            <SearchBar search={search} setSearch={setSearch} placeholderText="Search users..."/>
           {loading ? <p>Loading...</p> : userList}
           {error && <p className="text-red-500">{error}</p>}
         </>
@@ -109,17 +90,3 @@ export default function UsersPage() {
     </div>
   );
 }
-
-
-     // const handleSearch = async () => {
-    //     setLoading(true);
-    //     try {
-    //       const res = await fetch(`/api/users?search=${searchTerm}`);
-    //       const data = await res.json();
-    //       setUsers(data.users);
-    //     } catch (err) {
-    //       console.error("Search failed", err);
-    //     } finally {
-    //       setLoading(false);
-    //     }
-    //   };

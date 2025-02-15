@@ -91,6 +91,7 @@ model Workout {
   isPublic    Boolean   @default(true)
   createdBy   User      @relation(fields: [createdById], references: [id])
   createdById String
+  createdAt   DateTime  @default(now())
   likedBy     LikedItem[]
   programs    ProgramWorkout[] // Many-to-Many via intermediate table
 }
@@ -104,6 +105,7 @@ model Program {
   isPublic    Boolean   @default(true)
   createdBy   User      @relation(fields: [createdById], references: [id])
   createdById String
+  createdAt   DateTime  @default(now())
   likedBy     LikedItem[]
   results     ProgramCompletion[]
 }
