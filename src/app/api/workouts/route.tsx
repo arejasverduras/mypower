@@ -5,6 +5,6 @@ import workouts from'../../../../cypress/fixtures/workouts.json';
 
 // GET requests
 export async function GET() {
-
+    
     return NextResponse.json(workouts, {status: 200});
 }

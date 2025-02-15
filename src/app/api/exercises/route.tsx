@@ -3,16 +3,32 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { auth } from "../../../../auth";
 
-
 // GET requests
-export async function GET() {
-    const exercises = await prisma.exercise.findMany({
-      include: {
-        createdBy: true,
-      },
-      orderBy: { createdAt: "desc" },
-    });
-    return NextResponse.json(exercises, {status: 200});
+export async function GET(req: Request) {
+  const { searchParams } = new URL(req.url);
+  const search = searchParams.get('search')?.toLowerCase() || '';
+
+  const exercises = await prisma.exercise.findMany({
+    where: {
+      OR: [
+        { title: { contains: search } },
+        { description: { contains: search } },
+        { tags: { some: { name: { contains: search } } } },
+        { createdBy: { name: { contains: search } } },
+        { workouts: { some: { workout: { title: { contains: search } } } } },
+      ],
+    },
+    include: {
+      createdBy: true,
+      tags: true,
+      workouts: { include: { workout: true } },
+      likedBy: true,
+    },
+    orderBy: { createdAt: "desc" },
+  });
+
+
+  return NextResponse.json(exercises, { status: 200 });
 }
 
 // POST requests
