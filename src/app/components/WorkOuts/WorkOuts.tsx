@@ -3,12 +3,16 @@ import { useEffect, useState } from "react";
 import { WorkoutWithRelations } from "../../../../types/workout";
 import { WorkOutList } from "./WorkOutList/WorkOutList";
 import { SearchBar } from "../UI functions/SearchBar/SearchBar";
+import { useSession } from "@/context/SessionContext";
+import { CreateWorkoutModal } from "./CreateWorkoutModal/CreateWorkoutModal";
 
 export const WorkOuts = () => {
     const [workouts, setWorkouts] = useState<WorkoutWithRelations[]>([]);
     const [search, setSearch] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(true);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const { session, loading: sessionLoading } = useSession();
     
     useEffect(() => {
         const fetchWorkouts = async () => {
@@ -32,6 +36,39 @@ export const WorkOuts = () => {
         fetchWorkouts();
     }, []);
 
+    const handleAddWorkout = async (newWorkout: {
+        title: string;
+        description?: string;
+        isPublic?: boolean;
+        exercises: { id: string; customDescription?: string; customSets?: number; customRepetitions?: string }[];
+        tags: string[];
+    }) => {
+        try {
+            const res = await fetch("/api/workouts", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(newWorkout),
+            });
+
+            if (!res.ok) throw new Error("Failed to add workout");
+
+            const addedWorkout = await res.json();
+            setWorkouts((prev) => [addedWorkout, ...prev]);
+        } catch (err) {
+            console.error(err);
+            setError("Failed to add workout");
+        }
+    };
+
+    const checkForSignIn = () => {
+        if (!session) {
+            alert("You must be signed in to add a workout");
+        } else {
+            setIsModalOpen(true);
+        }
+    };
+
+
     // search functionality (filtering)
     const lowerCaseSearch = search.toLowerCase();
 
@@ -53,6 +90,17 @@ export const WorkOuts = () => {
                         <WorkOutList workouts={workoutsList} />
                 }
                 {error && <p className="my-5 text-red-500 text-center">{error}</p>}
+                <button
+                    onClick={checkForSignIn}
+                    className="py-2 px-4 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600"
+                >
+                    + Add Workout +
+                </button>
+                <CreateWorkoutModal 
+                    onAdd={handleAddWorkout}
+                    isOpen={isModalOpen}
+                    onClose={() => setIsModalOpen(false)}
+                />
             </div>
         </div>
     )

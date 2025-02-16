@@ -9,7 +9,7 @@ export const WorkOutCard = ({workout}: {workout: WorkoutWithRelations}) => {
             {workout.tags && (
             <p className="text-sm text-gray-500">Tags: {workout.tags.map(tag => tag.name).join(", ")}</p>
             )}
-            <p className="text-sm text-gray-500">Created by: {workout.createdBy.name}</p>
+            <p className="text-sm text-gray-500">Created by: {workout.createdBy?.name || "Unknown"}</p>
             <p className="text-sm text-gray-500">❤️ {workout.likedBy.length} Likes</p>
             <p className="text-sm text-gray-500">📌 Part of {workout.programs.length} programs</p>
             {workout.exercises && (
