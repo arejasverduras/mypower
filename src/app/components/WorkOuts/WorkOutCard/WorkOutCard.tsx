@@ -5,6 +5,7 @@ export const WorkOutCard = ({workout}: {workout: WorkoutWithRelations}) => {
     return (
         <div key={workout.id} data-cy="workout-card" className="bg-white shadow-card p-5 rounded-xl border border-gray-200">
             <h3 className="text-xl font-semibold text-text">{workout.title}</h3>
+            <p>{workout.id}</p>
             <p className="text-gray-600">{workout.description}</p>
             {workout.tags && (
             <p className="text-sm text-gray-500">Tags: {workout.tags.map(tag => tag.name).join(", ")}</p>
