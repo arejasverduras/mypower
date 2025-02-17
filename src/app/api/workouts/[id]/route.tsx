@@ -11,10 +11,12 @@ export async function GET(req:Request, {params}: {params: Promise<{id:string}>})
       const workout = await prisma.workout.findUnique({
           where: { id: workoutId },
           include: {
-            createdBy: {
-              select: {id: true, name: true, image: true},
-            }
-          }
+            createdBy: true,
+            tags: true,
+            exercises: { include: { exercise: true } },
+            likedBy: true,
+            programs: true,
+          },
         });
     
         if (!workout) {

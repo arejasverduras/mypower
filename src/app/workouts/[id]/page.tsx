@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 // import { Exercise } from "@/app/components/Exercises/ExerciseList/Exercise/Exercise";
-// import { Workout } from "@/app/components/Workouts/WorkoutList/Workout/Workout";
+import {WorkOut} from "@/app/components/WorkOut/WorkOut";
 
 export async function generateStaticParams() {
     const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/workouts`);
@@ -37,12 +37,12 @@ export default async function WorkoutPage({params}: { params: Promise<{id:string
 
     return (
         <div>
-            {/* <Workout 
+            <WorkOut 
                 view="page"
                 workout={workout}
-                index={workout.id}
-                /> */}
-                Workout components go here
+                // index={workout.id}
+                />
+
         </div>
     )
 };
