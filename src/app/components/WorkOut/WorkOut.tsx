@@ -1,37 +1,25 @@
 "use client";
-import Link from "next/link";
+import { WorkoutWithRelations } from "../../../../types/workout";
+import { WorkOutHeader } from "./WorkOutHeader/WorkOutHeader";
+// import Head from "next/head";
 
 interface WorkOutProps {
     workout: WorkoutWithRelations;
-    view: "page | list";
+    view: "page" | "list";
 }
 
 export const WorkOut = ({workout, view}: WorkOutProps) => {
-    console.log (workout);
+    console.log (workout, view);
     return (
         <>
-            {/* workout top section */}
-            <section>
-                <p>{workout.createdBy.name}</p>
-                <h1>{workout.title || "My workout"}</h1>
-                <p>{workout.description || "Add a description"}</p>
-            </section>
+        {/* <Head>
+            <title>{workout.title}</title>
+        </Head> */}
+        <div className="p-6">
 
-            {/* workout exercises */}
-            <section>
-                <h2>Exercises</h2>
-                {workout.exercises?.length === 0 ? <p>No exercises added</p> :  
-                    <ul>
-                        {workout.exercises?.map((exercise, index) => 
-                            <li key={exercise.id}>
-                 
-                                    <p>{exercise.exercise.title}</p>
-                    
-                            </li>
-                        )}
-                    </ul>
-                }
-            </section>
+            <WorkOutHeader workout={workout} />
+        </div>
+
         </>
     );
 }

@@ -16,9 +16,10 @@ module.exports = {
         midnightblue: "#191970", // Custom dark blue  
         primary: '#3B82F6', // Blue
           secondary: '#22C55E', // Green
-          background: "midnightblue", //'#F9FAFB', // Light gray
+          background: "midnightblue", //'#F9FAFB', 
           text: '#1F2937', // Dark gray
-          headertext: '#F9FAFB',
+          headertext: '#F9FAFB',// Light gray
+          description: '#6B7280', // Gray
           accent: '#EAB308', // Yellow
           error: '#EF4444', // Red
           foreground: "var(--foreground)",
