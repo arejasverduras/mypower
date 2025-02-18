@@ -16,9 +16,10 @@ export const WorkOutHeader = ({workout}: {workout: WorkoutWithRelations}) => {
                             height={25}
                             className="rounded-full" />
                     <Link href={`/users/${workout.createdBy.id}`}>{workout.createdBy.name}</Link>
-                </div>
-                <p className="text-blue-400">{workout.description || "Add a description"}</p>
-                 <div className="flex flex-wrap text-blue-200">
+                    <div className="font-bold">.</div>
+                    <div>{`${workout.exercises?.length} exercises` || "empty workout"}</div>
+                    <div className="font-bold">.</div>
+                    <div className="flex flex-wrap text-blue-200">
                     {workout.tags.map((tag, index) => (
                         <span key={index} className="flex items-center">
                         <Link href={`/tag/${tag.id}`}>
@@ -28,6 +29,9 @@ export const WorkOutHeader = ({workout}: {workout: WorkoutWithRelations}) => {
                         </span>
                     ))}
                 </div>
+                </div>
+                <p className="text-blue-400">{workout.description || "Add a description"}</p>
+                
             </section>
     )
 };
