@@ -1,4 +1,5 @@
 import { WorkoutWithRelations } from "../../../../../types/workout";
+import Link from "next/link";
 
 export const WorkOutCard = ({workout}: {workout: WorkoutWithRelations}) => {
     
@@ -24,9 +25,12 @@ export const WorkOutCard = ({workout}: {workout: WorkoutWithRelations}) => {
             </div>
             )}
             <div className="flex justify-between mt-3">
-                <button className="bg-secondary text-white px-3 py-2 rounded-xl hover:bg-green-600 transition">
-                    View
-                </button>
+                <Link href={`/workouts/${workout.id}`}>
+
+                    <button className="bg-secondary text-white px-3 py-2 rounded-xl hover:bg-green-600 transition">
+                        View
+                    </button>
+                </Link>
                 <button className="bg-accent text-white px-3 py-2 rounded-xl hover:bg-yellow-500 transition">
                     Like
                 </button>
