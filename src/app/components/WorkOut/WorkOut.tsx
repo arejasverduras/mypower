@@ -12,7 +12,7 @@ interface WorkOutProps {
 export const WorkOut = ({workout, view}: WorkOutProps) => {
     console.log (workout, view);
     return (
-        <div className=" flex flex-col items-center space-y-4 max-w-5xl mx-auto">
+        <div className=" flex flex-col items-start space-y-4 max-w-5xl mx-auto">
             <WorkOutHeader workout={workout} />
             <WorkOutExercises workoutExercises={workout.exercises || []} />
         </div>

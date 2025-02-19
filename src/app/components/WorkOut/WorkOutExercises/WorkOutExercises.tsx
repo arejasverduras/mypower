@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { WorkoutWithRelations } from "../../../../../types/workout";
+import { WorkOutExerciseCard } from "../WorkOutExerciseCard";
 
 
 
@@ -7,11 +8,11 @@ export const WorkOutExercises = ({workoutExercises}:{workoutExercises: WorkoutWi
     const [exercises, setExercises] = useState(workoutExercises);
     
     return (
-        <div className="flex flex-col bg-midnightblue text-white p-4 rounded-lg shadow-md w-full">
+        <div className="flex flex-col space-y-8 bg-midnightblue text-white p-4 rounded-lg shadow-md w-full">
  
             {exercises.length > 0 ? exercises.map((exercise, index) => (
-                
-                <p key={index}>{exercise.exercise.title} ExerciseCard </p>
+                <WorkOutExerciseCard key={index} exercise={exercise} />
+             
             )) : <div>Add exercises to get started..</div>    
             }
         </div>
