@@ -1,6 +1,7 @@
 "use client";
 import { WorkoutWithRelations } from "../../../../types/workout";
 import { WorkOutHeader } from "./WorkOutHeader/WorkOutHeader";
+import { WorkOutExercises } from "./WorkOutExercises/WorkOutExercises";
 // import Head from "next/head";
 
 interface WorkOutProps {
@@ -11,15 +12,9 @@ interface WorkOutProps {
 export const WorkOut = ({workout, view}: WorkOutProps) => {
     console.log (workout, view);
     return (
-        <>
-        {/* <Head>
-            <title>{workout.title}</title>
-        </Head> */}
-        <div className="p-6">
-
+        <div className=" flex flex-col items-center space-y-4 max-w-5xl mx-auto">
             <WorkOutHeader workout={workout} />
+            <WorkOutExercises workoutExercises={workout.exercises || []} />
         </div>
-
-        </>
     );
 }
