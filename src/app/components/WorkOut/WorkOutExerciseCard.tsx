@@ -2,6 +2,7 @@ import { WorkoutWithRelations } from "../../../../types/workout";
 // import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
+import { YouTube } from "../Video/YouTube/YouTube";
 
 
 export const WorkOutExerciseCard = ({exercise}:{exercise: WorkoutWithRelations["exercises"][0]}) => {
@@ -17,35 +18,73 @@ export const WorkOutExerciseCard = ({exercise}:{exercise: WorkoutWithRelations["
                 </div>
                 <div className="flex flex-col items-center justify-center">
                     {/* Tags */}
-                    <p>by {exercise.exercise.createdBy.name }</p>
-
-                    {/* Tags, tags */}
+                    {/* <p className="text-description ">by {exercise.exercise.createdBy.name }</p> */}
+                    {/* {exercise.customSets && exercise.customRepetitions ?
+                            (   <div className="flex space-x-2 ">
+                                    <p><b>Sets:</b> {exercise.customSets || null}</p>
+                                    <p><b>Reps:</b> {exercise.customRepetitions}</p> 
+                                    <p><b>Break: </b>2 min</p>
+                                </div>
+                            ): <div>{exercise.exercise.execution}</div>} */}
+                    {/* glutes, quads */}
                 </div>
                 <div>
                     {/* buttons */}
                     heart ...
                 </div>
             </div>
-            {!preview ? (
-                    <div 
-                        className="flex justify-center bg-bgblue rounded-b-lg w-11/12 cursor-pointer" onClick={() => setPreview(!preview)}>
-                        collapsed
-                        </div>
-                ):(
-                    <div className="flex justify-center bg-bgblue rounded-b-lg w-11/12">
-                        expanded
-                        {exercise.exercise.image && (
-                            <div className="flex justify-center">
-                                <Image 
-                                    src={exercise.exercise.image} 
-                                    width={300} 
-                                    height={300} 
-                                    alt="exercise image"
-                                    className="rounded-3xl" />
+            {/* Tray */}
+            <div className="bg-bgblue rounded-b-lg w-11/12 cursor-pointer">
+            <div className="border-l-4 border-b-4 rounded-b-lg border-b-white border-l-blue-400 ">
+                {!preview ? (
+                        <div 
+                            className="flex justify-center items-center " onClick={() => setPreview(!preview)}>
+                            {exercise.customSets && exercise.customRepetitions ?
+                                (   <div className="flex justify-center items-center space-x-6 p-2">
+                                        <p><b>Sets: </b>{exercise.customSets || null}</p>
+                                        <p><b>Reps: </b>{exercise.customRepetitions}</p>
+                                        <p><b>Break: </b>2 min</p> 
+                                    </div>
+                                ): <div>{exercise.exercise.execution}</div>}
+                            {/* <p className="text-white text-sm ">by {exercise.exercise.createdBy.name }</p> */}
+
+        
                             </div>
-                        )}
+                    ):(
+                        <div className="flex flex-col justify-center py-5">
+                        
+                            {exercise.exercise.video && (   
+                                <div className="rounded-3xl  h-80">
+                                    <YouTube 
+                                        embedId={exercise.exercise.video}  />
+                                    
+                                    </div>
+                                )}
+                            {exercise.exercise.image && (
+                                <div className="flex justify-center">
+                                    <Image 
+                                        src={exercise.exercise.image} 
+                                        width={300} 
+                                        height={300} 
+                                        alt="exercise image"
+                                        className="rounded-3xl" />
+                                </div>
+                            )}
+                            <div className="p-5 space-y-4" >
+                                <p>{exercise.customDescription || exercise.exercise.description}</p>
+                                {exercise.customSets && exercise.customRepetitions ?
+                                (   <div className="flex space-x-2 ">
+                                        <p><b>Sets:</b> {exercise.customSets || null}</p>
+                                        <p><b>Reps:</b> {exercise.customRepetitions}</p> 
+                                    </div>
+                                ): <div>{exercise.exercise.execution}</div>}
+                                
+                            </div>
+
+                        </div>
+                    )}
                     </div>
-                )}
+                </div>
             <div>
 
             </div>
