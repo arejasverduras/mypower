@@ -3,11 +3,17 @@ import { WorkoutWithRelations } from "../../../../types/workout";
 import Image from "next/image";
 import { useState } from "react";
 import { YouTube } from "../Video/YouTube/YouTube";
+import { HeartIcon } from '@heroicons/react/24/solid'; 
+import { HeartIcon as HeartOutline } from "@heroicons/react/24/outline";
+import { TrashIcon } from '@heroicons/react/24/solid';
 
 
 export const WorkOutExerciseCard = ({exercise}:{exercise: WorkoutWithRelations["exercises"][0]}) => {
     const [preview, setPreview] = useState(false);
+    const [like, setLike] = useState(false);
     console.log(exercise);
+
+    const handleLike = () => setLike(!like);
     
     return (
         <div className="flex flex-col items-center">
@@ -28,11 +34,18 @@ export const WorkOutExerciseCard = ({exercise}:{exercise: WorkoutWithRelations["
                             ): <div>{exercise.exercise.execution}</div>} */}
                     {/* glutes, quads */}
                 </div>
-                <div>
+                <div className="flex items-center space-x-4">
                     {/* buttons */}
-                    heart ...
+                    {like ?
+                    <HeartIcon className="h-6 w-6 text-red-500 cursor-pointer" onClick={handleLike} />
+                    :
+                    <HeartOutline className="h-6 w-6 text-red-500 cursor-pointer" onClick={handleLike} />
+                    }
+                    <div className="flex items-center pb-2 text-lg font-bold">...</div>    
+                    <TrashIcon className="h-6 w-6 cursor-pointer" />
                 </div>
             </div>
+            
             {/* Tray */}
             <div className="bg-bgblue rounded-b-lg w-11/12 cursor-pointer">
             <div className="border-l-4 border-b-4 rounded-b-lg border-b-white border-l-blue-400 ">
