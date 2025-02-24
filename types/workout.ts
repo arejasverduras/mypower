@@ -13,6 +13,7 @@ import {
   export type WorkoutWithRelations = Workout & {
     exercises: (WorkoutExercise & {
       exercise: Exercise & {
+        createdBy: User
         results: ExerciseResult[]; // Include results for each exercise
       };
     })[];

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { auth } from "../../../../../auth";
+// import { auth } from "../../../../../auth";
 
 export async function GET(req:Request, {params}: {params: Promise<{id:string}>}) {
   const { id } = await params;
@@ -13,7 +13,7 @@ export async function GET(req:Request, {params}: {params: Promise<{id:string}>})
           include: {
             createdBy: true,
             tags: true,
-            exercises: { include: { exercise: true } },
+            exercises: { include: { exercise: { include: {createdBy: true}} } },
             likedBy: true,
             programs: true,
           },

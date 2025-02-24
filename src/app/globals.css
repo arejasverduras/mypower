@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+@theme {
+  --inset-shadow-md: inset 0 4px 3px rgba(0, 0, 0, 0.25); 
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -11,7 +15,7 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: rgb(51, 51, 157);
+    --background: #33339d;
     --foreground: #ededed;
   }
 }
@@ -28,5 +32,21 @@ h1 {
   font-weight: bold;
 }
 
+/* HTML: <div class="triangle"></div> */
+.triangle {
+  --r:18px; /* border radius */
 
+  height: 100px;
+  aspect-ratio: 2;
+  --_g:calc(var(--r)/tan(22.5deg)) top var(--r),#000 98%,#0000 101%;
+  -webkit-mask:
+    conic-gradient(from 157.5deg at 50% calc(var(--r)/(3*sqrt(2) - 4) - 100%/tan(22.5deg)),#000 45deg,#0000 0)
+     0 0/100% calc(100% - var(--r)/sqrt(2)) no-repeat,
+    radial-gradient(var(--r) at 50% calc(100% - var(--r)*sqrt(2)),#000 98%,#0000 101%),
+    radial-gradient(var(--r) at left  var(--_g)),
+    radial-gradient(var(--r) at right var(--_g));
+  clip-path: polygon(50% 100%,100% 0,0 0);
+  background: linear-gradient(45deg,#faf200,#fad900);
+  /* transform: scale(0.2); */
+}
 

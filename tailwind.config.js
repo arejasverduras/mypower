@@ -17,6 +17,7 @@ module.exports = {
         primary: '#3B82F6', // Blue
           secondary: '#22C55E', // Green
           background: "midnightblue", //'#F9FAFB', 
+          bgblue: "#33339d",
           text: '#1F2937', // Dark gray
           headertext: '#F9FAFB',// Light gray
           description: '#6B7280', // Gray
