@@ -1,17 +1,20 @@
-import { WorkoutWithRelations } from "../../../../types/workout";
+import { WorkoutWithRelations } from "../../../../../types/workout";
 // import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
-import { YouTube } from "../Video/YouTube/YouTube";
+import { YouTube } from "../../Video/YouTube/YouTube";
 import { HeartIcon } from '@heroicons/react/24/solid'; 
 import { HeartIcon as HeartOutline } from "@heroicons/react/24/outline";
 import { TrashIcon } from '@heroicons/react/24/solid';
 
+interface WorkOutExerciseCardProps {
+    exercise: WorkoutWithRelations["exercises"][0];
+    context: "view" | "edit" | "search";
+}
 
-export const WorkOutExerciseCard = ({exercise}:{exercise: WorkoutWithRelations["exercises"][0]}) => {
+export const WorkOutExerciseCard = ({exercise, context}: WorkOutExerciseCardProps) => {
     const [preview, setPreview] = useState(false);
     const [like, setLike] = useState(false);
-    console.log(exercise);
 
     const handleLike = () => setLike(!like);
     
@@ -19,7 +22,7 @@ export const WorkOutExerciseCard = ({exercise}:{exercise: WorkoutWithRelations["
         <div className="flex flex-col items-center">
             <div className="flex items-center bg-headertext text-midnightblue p-4 rounded-lg shadow-md w-full justify-between">
                 <div onClick={() => setPreview(!preview)}>
-                    <h3 className="font-bold text-2xl cursor-pointer ">{exercise.exercise.title}</h3>
+                    <h3 className="font-bold text-2xl cursor-pointer ">{context === "search" ? "searchResult":exercise.exercise.title}</h3>
 
                 </div>
                 <div className="flex flex-col items-center justify-center">

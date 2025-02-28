@@ -40,7 +40,6 @@ export default async function WorkoutPage({params}: { params: Promise<{id:string
             <WorkOut 
                 view="page"
                 workout={workout}
-                // index={workout.id}
                 />
 
         </div>

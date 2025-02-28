@@ -1,20 +1,23 @@
-import { useState } from "react";
 import { WorkoutWithRelations } from "../../../../../types/workout";
-import { WorkOutExerciseCard } from "../WorkOutExerciseCard";
+import { WorkOutExerciseCard } from "../WorkOutExerciseCard/WorkOutExerciseCard";
 
+interface WorkOutExercisesProps {
+    workoutExercises: WorkoutWithRelations["exercises"];
+    context: "view" | "edit" | "search";
+}
 
-
-export const WorkOutExercises = ({workoutExercises}:{workoutExercises: WorkoutWithRelations["exercises"] | []}) => {
-    const [exercises, setExercises] = useState(workoutExercises);
+export const WorkOutExercises = ({ workoutExercises, context }: WorkOutExercisesProps) => {
+    
     
     return (
         <div className="flex flex-col space-y-8 bg-midnightblue text-white p-4 rounded-lg shadow-md w-full">
- 
-            {exercises.length > 0 ? exercises.map((exercise, index) => (
-                <WorkOutExerciseCard key={index} exercise={exercise} />
-             
-            )) : <div>Add exercises to get started..</div>    
-            }
+            {workoutExercises.length > 0 ? (
+                workoutExercises.map((exercise, index) => (
+                    <WorkOutExerciseCard key={index} exercise={exercise} context={context} /> 
+                ))
+            ) : (
+                <div>{context === "search" ? "No exercises found" : "Add exercises to get started.."}</div>
+            )}
         </div>
-    )
+    );
 };
