@@ -4,8 +4,7 @@ import { ExerciseWithRelations } from "../../../../../types/exercise";
 import Image from "next/image";
 import { useState } from "react";
 import { YouTube } from "../../Video/YouTube/YouTube";
-import { HeartIcon } from '@heroicons/react/24/solid'; 
-import { HeartIcon as HeartOutline } from "@heroicons/react/24/outline";
+
 
 
 interface WorkOutAddExerciseCardProps {
@@ -15,9 +14,7 @@ interface WorkOutAddExerciseCardProps {
 
 export const WorkOutAddExerciseCard = ({exercise, context}: WorkOutAddExerciseCardProps) => {
     const [preview, setPreview] = useState(false);
-    const [like, setLike] = useState(false);
-
-    const handleLike = () => setLike(!like);
+  
     
     if (context === "workOutSearch") 
     return (

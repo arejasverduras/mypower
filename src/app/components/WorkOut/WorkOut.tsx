@@ -22,6 +22,7 @@ export const WorkOut = ({workout, view}: WorkOutProps) => {
 
     const handleAddExercise = () => {
         // update the state of WorkOutExercises with the newly added exercises from WorkOutAddExercises
+        return null;
     }
 
     if (view === "page")
@@ -29,7 +30,7 @@ export const WorkOut = ({workout, view}: WorkOutProps) => {
         <div className=" flex flex-col items-start space-y-4 max-w-5xl mx-auto">
             <WorkOutHeader workout={workout} />
             <WorkOutExercises workoutExercises={exercises || []} context={creatorOrSuper? "edit": "view"} />
-            {creatorOrSuper && <WorkOutAddExercises exercises={exercises} setExercises={setExercises} />}
+            {creatorOrSuper && <WorkOutAddExercises exercises={exercises} setExercises={setExercises} handleAdd={handleAddExercise} />}
         </div>
     );
 }
