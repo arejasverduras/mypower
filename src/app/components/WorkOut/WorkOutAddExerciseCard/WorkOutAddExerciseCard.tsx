@@ -10,16 +10,18 @@ import { YouTube } from "../../Video/YouTube/YouTube";
 interface WorkOutAddExerciseCardProps {
     exercise: ExerciseWithRelations;
     context:  "search" | "workOutSearch";
+    onAdd: (exercise: ExerciseWithRelations) => void;
+    exists: boolean;
 }
 
-export const WorkOutAddExerciseCard = ({exercise, context}: WorkOutAddExerciseCardProps) => {
+export const WorkOutAddExerciseCard = ({exercise, context, onAdd, exists}: WorkOutAddExerciseCardProps) => {
     const [preview, setPreview] = useState(false);
   
     
     if (context === "workOutSearch") 
     return (
         <div className="flex flex-col items-center">
-            <div className="flex items-center bg-headertext text-midnightblue p-4 rounded-lg shadow-md w-full justify-between">
+            <div className={`flex items-center ${exists ? 'bg-blue-100 ' : 'bg-headertext'} text-midnightblue p-4 rounded-lg shadow-md w-full justify-between`}>
                 <div onClick={() => setPreview(!preview)}>
                     <h3 className="font-bold text-2xl cursor-pointer ">{exercise.title}</h3>
 
@@ -38,7 +40,14 @@ export const WorkOutAddExerciseCard = ({exercise, context}: WorkOutAddExerciseCa
                 </div>
                 <div className="flex items-center space-x-4">
                     {/* buttons */}
-                    <div>ADD</div>
+                    {!exists &&
+                        <button 
+                            onClick={()=> onAdd(exercise)}
+                            className="cursor-pointer rounded-lg px-2 py-1 bg-midnightblue text-white"
+                            >
+                            ADD
+                        </button>
+                     }
                     
                     {/* {like ?
                     <HeartIcon className="h-6 w-6 text-red-500 cursor-pointer" onClick={handleLike} />
@@ -66,7 +75,6 @@ export const WorkOutAddExerciseCard = ({exercise, context}: WorkOutAddExerciseCa
                                 <div className="rounded-3xl  h-80">
                                     <YouTube 
                                         embedId={exercise.video}  />
-                                    
                                     </div>
                                 )}
                             {exercise.image && (

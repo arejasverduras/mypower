@@ -8,27 +8,38 @@ export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const search = searchParams.get('search')?.toLowerCase() || '';
 
-  const exercises = await prisma.exercise.findMany({
-    where: {
-      OR: [
-        { title: { contains: search } },
-        { description: { contains: search } },
-        { tags: { some: { name: { contains: search } } } },
-        { createdBy: { name: { contains: search } } },
-        { workouts: { some: { workout: { title: { contains: search } } } } },
-      ],
-    },
-    include: {
-      createdBy: true,
-      tags: true,
-      workouts: { include: { workout: true } },
-      likedBy: true,
-    },
-    orderBy: { createdAt: "desc" },
-  });
 
 
-  return NextResponse.json(exercises, { status: 200 });
+  try {
+    const exercises = await prisma.exercise.findMany({
+      where: {
+        OR: [
+          { title: { contains: search } },
+          { description: { contains: search } },
+          { tags: { some: { name: { contains: search } } } },
+          { createdBy: { name: { contains: search } } },
+          { workouts: { some: { workout: { title: { contains: search } } } } },
+        ],
+      },
+      include: {
+        createdBy: true,
+        tags: true,
+        workouts: { include: { workout: true } },
+        likedBy: true,
+      },
+      orderBy: { createdAt: "desc" },
+    });
+  
+  
+    return NextResponse.json(exercises, { status: 200 });
+  } catch (error) {
+    console.error("Error fetching exercises:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch exercises" },
+      { status: 500 }
+    );
+  }
+  
 }
 
 // POST requests

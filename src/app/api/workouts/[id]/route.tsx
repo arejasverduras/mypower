@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-// import { auth } from "../../../../../auth";
 
 export async function GET(req:Request, {params}: {params: Promise<{id:string}>}) {
   const { id } = await params;

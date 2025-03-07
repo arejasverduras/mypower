@@ -7,7 +7,7 @@ interface SearchBarProps {
 export const SearchBar = ({search, setSearch, placeholderText}: SearchBarProps) => {    
 
     return (
-        <div className="flex flex-col sm:flex-row gap-2 mb-4">
+      <div className="flex flex-col sm:flex-row gap-2 mb-4 w-1/2 sm:w-1/3 p-4">
         <input
           type="text"
           value={search}

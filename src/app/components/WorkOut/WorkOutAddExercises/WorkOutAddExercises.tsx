@@ -10,16 +10,16 @@ interface WorkOutAddExercisesProps {
 
     exercises: WorkoutWithRelations["exercises"];
     setExercises: (exercises: WorkoutWithRelations["exercises"]) => void;
-    handleAdd: () => void;
+    workoutId: string;
 }
 
-export const WorkOutAddExercises = ({exercises, setExercises, handleAdd}: WorkOutAddExercisesProps) => {
+export const WorkOutAddExercises = ({exercises, setExercises, workoutId}: WorkOutAddExercisesProps) => {
     // search exercises from the library to add to the workout on the workout page (wrapped in WorkOut component)
     const [search, setSearch] = useState("");
     const [searchResults, setSearchResults] = useState<ExerciseWithRelations[]>([]);
-    const [error, setError] = useState("test error");
+    const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
-
+    
     // search for exercises by querying the api at /exercises. use debouncing while typing the search query
     useEffect(() => {
         const delayDebounceFn = setTimeout(() => {
@@ -42,10 +42,35 @@ export const WorkOutAddExercises = ({exercises, setExercises, handleAdd}: WorkOu
         return () => clearTimeout(delayDebounceFn);
     }, [search]);
 
-    console.log(searchResults);
+    const handleAddExercise = async (exercise: ExerciseWithRelations) => {
+        try {
+            const res = await fetch(`/api/workouts/${workoutId}/edit`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ workoutId, exerciseId: exercise.id }),
+            });
+
+            if (!res.ok) {
+                setError('Failed to add exercise');
+                return;
+            }
+
+            const updatedWorkout = await res.json();
+            setExercises(updatedWorkout.exercises);
+        } catch (error) {
+            console.error(error);
+            setError('Failed to add exercise');
+        }
+    };
+
+    const checkExisting = (exercise: ExerciseWithRelations, exercises: WorkoutWithRelations["exercises"]) => {
+        return exercises.some(existingExercise => existingExercise.exerciseId === exercise.id);
+    }
     
     return (
-        <>
+        <div className="bg-midnightblue w-full rounded-lg">
             <SearchBar search={search} setSearch={setSearch} placeholderText="Find exercises to add.." />
             {error && <Error error={error} />}
 
@@ -53,13 +78,20 @@ export const WorkOutAddExercises = ({exercises, setExercises, handleAdd}: WorkOu
             {loading ? <div>Searching...</div> :
                 searchResults.length > 0 && search !== "" ? (
                     searchResults.map((exercise, index) => (
-                        <WorkOutAddExerciseCard key={index} exercise={exercise} context={"workOutSearch"} /> 
+                        
+                        <WorkOutAddExerciseCard 
+                            key={index} 
+                            exercise={exercise} 
+                            context={"workOutSearch"}
+                            onAdd={handleAddExercise}
+                            exists={checkExisting(exercise, exercises)}
+                            /> 
                     ))
                 ) : (
                     <div>{search !== "" ? "No exercises found" : "Find exercises to add"}</div>
                 )}
             </div>
             
-        </>
+        </div>
     )
 };
