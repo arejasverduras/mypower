@@ -10,11 +10,13 @@ import { TrashIcon } from '@heroicons/react/24/solid';
 interface WorkOutExerciseCardProps {
     exercise: WorkoutWithRelations["exercises"][0];
     context: "view" | "edit" | "search";
+    onDelete: (exerciseId: string) => void;
 }
 
-export const WorkOutExerciseCard = ({exercise, context}: WorkOutExerciseCardProps) => {
+export const WorkOutExerciseCard = ({exercise, context, onDelete}: WorkOutExerciseCardProps) => {
     const [preview, setPreview] = useState(false);
     const [like, setLike] = useState(false);
+    
 
     const handleLike = () => setLike(!like);
     
@@ -45,7 +47,7 @@ export const WorkOutExerciseCard = ({exercise, context}: WorkOutExerciseCardProp
                     <HeartOutline className="h-6 w-6 text-red-500 cursor-pointer" onClick={handleLike} />
                     }
                     <div className="flex items-center pb-2 text-lg font-bold">...</div>    
-                    <TrashIcon className="h-6 w-6 cursor-pointer" />
+                    {context === 'edit' && <TrashIcon className="h-6 w-6 cursor-pointer" onClick={() => onDelete(exercise.id)} />}
                 </div>
             </div>
             
