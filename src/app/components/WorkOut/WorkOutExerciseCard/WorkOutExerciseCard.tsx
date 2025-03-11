@@ -30,13 +30,6 @@ export const WorkOutExerciseCard = ({exercise, context, onDelete}: WorkOutExerci
                 <div className="flex flex-col items-center justify-center">
                     {/* Tags */}
                     {/* <p className="text-description ">by {exercise.exercise.createdBy.name }</p> */}
-                    {/* {exercise.customSets && exercise.customRepetitions ?
-                            (   <div className="flex space-x-2 ">
-                                    <p><b>Sets:</b> {exercise.customSets || null}</p>
-                                    <p><b>Reps:</b> {exercise.customRepetitions}</p> 
-                                    <p><b>Break: </b>2 min</p>
-                                </div>
-                            ): <div>{exercise.exercise.execution}</div>} */}
                     {/* glutes, quads */}
                 </div>
                 <div className="flex items-center space-x-4">
@@ -69,7 +62,7 @@ export const WorkOutExerciseCard = ({exercise, context, onDelete}: WorkOutExerci
         
                             </div>
                     ):(
-                        <div className="flex flex-col justify-center py-5">
+                        <div className="flex flex-col justify-center py-5 cursor-default">
                         
                             {exercise.exercise.video && (   
                                 <div className="rounded-3xl  h-80">
@@ -82,20 +75,24 @@ export const WorkOutExerciseCard = ({exercise, context, onDelete}: WorkOutExerci
                                 <div className="flex justify-center">
                                     <Image 
                                         src={exercise.exercise.image} 
-                                        width={300} 
+                                        width={500} 
                                         height={300} 
                                         alt="exercise image"
-                                        className="rounded-3xl" />
+                                        className="rounded-3xl w-full" />
                                 </div>
                             )}
-                            <div className="p-5 space-y-4" >
-                                <p>{exercise.customDescription || exercise.exercise.description}</p>
+                            <div className="p-5" >
+                                <h4 className="font-bold mb-0">Description</h4>
+                                <p className="mb-4 ">{exercise.customDescription || exercise.exercise.description}</p>
                                 {exercise.customSets && exercise.customRepetitions ?
                                 (   <div className="flex space-x-2 ">
                                         <p><b>Sets:</b> {exercise.customSets || null}</p>
                                         <p><b>Reps:</b> {exercise.customRepetitions}</p> 
                                     </div>
-                                ): <div>{exercise.exercise.execution}</div>}
+                                ): (<>
+                                        <h4 className="font-bold">Execution</h4>
+                                        <div>{exercise.exercise.execution}</div>
+                                    </>)}
                                 
                             </div>
 
