@@ -59,11 +59,14 @@ FRONTEND - STRUCTURE
 - page tree ?
 - component tree ?
 
+
 API - ROUTES
 [] Users
     [] /[id]
         [] /edit
         [] /check-username
+[] Auth/ [...nextauth]
+[] Session
 
 [] Exercises
     [] /[id]
