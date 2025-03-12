@@ -60,8 +60,8 @@ FRONTEND - STRUCTURE
 - component tree ?
 
 FRONTEND - GENERAL COMPONENTS
-- SuccesMessage (api response)
-- Error (api respone)
+- SuccesMessage (api response). 
+- Error (api respone). 
 - Alert Modal (you need to be logged in etc.)
 
 FRONTEND - REUSABLES
