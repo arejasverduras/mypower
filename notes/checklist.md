@@ -59,6 +59,23 @@ FRONTEND - STRUCTURE
 - page tree ?
 - component tree ?
 
+FRONTEND - GENERAL COMPONENTS
+- SuccesMessage (api response)
+- Error (api respone)
+- Alert Modal (you need to be logged in etc.)
+
+FRONTEND - REUSABLES
+- "Browse by" for all items. In different contexts. Needs planning
+- Different cards for different contexts  (ie Exercise search in workout, or general search, or add to other workout)
+- SearchBar
+
+FRONTEND - BUTTONS
+- EditDelete Buttons (session conditional)
+- BackButton (this can be tricky)
+
+FRONTEND - CONTEXT
+- useSession
+
 
 API - ROUTES
 [] Users
