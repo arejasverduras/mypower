@@ -1,6 +1,10 @@
 edit workout 
 - workout metadata: title, description
+    - patchroute /[id]/edit
+    - frontend modal
+    - frontend edit / delete buttons
 
+- workout image ?
 - exercise custom description, sets and reps
 - change order : drag n drop
 - add exercises with drag n drop from exercise search

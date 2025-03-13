@@ -17,11 +17,11 @@ interface WorkOutProps {
 
 export const WorkOut = ({workout, view}: WorkOutProps) => {
     const [exercises, setExercises] = useState(workout.exercises);
-    const session = useSession();
+    const {session} = useSession();
     const [error, setError] = useState("");
     // const [message, setMessage] = useState("")
 
-    const creatorOrSuper = session?.session?.id === workout.createdBy.id || session?.session?.isSuperuser;
+    const creatorOrSuper = session?.id === workout.createdBy.id || session?.isSuperuser;
 
     const handleDeleteExercise = async (exerciseId: string) => {
         try {
@@ -43,7 +43,7 @@ export const WorkOut = ({workout, view}: WorkOutProps) => {
             // setMessage(updatedWorkout.message);
         } catch (error) {
             console.error(error);
-            setError(error.message);
+            setError('Failed to delete exercise');
         }
     };
 

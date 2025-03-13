@@ -1,10 +1,52 @@
+"use client"
 import { WorkoutWithRelations } from "../../../../../types/workout"
 import Link from "next/link";
 import Image from "next/image";
-import userPlaceholderImage from "../../../../../public/images/JaraFitM.png"
+import userPlaceholderImage from "../../../../../public/images/JaraFitM.png";
+import { EditDeleteButtons } from "../../UI functions/EditDeleteButtons/EditDeleteButtons";
+import { useSession } from "@/context/SessionContext";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Error } from "../../UI functions/Error/Error";
 
 
 export const WorkOutHeader = ({workout}: {workout: WorkoutWithRelations}) => {
+    const [error, setError] = useState("");
+    const {session} = useSession();
+    const router = useRouter();
+
+    const creatorOrSuper = session?.id === workout.createdBy.id || session?.isSuperuser;
+
+    const handleEdit = () => null;
+
+    //   DELETE exercise
+    const handleDelete = async (id:string) => {
+        setError("");
+
+        if (!creatorOrSuper) {
+            setError("You are not authorized to delete this workout.");
+            return;
+            }
+    
+        if (!confirm("Are you sure you want to delete this workout?")) return;
+    
+        try {
+            const res = await fetch(`/api/workout/${id}/edit`, { method: "DELETE" });
+    
+            if (!res.ok) {
+                setError("Failed to delete workout");
+                return;
+            }
+            
+            alert("User deleted successfully");
+            router.push("/workouts")
+        } catch (err) {
+            console.error(err);
+            setError("Failed to delete workout.");
+            return;
+        }
+        };
+
 
     return (
             <>
@@ -46,8 +88,19 @@ export const WorkOutHeader = ({workout}: {workout: WorkoutWithRelations}) => {
                 </section>
                 <section>
                     {/* Like heart */}
-
                     {/* dot menu with sharing functions*/}
+                    <div className="flex flex-col space-y-4 py-4 shadow-md shadow-midnightblue rounded-lg">
+                        {error && <Error error={error} />}
+                        {session && 
+                            <div className="px-4">
+                                <EditDeleteButtons 
+                                    id={workout.id} 
+                                    onEdit={handleEdit} 
+                                    handleDelete={handleDelete} 
+                                />
+                            </div>
+                            }
+                    </div>
                 </section>
             </>
     )
