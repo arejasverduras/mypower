@@ -1,5 +1,6 @@
 edit workout 
 - workout metadata: title, description
+
 - exercise custom description, sets and reps
 - change order : drag n drop
 - add exercises with drag n drop from exercise search

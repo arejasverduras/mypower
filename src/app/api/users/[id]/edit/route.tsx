@@ -62,17 +62,6 @@ export async function PATCH(
             )(req, context) as Promise<Response>;
   }
  
-//       // Update the exercise
-//       const updatedExercise = await prisma.exercise.update({
-//         where: { id },
-//         data: {
-//           title: body.title || undefined,
-//           video: body.video || undefined,
-//           image: body.image || undefined,
-//           description: body.description || undefined,
-//           execution: body.execution || undefined,
-//         },
-//       });
 
 export async function DELETE(
   req: NextRequest,

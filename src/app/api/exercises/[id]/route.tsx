@@ -36,7 +36,6 @@ export const PATCH = auth(async function PATCH(req, { params }: { params: Promis
   const { id } = await params; // Await params because it's now a Promise
   const body = await req.json();
 
-  console.log("Session object in API route:", req.auth); // Log the session object
 
 
   // Ensure the user is authenticated
