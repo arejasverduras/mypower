@@ -2,22 +2,20 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { auth } from "../../../../../../auth";
 import { User } from "next-auth";
-// import { WorkoutWithRelations } from "../../../../../../types/workout";
-
 
 
 // add exercise to workout
 export async function POST(
     req: NextRequest,
     context: { params: { id: string } },
-  ): Promise<Response> 
+  ): Promise<NextResponse> 
 
   {
     return auth(async (
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
         authreq: any & { auth?: { user?: User } }
     ) => {
-        const { id } = context.params;
+        const { id } = await context.params;
   
     // 1. checks for a logged in user
         if (!authreq.auth?.user) {
@@ -66,7 +64,7 @@ export async function POST(
         return NextResponse.json({ error: "Internal server error" }, { status: 500 });
       }
     }
-            )(req, context) as Promise<Response>;
+            )(req, context) as Promise<NextResponse>;
   }
 
 
@@ -81,7 +79,7 @@ export async function PATCH(
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       authreq: any & { auth?: { user?: User } }
   ) => {
-      const { id } = context.params;
+      const { id } = await context.params;
 
   // 1. checks for a logged in user
       if (!authreq.auth?.user) {
@@ -136,18 +134,14 @@ export async function PATCH(
 
 
 
- 
   export async function DELETE(
     req: NextRequest,
     context: { params: { id: string } },
-  ): Promise<Response> 
+  ): Promise<Response> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return auth(async (authreq: any & { auth?: { user?: User } }) => {
+      const { id } = await context.params;
 
-  {
-    return auth(async (
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any  
-      authreq: any & { auth?: { user?: User } }
-    ) => {
-        const { id } = context.params;
 
     // 1. checks for a logged in user
         if (!authreq.auth?.user) {
@@ -202,6 +196,73 @@ export async function PATCH(
           { status: 500 }
         );
       }
-    }
-            )(req, context) as Promise<Response>;
+      
+    })(req, context) as Promise<Response>;
   }
+
+  // export const DELETE = auth(async (req: AuthenticatedRequest, { params }: { params: { id: string } }) => {
+   
+  //   const { id } = await params;
+    
+  //   // 1. Check for authenticated user
+  //   if (!req.auth?.user) {
+  //     return Response.json({ error: "Not authenticated" }, { status: 401 })
+  //   }
+  
+  //   // 2. Check if workout exists
+  //   const existingWorkout = await prisma.workout.findUnique({
+  //     where: { id: params.id }
+  //   })
+  
+  //   if (!existingWorkout) {
+  //     return Response.json({ error: "Workout not found" }, { status: 404 })
+  //   }
+  
+  //   // 3. Check if user is creator or superuser
+  //   const isSelfOrSuperuser = 
+  //     req.auth.user.id === existingWorkout.createdById || 
+  //     req.auth.user.isSuperuser
+  
+  //   if (!isSelfOrSuperuser) {
+  //     return Response.json({ error: "Not authorized" }, { status: 403 })
+  //   }
+  
+  //   try {
+  //     // 4. Get exerciseId from request body
+      
+      
+  //     const { exerciseId } = await req.json()
+  
+  //     // 5. Delete exercise from workout
+  //     const updatedWorkout = await prisma.workout.update({
+  //       where: { id },
+  //       data: {
+  //         exercises: {
+  //           delete: {
+  //             id: exerciseId,
+  //           },
+  //         },
+  //       },
+  //       include: {
+  //         exercises: { 
+  //           include: { 
+  //             exercise: { 
+  //               include: { 
+  //                 createdBy: true 
+  //               } 
+  //             } 
+  //           } 
+  //         }
+  //       },
+  //     })
+  
+  //     return Response.json(updatedWorkout, { status: 200 })
+  
+  //   } catch (error) {
+  //     console.error(error)
+  //     return Response.json(
+  //       { error: "Internal Server Error" }, 
+  //       { status: 500 }
+  //     )
+  //   }
+  // })

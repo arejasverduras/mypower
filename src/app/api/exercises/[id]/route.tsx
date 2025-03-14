@@ -80,7 +80,7 @@ export const PATCH = auth(async function PATCH(req, { params }: { params: Promis
 
 
 // DELETE: Remove an exercise
-export const DELETE = auth( async function DELETE(req, { params }: {params: Promise<{id:string}>}) {
+export const DELETE = auth( async function DELETE(req, { params }: {params: Promise<{id:string}> }) {
   const { id } = await params;  
   const exerciseId = id;
    
