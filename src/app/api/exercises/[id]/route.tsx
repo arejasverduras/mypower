@@ -1,9 +1,9 @@
-// import { PrismaClient } from "@prisma/client";
-import { NextResponse } from "next/server";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { auth } from "../../../../../auth";
+import { User } from "@prisma/client";
 
-// const prisma = new PrismaClient();
 
 export async function GET(req:Request, {params}: {params: Promise<{id:string}>}) {
   const { id } = await params;
@@ -32,19 +32,21 @@ export async function GET(req:Request, {params}: {params: Promise<{id:string}>})
 }
 
 
-export const PATCH = auth(async function PATCH(req, { params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params; // Await params because it's now a Promise
-  const body = await req.json();
+export async function PATCH(
+  req: NextRequest,
+  context: { params: { id: string } },
+): Promise<Response> {
+  return auth(async (
+    authreq: any & { auth?: { user?: User } }
+  ) => {
+    const { id } = await context.params;
 
+    // 1. Ensure the user is authenticated
+    if (!authreq.auth?.user) {
+      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+    }
 
-
-  // Ensure the user is authenticated
-  if (!req.auth) {
-    return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
-  }
-
-  try {
-    // Fetch the exercise to check ownership
+    // 2. Fetch the exercise to check ownership
     const exercise = await prisma.exercise.findUnique({
       where: { id },
       select: { createdById: true },
@@ -54,66 +56,75 @@ export const PATCH = auth(async function PATCH(req, { params }: { params: Promis
       return NextResponse.json({ error: "Exercise not found" }, { status: 404 });
     }
 
-    // Check if the user is the creator or a superuser
-    if (exercise.createdById !== req.auth.user.id && !req.auth.user.isSuperuser) {
+    // 3. Check if the user is the creator or a superuser
+    if (exercise.createdById !== authreq.auth.user.id && !authreq.auth.user.isSuperuser) {
       return NextResponse.json({ error: "Not authorized" }, { status: 403 });
     }
 
-    // Update the exercise
-    const updatedExercise = await prisma.exercise.update({
-      where: { id },
-      data: {
-        title: body.title || undefined,
-        video: body.video || undefined,
-        image: body.image || undefined,
-        description: body.description || undefined,
-        execution: body.execution || undefined,
-      },
-    });
+    const body = await req.json();
 
-    return NextResponse.json(updatedExercise, { status: 200 });
-  } catch (error) {
-    console.error("Error updating exercise:", error);
-    return NextResponse.json({ error: "Failed to update exercise" }, { status: 500 });
-  }
-});
+    // 4. Update the exercise
+    try {
+      const updatedExercise = await prisma.exercise.update({
+        where: { id },
+        data: {
+          title: body.title || undefined,
+          video: body.video || undefined,
+          image: body.image || undefined,
+          description: body.description || undefined,
+          execution: body.execution || undefined,
+        },
+      });
+
+      return NextResponse.json(updatedExercise, { status: 200 });
+    } catch (error) {
+      console.error("Error updating exercise:", error);
+      return NextResponse.json({ error: "Failed to update exercise" }, { status: 500 });
+    }
+  })(req, context) as Promise<Response>;
+}
 
 
 // DELETE: Remove an exercise
-export const DELETE = auth( async function DELETE(req, { params }: {params: Promise<{id:string}> }) {
-  const { id } = await params;  
-  const exerciseId = id;
-   
-    // Ensure the user is authenticated
-    if (!req.auth) {
-      return NextResponse.json({ message: "Not authenticated" }, { status: 401 });
+export async function DELETE(
+  req: NextRequest,
+  context: { params: { id: string } },
+): Promise<Response> {
+  return auth(async (
+    authreq: any & { auth?: { user?: User } }
+  ) => {
+    const { id } = await context.params;
+
+    // 1. Ensure the user is authenticated
+    if (!authreq.auth?.user) {
+      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
     }
-  
+
+    // 2. Fetch the exercise to check ownership
+    const exercise = await prisma.exercise.findUnique({
+      where: { id },
+      select: { createdById: true },
+    });
+
+    if (!exercise) {
+      return NextResponse.json({ error: "Exercise not found" }, { status: 404 });
+    }
+
+    // 3. Check if the user is the creator or a superuser
+    if (exercise.createdById !== authreq.auth.user.id && !authreq.auth.user.isSuperuser) {
+      return NextResponse.json({ error: "Not authorized" }, { status: 403 });
+    }
+
+    // 4. Delete the exercise
     try {
-      // Fetch the exercise to check ownership
-      const exercise = await prisma.exercise.findUnique({
-          where: { id },
-          select: { createdById: true },
-        });
-
-        if (!exercise) {
-          return NextResponse.json({ error: "Exercise not found" }, { status: 404 });
-        }
-
-        // Check if the user is the creator or a superuser
-      if (exercise.createdById !== req.auth.user.id && !req.auth.user.isSuperuser) {
-        return NextResponse.json({ error: "Not authorized" }, { status: 403 });
-      }
-
-
-
       await prisma.exercise.delete({
-        where: { id: exerciseId },
+        where: { id },
       });
-  
+
       return NextResponse.json({ message: "Exercise deleted successfully" }, { status: 200 });
     } catch (error) {
-      console.log(error);
+      console.error("Error deleting exercise:", error);
       return NextResponse.json({ error: "Failed to delete exercise" }, { status: 500 });
     }
-  })
+  })(req, context) as Promise<Response>;
+}
