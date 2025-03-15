@@ -69,10 +69,7 @@ export async function POST(
 
 
   // edit metadata
-export async function PATCH(
-  req: NextRequest,
-  context: { params: { id: string } },
-): Promise<Response> 
+export async function PATCH(req: NextRequest,context: { params: { id: string } },): Promise<Response> 
 
 {
   return auth(async (
