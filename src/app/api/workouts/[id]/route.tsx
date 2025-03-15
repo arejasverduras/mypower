@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { auth } from "../../../../../auth";
@@ -37,7 +38,7 @@ export async function PATCH(
 
 {
   return auth(async (
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
       authreq: any & { auth?: { user?: User } }
   ) => {
       const { id } = await context.params;
