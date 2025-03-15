@@ -88,12 +88,12 @@ export async function PATCH(
 // DELETE: Remove an exercise
 export async function DELETE(
   req: NextRequest,
-  context: { params : {id: string} },
+  params : {id: string} ,
 ): Promise<Response> {
   return auth(async (
     authreq: any & { auth?: { user?: User } }
   ) => {
-    const { id } = await context.params;
+    const { id } = await params;
 
     // 1. Ensure the user is authenticated
     if (!authreq.auth?.user) {
@@ -126,5 +126,5 @@ export async function DELETE(
       console.error("Error deleting exercise:", error);
       return NextResponse.json({ error: "Failed to delete exercise" }, { status: 500 });
     }
-  })(req, context) as Promise<Response>;
+  })(req, {params}) as Promise<Response>;
 }
