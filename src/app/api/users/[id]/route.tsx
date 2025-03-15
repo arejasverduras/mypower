@@ -17,20 +17,10 @@ declare global {
   
   {
     return auth(async (
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         authreq: any & { auth?: { user?: User } }
     ) => {
-        const { id } = context.params;
-  
-        // 1. checks for a logged in user
-      //   if (!authreq?.auth?.user) {
-      //   return NextResponse.json(
-      //     { error: 'Unauthorized' },
-      //     {
-      //       status: 401,
-      //       statusText: 'You must be logged in to perform this action',
-      //     },
-      //   );
-      // } 
+        const { id } = await context.params;
       
       try {
         const isSelfOrSuperuser =

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { auth } from "../../../../../../auth";
@@ -12,7 +13,7 @@ export async function PATCH(
     return auth(async (
         authreq: any & { auth?: { user?: User } }
     ) => {
-        const { id } = context.params;
+        const { id } = await context.params;
   
     // 1. checks for a logged in user
         if (!authreq.auth?.user) {
@@ -72,7 +73,7 @@ export async function DELETE(
   return auth(async (
       authreq: any & { auth?: { user?: User } }
   ) => {
-      const { id } = context.params;
+      const { id } = await context.params;
 
   // 1. checks for a logged in user
       if (!authreq.auth?.user) {
