@@ -15,7 +15,7 @@ interface Session {
 interface SessionContextValue {
   session: Session | null;
   loading: boolean;
-  signIn: (provider: string, options?: any) => void; // Add signIn for logging in
+  signIn: (provider: string, options?: Record<string, unknown>) => void; // Add signIn for logging in
   logout: () => void; // Add logout for logging out
 }
 
@@ -45,7 +45,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     fetchSession();
   }, []);
 
-  const signIn = (provider: string, options?: any) => {
+  const signIn = (provider: string, options?: Record<string, unknown>) => {
     authSignIn(provider, options);
   };
 

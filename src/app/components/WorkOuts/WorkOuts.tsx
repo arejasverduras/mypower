@@ -12,7 +12,7 @@ export const WorkOuts = () => {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const { session, loading: sessionLoading } = useSession();
+    const { session } = useSession();
     
     useEffect(() => {
         const fetchWorkouts = async () => {
