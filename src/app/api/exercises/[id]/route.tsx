@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { NextRequest, NextResponse } from "next/server";
+import {  NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { auth } from "../../../../../auth";
-import { User } from "@prisma/client";
+// import { auth } from "../../../../../auth";
+// import { User } from "@prisma/client";
 
 
 export async function GET(req:Request, {params}: {params: Promise<{id:string}>}) {
