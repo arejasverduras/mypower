@@ -4,7 +4,7 @@ import prisma from "@/lib/prisma";
 import { auth } from "../../../../../auth";
 // import { User } from "@prisma/client";
 
-type NextAuthAPIRouteHandler = (req: NextRequest, context: { params: { id: string } }) => Promise<Response>;
+type NextAuthAPIRouteHandler = (req: NextRequest, ctx: { params?: Record<string, string | string[]> }) => Promise<Response>;
 
 
 export async function GET(req:Request, {params}: {params: Promise<{id:string}>}) {
