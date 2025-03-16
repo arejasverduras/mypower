@@ -2,12 +2,27 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { auth } from "../../../../auth";
 
+
+// interface AuthRequest extends Request {
+//   auth?: any;
+// }
+
+type NextAuthAPIRouteHandler = (req: Request) => Promise<
+  NextResponse<
+    | {
+        error: string
+      }
+    | {
+        ok: boolean
+      }
+  >
+>
+
+
 // GET requests
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const search = searchParams.get('search')?.toLowerCase() || '';
-
-
 
   try {
     const exercises = await prisma.exercise.findMany({
@@ -44,9 +59,9 @@ export async function GET(req: Request) {
 // POST requests
 export const POST = auth(async function POST(req: Request) {
     const body = await req.json(); 
-    const session = await auth();
+    // const session = await auth();
 
-    if (!session) {
+    if (!req.auth) {
         return NextResponse.json({ error: "Not authenticated to POST exercise" }, { status: 401 });
       }
   
@@ -62,7 +77,7 @@ export const POST = auth(async function POST(req: Request) {
           image: body.image || null,
           description: body.description || null,
           execution: body.execution || null,
-          createdBy: { connect: { id: session?.user?.id } }, // Always connect to the user
+          createdBy: { connect: { id: req.auth?.user?.id } }, // Always connect to the user
         },
       });
   
@@ -74,5 +89,5 @@ export const POST = auth(async function POST(req: Request) {
         { status: 500 }
       );
     }
-  });
+  }) as NextAuthAPIRouteHandler;
   
