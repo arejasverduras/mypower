@@ -7,16 +7,16 @@ import { auth } from "../../../../auth";
 //   auth?: any;
 // }
 
-// type NextAuthAPIRouteHandler = (req: Request) => Promise<
-//   NextResponse<
-//     | {
-//         error: string
-//       }
-//     | {
-//         ok: boolean
-//       }
-//   >
-// >
+type NextAuthAPIRouteHandler = (req: Request) => Promise<
+  NextResponse<
+    | {
+        error: string
+      }
+    | {
+        ok: boolean
+      }
+  >
+>
 
 
 // GET requests
@@ -89,5 +89,5 @@ export const POST = auth(async function POST(req: Request) {
         { status: 500 }
       );
     }
-  }) ;
+  }) as NextAuthAPIRouteHandler;
   
