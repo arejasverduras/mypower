@@ -3,6 +3,17 @@ import prisma from '@/lib/prisma';
 import { Prisma } from '@prisma/client';
 import { auth } from '../../../../auth';
 
+type NextAuthAPIRouteHandler = (req: Request) => Promise<
+  NextResponse<
+    | {
+        error: string
+      }
+    | {
+        ok: boolean
+      }
+  >
+>
+
 // GET requests
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
@@ -93,4 +104,4 @@ export const POST = auth(async function POST(req: Request) {
       { status: 500 }
     );
   }
-});
+}) as NextAuthAPIRouteHandler;
