@@ -91,45 +91,44 @@ export async function GET(
 export async function DELETE(
   req: NextRequest,
   context: { params: { id: string } },
-): Promise<Response> {
+): Promise<NextResponse> {
   return auth(async () => {
 
     const { id } = await context.params;
 
     // 1. Ensure the user is authenticated
-  if (!req.auth?.user) {
-    return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
-  }
+    if (!req.auth?.user) {
+      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+    }
 
-  // 2. Fetch the exercise to check ownership
-  const exercise = await prisma.exercise.findUnique({
-    where: { id: id as string },
-    select: { createdById: true },
-  });
-
-  if (!exercise) {
-    return NextResponse.json({ error: "Exercise not found" }, { status: 404 });
-  }
-
-  // 3. Check if the user is the creator or a superuser
-  if (exercise.createdById !== req.auth.user.id && !req.auth.user.isSuperuser) {
-    return NextResponse.json({ error: "Not authorized" }, { status: 403 });
-  }
-
-  // 4. Delete the exercise
-  try {
-    await prisma.exercise.delete({
+    // 2. Fetch the exercise to check ownership
+    const exercise = await prisma.exercise.findUnique({
       where: { id: id as string },
+      select: { createdById: true },
     });
 
-    return NextResponse.json({ message: "Exercise deleted successfully" }, { status: 200 });
-  } catch (error) {
-    console.error("Error deleting exercise:", error);
-    return NextResponse.json({ error: "Failed to delete exercise" }, { status: 500 });
-  }
+    if (!exercise) {
+      return NextResponse.json({ error: "Exercise not found" }, { status: 404 });
+    }
 
+    // 3. Check if the user is the creator or a superuser
+    if (exercise.createdById !== req.auth.user.id && !req.auth.user.isSuperuser) {
+      return NextResponse.json({ error: "Not authorized" }, { status: 403 });
+    }
 
-  })(req, context) as Promise<Response>;
+    // 4. Delete the exercise
+    try {
+      await prisma.exercise.delete({
+        where: { id: id as string },
+      });
+
+      return NextResponse.json({ message: "Exercise deleted successfully" }, { status: 200 });
+    } catch (error) {
+      console.error("Error deleting exercise:", error);
+      return NextResponse.json({ error: "Failed to delete exercise" }, { status: 500 });
+    }
+
+  })(req, context) as Promise<NextResponse>;
 }
 
 
