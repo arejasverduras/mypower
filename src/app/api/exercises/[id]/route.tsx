@@ -2,7 +2,7 @@
 import {  NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { auth } from "../../../../../auth";
-// import { User } from "@prisma/client";
+import { User } from "@prisma/client";
 
 // type NextAuthAPIRouteHandler = (req: NextRequest, context: { params: { id: string } }) => Promise<NextResponse>;
 
@@ -90,20 +90,19 @@ export async function GET(
 
 export async function DELETE(
   req: NextRequest,
-  context: { params: { id: string } },
+  context: { params: { id: string } }
 ): Promise<NextResponse> {
-  return auth(async () => {
-
-    const { id } = await context.params;
+  return auth(async (authreq: any & { auth?: { user?: User } }) => {
+    const { id } = context.params;
 
     // 1. Ensure the user is authenticated
-    if (!req.auth?.user) {
+    if (!authreq.auth?.user) {
       return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
     }
 
     // 2. Fetch the exercise to check ownership
     const exercise = await prisma.exercise.findUnique({
-      where: { id: id as string },
+      where: { id },
       select: { createdById: true },
     });
 
@@ -112,14 +111,14 @@ export async function DELETE(
     }
 
     // 3. Check if the user is the creator or a superuser
-    if (exercise.createdById !== req.auth.user.id && !req.auth.user.isSuperuser) {
+    if (exercise.createdById !== authreq.auth.user.id && !authreq.auth.user.isSuperuser) {
       return NextResponse.json({ error: "Not authorized" }, { status: 403 });
     }
 
     // 4. Delete the exercise
     try {
       await prisma.exercise.delete({
-        where: { id: id as string },
+        where: { id },
       });
 
       return NextResponse.json({ message: "Exercise deleted successfully" }, { status: 200 });
@@ -127,7 +126,6 @@ export async function DELETE(
       console.error("Error deleting exercise:", error);
       return NextResponse.json({ error: "Failed to delete exercise" }, { status: 500 });
     }
-
   })(req, context) as Promise<NextResponse>;
 }
 
