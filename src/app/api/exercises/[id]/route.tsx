@@ -126,22 +126,23 @@ export async function GET(
 //   })(req, context) as Promise<NextResponse>;
 // }
 
-export const PATCH = auth(
-  async (
-    req: NextAuthRequest,
-    { params }: { params: Record<string, string | string[] | undefined> }
-  ): Promise<NextResponse> => {
-  // ... now I can use request.auth
-  const { id} = await params;
 
-    // 1. Ensure the user is authenticated
+export const PATCH = auth(async (
+  req: NextAuthRequest,
+  context: { params: Record<string, string | string[] | undefined> } // ✅ Corrected Type
+): Promise<NextResponse> => {
+  const id = context.params.id as string; // ✅ Type assertion to ensure ID is a string
+
+  // 1. Ensure the user is authenticated
   if (!req.auth) {
     return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
   }
-  console.log(id);
 
-  return NextResponse.json({message: "success"}, { status: 200 });
-})
+  console.log("PATCH request for ID:", id); // ✅ Debugging
+
+  return NextResponse.json({ message: "Success" }, { status: 200 });
+});
+
 
 
 
