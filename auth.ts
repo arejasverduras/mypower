@@ -1,17 +1,13 @@
-import NextAuth from "next-auth"
+import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import prisma from "@/lib/prisma";
 import { NextRequest } from "next/server";
+import type { Session } from "next-auth";
 
 // Extend NextRequest to include authentication data
 export interface NextAuthRequest extends NextRequest {
-  auth: {
-    id: string;
-    sessionToken: string;
-    userId: string;
-    expires: string;
-  } | null | undefined;
+  auth: Session | null;
 }
 
 declare module "@auth/core/adapters" {
@@ -47,16 +43,12 @@ export const nextAuth = NextAuth({
   },
 });
 
-// Apply the fix for proper dynamic route handling
-export const auth = nextAuth.auth as typeof nextAuth.auth &
-  (<HandlerResponse extends Response | Promise<Response>>(
-    handler: (
-      req: NextAuthRequest,
-      context: { params: Record<string, string | string[] | undefined> }
-    ) => HandlerResponse
-  ) => (
-    req: NextRequest,
+// ✅ Corrected `auth` function type
+export const auth = nextAuth.auth as typeof nextAuth.auth & ((
+  handler: (
+    req: NextAuthRequest,
     context: { params: Record<string, string | string[] | undefined> }
-  ) => HandlerResponse);
+  ) => Response | Promise<Response>
+) => (req: NextRequest, context: { params: Record<string, string | string[] | undefined> }) => Response | Promise<Response>);
 
 export const { handlers, signIn, signOut } = nextAuth;

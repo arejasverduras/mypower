@@ -129,9 +129,9 @@ export async function GET(
 
 export const PATCH = auth(async (
   req: NextAuthRequest,
-  context: { params: Record<string, string | string[] | undefined> } // ✅ Corrected Type
+  context: { params: Record<string, string | string[] | undefined> }
 ): Promise<NextResponse> => {
-  const id = context.params.id as string; // ✅ Type assertion to ensure ID is a string
+  const id = context.params.id as string; // ✅ Ensure `id` is a string
 
   // 1. Ensure the user is authenticated
   if (!req.auth) {
