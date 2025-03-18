@@ -4,7 +4,6 @@ import prisma from "@/lib/prisma";
 import { auth, NextAuthRequest } from "../../../../../auth";
 
 
-
 export async function GET(
   req:Request, 
   {params}: {params: Promise<{id:string}>}) {
