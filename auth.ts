@@ -1,14 +1,15 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import prisma from "@/lib/prisma";
-import { NextRequest } from "next/server";
-import type { Session } from "next-auth";
+import type { NextApiRequest, NextApiResponse } from "next";
+import { getServerSession } from "next-auth/next";
+// import { Session } from "@prisma/client";
 
-// Extend NextRequest to include authentication data
-export interface NextAuthRequest extends NextRequest {
-  auth: Session | null;
-}
+// export interface NextAuthRequest extends NextApiRequest {
+//   auth: Session | null;
+// }
 
 declare module "@auth/core/adapters" {
   interface AdapterUser {
@@ -22,8 +23,7 @@ declare module "next-auth" {
   }
 }
 
-// Define NextAuth with proper context handling
-export const nextAuth = NextAuth({
+export const authOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
     GoogleProvider({
@@ -33,7 +33,7 @@ export const nextAuth = NextAuth({
   ],
   secret: process.env.AUTH_SECRET,
   callbacks: {
-    async session({ session, user }) {
+    async session({ session, user }: { session: any; user: any }) {
       if (session.user) {
         session.user.id = user.id;
         session.user.isSuperuser = user.isSuperuser;
@@ -41,14 +41,14 @@ export const nextAuth = NextAuth({
       return session;
     },
   },
-});
+};
 
-// ✅ Corrected `auth` function type
-export const auth = nextAuth.auth as typeof nextAuth.auth & ((
-  handler: (
-    req: NextAuthRequest,
-    context: { params: Record<string, string | string[] | undefined> }
-  ) => Response | Promise<Response>
-) => (req: NextRequest, context: { params: Record<string, string | string[] | undefined> }) => Response | Promise<Response>);
+// ✅ Use this instead of `auth()`
+export const getAuthSession = async (req: NextApiRequest, res: NextApiResponse) => {
+  return getServerSession(req, res, authOptions);
+};
 
-export const { handlers, signIn, signOut } = nextAuth;
+// ✅ NextAuth API Route Handler (for pages/api/auth/[...nextauth].ts)
+export default function handler(req: NextApiRequest, res: NextApiResponse) {
+  return NextAuth(req, res, authOptions);
+}
