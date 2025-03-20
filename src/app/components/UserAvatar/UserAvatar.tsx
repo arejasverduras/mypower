@@ -1,11 +1,11 @@
 
 "use client"
-import { useSession } from "@/context/SessionContext";
+import { useSessionContext } from "@/context/SessionContext";
 import Link from "next/link";
 import Image from "next/image";
 
 export default function UserAvatar() {
-    const {session} = useSession();
+    const {session} = useSessionContext();
    
     if (!session) return null
    

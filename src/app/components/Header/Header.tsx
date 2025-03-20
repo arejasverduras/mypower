@@ -2,10 +2,10 @@
 import SignInButton from "../SignInButton/SignInButton"
 import { SignOutButton } from "../SignOutButton/SignOutButton"
 import UserAvatar from "../UserAvatar/UserAvatar"
-import { useSession } from "@/context/SessionContext"
+import { useSessionContext } from "@/context/SessionContext"
 
 export const HeaderJara = () => {
-    const { session, loading } = useSession();
+    const { session, loading,  } = useSessionContext();
 
     if (loading) {
         return <div>Loading...</div>;

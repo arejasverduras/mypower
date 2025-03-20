@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { HeaderJara } from "./components/Header/Header";
-// import { Hero } from "./components/Hero/Hero";
-import { SessionProvider } from "@/context/SessionContext";
+import SessionContextProvider from "@/context/SessionContext"; // ✅ Use our custom session provider
+import { SessionProvider } from "next-auth/react"; // ✅ NextAuth session provider
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -21,22 +22,15 @@ export const metadata: Metadata = {
   description: "Create and share workouts for your fitness goals",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <SessionProvider>
-          <HeaderJara />
-          {/* <Hero /> */}
-          <main>
-            {children}
-          </main>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <SessionProvider> {/* ✅ NextAuth's session provider */}
+          <SessionContextProvider> {/* ✅ Our custom session context provider */}
+            <HeaderJara />
+            <main>{children}</main>
+          </SessionContextProvider>
         </SessionProvider>
       </body>
     </html>

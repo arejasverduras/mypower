@@ -1,71 +1,37 @@
-"use client";
+"use client"; // ✅ Required for React Context
 
-import { createContext, useContext, useEffect, useState, ReactNode } from "react";
-import { signIn as authSignIn, signOut as authSignOut } from "next-auth/react";
+import { createContext, useContext, useEffect, useState } from "react";
+import { useSession, signIn, signOut } from "next-auth/react";
+import type { Session } from "next-auth";
 
-interface Session {
-  id: string;
-  name: string;
-  email: string;
-  image: string;
-  isSuperuser: boolean;
-  user: object;
-}
-
-interface SessionContextValue {
+interface SessionContextType {
   session: Session | null;
   loading: boolean;
-  signIn: (provider: string, options?: Record<string, unknown>) => void; // Add signIn for logging in
-  logout: () => void; // Add logout for logging out
+  signIn: () => void;
+  signOut: () => void;
 }
 
-const SessionContext = createContext<SessionContextValue | undefined>(undefined);
+const SessionContext = createContext<SessionContextType | undefined>(undefined);
 
-export function SessionProvider({ children }: { children: ReactNode }) {
-  const [session, setSession] = useState<Session | null>(null);
-  const [loading, setLoading] = useState(true);
+export default function SessionContextProvider({ children }: { children: React.ReactNode }) {
+  const { data: session, status } = useSession();
+  const [loading, setLoading] = useState(status === "loading");
 
   useEffect(() => {
-    const fetchSession = async () => {
-      try {
-        const res = await fetch("/api/session");
-        const data = await res.json();
-        if (data.authenticated) {
-          setSession(data.user);
-        } else {
-          setSession(null);
-        }
-      } catch (error) {
-        console.error("Failed to fetch session:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchSession();
-  }, []);
-
-  const signIn = (provider: string, options?: Record<string, unknown>) => {
-    authSignIn(provider, options);
-  };
-
-  const logout = async () => {
-    await authSignOut({ redirect: false }); // Prevent unnecessary page reloads
-    setSession(null); // Clear session locally
-  };
+    setLoading(status === "loading");
+  }, [status]);
 
   return (
-    <SessionContext.Provider value={{ session, loading, signIn, logout }}>
+    <SessionContext.Provider value={{ session, loading, signIn, signOut }}>
       {children}
     </SessionContext.Provider>
   );
 }
 
-export function useSession() {
+export function useSessionContext() {
   const context = useContext(SessionContext);
   if (!context) {
-    throw new Error("useSession must be used within a SessionProvider");
+    throw new Error("useSessionContext must be used within a SessionContextProvider");
   }
-
   return context;
-};
+}

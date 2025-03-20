@@ -1,14 +1,13 @@
 "use client";
-
-import { useSession } from "@/context/SessionContext";
+import { signOut } from "next-auth/react";
 
 export function SignOutButton() {
-  const { logout } = useSession();
+
 
   return (
     <button
       type="button"
-      onClick={logout}
+      onClick={() => signOut()}
       className="px-4 py-2 bg-red-500 text-white rounded"
     >
       Sign Out
