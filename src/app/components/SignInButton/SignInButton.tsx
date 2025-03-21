@@ -1,10 +1,8 @@
 "use client";
-
-// import { useSessionContext } from "@/context/SessionContext";
 import { signIn } from "next-auth/react";
 
 export default function SignInButton() {
-  // const { signIn } = useSessionContext();
+
 
   return (
     <button

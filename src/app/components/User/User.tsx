@@ -4,7 +4,7 @@ import { EditUserModal } from "./EditUserModal/EditUserModal"
 import { EditDeleteButtons } from "../UI functions/EditDeleteButtons/EditDeleteButtons"
 import Image from "next/image"
 import Link from "next/link"
-import { useSession } from "@/context/SessionContext"
+import { useSessionContext } from "@/context/SessionContext"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { User as UserType } from "@prisma/client"
@@ -21,7 +21,7 @@ export const User = ({id, data}: UserProps) => {
     const [editingId, setEditingId] = useState<string | null>(null);
     
 
-    const {session} = useSession();
+    const {session} = useSessionContext();
     const router = useRouter();
 
     const isAuthorized = session?.id === id || session?.isSuperuser;

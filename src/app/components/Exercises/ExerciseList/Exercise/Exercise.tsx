@@ -5,7 +5,7 @@ import { YouTube } from "@/app/components/Video/YouTube/YouTube"
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import EditExerciseModal from "../../EditExerciseModal/EditExerciseModal"
-import { useSession } from "@/context/SessionContext"
+import { useSessionContext } from "@/context/SessionContext"
 import { BackButton } from "@/app/components/UI functions/BackButton/BackButton"
 import { EditDeleteButtons } from "@/app/components/UI functions/EditDeleteButtons/EditDeleteButtons"
 import { ExerciseWithRelations } from "../../../../../../types/exercise"
@@ -21,7 +21,7 @@ export const Exercise = ({exercise, index, view}:Exercise) => {
     const [editingId, setEditingId] = useState<string | null>(null);
     const [exerciseData, setExerciseData] = useState<ExerciseWithRelations>(exercise)
     const [error, setError] = useState("")
-    const { session } = useSession();
+    const { session } = useSessionContext();
     const [isAuthorized, setIsAuthorized] = useState(false);
     // const [referrer, setReferrer] = useState<string | null>(null);
     

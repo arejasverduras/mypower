@@ -3,8 +3,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { HeaderJara } from "./components/Header/Header";
-import SessionContextProvider from "@/context/SessionContext"; // ✅ Use our custom session provider
-import { SessionProvider } from "next-auth/react"; // ✅ NextAuth session provider
+import SessionContextProvider from "@/context/SessionContext"; // ✅ Use only this
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -26,12 +25,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <SessionProvider> {/* ✅ NextAuth's session provider */}
-          <SessionContextProvider> {/* ✅ Our custom session context provider */}
-            <HeaderJara />
-            <main>{children}</main>
-          </SessionContextProvider>
-        </SessionProvider>
+        <SessionContextProvider> {/* ✅ Only this is needed */}
+          <HeaderJara />
+          <main>{children}</main>
+        </SessionContextProvider>
       </body>
     </html>
   );

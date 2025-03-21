@@ -11,12 +11,12 @@ export default function UserAvatar() {
    
     return (
       <div className="flex items-center">
-        {session.image && (        
-          <Image src={session.image} alt="User Avatar" className="rounded-full" width={50} height={50} />
+        {session.user?.image && (        
+          <Image src={session.user.image} alt="User Avatar" className="rounded-full" width={50} height={50} />
 )}
         <p className="mx-5">
-          <Link href={`/users/${session.id}`}>{session.name}</Link>
-          {session.isSuperuser && (" SUPERUSER")}
+          <Link href={`/users/${session.user?.id}`}>{session.user?.name}</Link>
+          {session.user?.isSuperuser && (" SUPERUSER")}
         </p>
       </div>
     )

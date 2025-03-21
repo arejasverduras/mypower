@@ -3,14 +3,14 @@ import { useState, useEffect } from "react";
 import { ExerciseList } from "./ExerciseList/ExerciseList";
 import { ExerciseWithRelations } from "../../../../types/exercise";
 import { AddExerciseModal } from "./AddExerciseForm/AddExerciseForm";;
-import { useSession } from "@/context/SessionContext";
+import { useSessionContext } from "@/context/SessionContext";
 import { SearchBar } from "../UI functions/SearchBar/SearchBar";
 
 export const Exercises = () => {
     const [exercises, setExercises] = useState<ExerciseWithRelations[]>([]);
     const [error, setError] = useState<string | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const { session, loading} = useSession();
+    const { session, loading} = useSessionContext();
     const [search, setSearch] = useState('');
 
      // GET exercises from the API

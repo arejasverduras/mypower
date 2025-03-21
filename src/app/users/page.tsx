@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useSession } from "@/context/SessionContext";
+import { useSessionContext } from "@/context/SessionContext";
 import SignInButton from "../components/SignInButton/SignInButton";
 import Link from "next/link";
 import Image from "next/image";
@@ -15,7 +15,7 @@ export default function UsersPage() {
   const [search, setSearch] = useState("");
   const [error, setError] = useState("");
 
-  const { session, loading: sessionLoading } = useSession();
+  const { session, loading: sessionLoading } = useSessionContext();
 
   useEffect(() => {
     if (session) {
