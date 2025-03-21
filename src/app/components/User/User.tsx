@@ -8,7 +8,7 @@ import { useSessionContext } from "@/context/SessionContext"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { User as UserType } from "@prisma/client"
-import { ExerciseWithRelations } from "../../../../types/exercise"
+import { ExerciseWithRelations } from "../../../types/exercise"
 
 interface UserProps  {
     id: string,

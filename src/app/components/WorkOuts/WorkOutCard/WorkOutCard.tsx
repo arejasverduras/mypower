@@ -1,4 +1,4 @@
-import { WorkoutWithRelations } from "../../../../../types/workout";
+import { WorkoutWithRelations } from "../../../../types/workout";
 import Link from "next/link";
 
 export const WorkOutCard = ({workout}: {workout: WorkoutWithRelations}) => {

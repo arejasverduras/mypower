@@ -1,9 +1,9 @@
 "use client"
 import { useEffect, useState } from "react";
-import { WorkoutWithRelations } from "../../../../types/workout";
+import { WorkoutWithRelations } from "../../../types/workout";
 import { WorkOutList } from "./WorkOutList/WorkOutList";
 import { SearchBar } from "../UI functions/SearchBar/SearchBar";
-import { useSession } from "@/context/SessionContext";
+import { useSessionContext } from "@/context/SessionContext";
 import { CreateWorkoutModal } from "./CreateWorkoutModal/CreateWorkoutModal";
 
 export const WorkOuts = () => {
@@ -12,7 +12,7 @@ export const WorkOuts = () => {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const { session } = useSession();
+    const { session } = useSessionContext();
     
     useEffect(() => {
         const fetchWorkouts = async () => {

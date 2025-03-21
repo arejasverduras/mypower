@@ -1,5 +1,5 @@
 
-import { ExerciseWithRelations } from "../../../../../types/exercise";
+import { ExerciseWithRelations } from "../../../../types/exercise";
 // import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";

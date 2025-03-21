@@ -1,7 +1,7 @@
 'use client'
 import { useState, useEffect } from "react";
 import { ExerciseList } from "./ExerciseList/ExerciseList";
-import { ExerciseWithRelations } from "../../../../types/exercise";
+import { ExerciseWithRelations } from "../../../types/exercise";
 import { AddExerciseModal } from "./AddExerciseForm/AddExerciseForm";;
 import { useSessionContext } from "@/context/SessionContext";
 import { SearchBar } from "../UI functions/SearchBar/SearchBar";

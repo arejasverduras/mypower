@@ -1,4 +1,4 @@
-import { WorkoutWithRelations } from "../../../../../types/workout";
+import { WorkoutWithRelations } from "../../../../types/workout";
 import { WorkOutExerciseCard } from "../WorkOutExerciseCard/WorkOutExerciseCard";
 
 interface WorkOutExercisesProps {

@@ -1,10 +1,10 @@
 "use client";
 import { useState } from "react";
-import { WorkoutWithRelations } from "../../../../types/workout";
+import { WorkoutWithRelations } from "../../../types/workout";
 import { WorkOutHeader } from "./WorkOutHeader/WorkOutHeader";
 import { WorkOutExercises } from "./WorkOutExercises/WorkOutExercises";
 import { WorkOutAddExercises } from "./WorkOutAddExercises/WorkOutAddExercises";
-import { useSession } from "@/context/SessionContext";
+import { useSessionContext } from "@/context/SessionContext";
 import { Error } from "../UI functions/Error/Error";
 
 
@@ -17,7 +17,7 @@ interface WorkOutProps {
 
 export const WorkOut = ({workout, view}: WorkOutProps) => {
     const [exercises, setExercises] = useState(workout.exercises);
-    const {session} = useSession();
+    const {session} = useSessionContext();
     const [error, setError] = useState("");
     // const [message, setMessage] = useState("")
 

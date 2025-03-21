@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { YouTube } from "../../Video/YouTube/YouTube";
-import { ExerciseWithRelations } from "../../../../../types/exercise";
+import { ExerciseWithRelations } from "../../../../types/exercise";
 
 interface EditExerciseModalProps {
   exerciseId: string;

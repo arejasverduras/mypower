@@ -2,8 +2,8 @@
 import { useState, useEffect } from "react";
 import { SearchBar } from "../../UI functions/SearchBar/SearchBar";
 import { WorkOutAddExerciseCard } from "../WorkOutAddExerciseCard/WorkOutAddExerciseCard";
-import { WorkoutWithRelations } from "../../../../../types/workout";
-import { ExerciseWithRelations } from "../../../../../types/exercise";
+import { WorkoutWithRelations } from "../../../../types/workout";
+import { ExerciseWithRelations } from "../../../../types/exercise";
 import { Error } from "../../UI functions/Error/Error";
 
 interface WorkOutAddExercisesProps {

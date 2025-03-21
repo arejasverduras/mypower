@@ -8,7 +8,7 @@ import EditExerciseModal from "../../EditExerciseModal/EditExerciseModal"
 import { useSessionContext } from "@/context/SessionContext"
 import { BackButton } from "@/app/components/UI functions/BackButton/BackButton"
 import { EditDeleteButtons } from "@/app/components/UI functions/EditDeleteButtons/EditDeleteButtons"
-import { ExerciseWithRelations } from "../../../../../../types/exercise"
+import { ExerciseWithRelations } from "../../../../../types/exercise"
 
 export interface Exercise {
     exercise: ExerciseWithRelations
@@ -49,7 +49,7 @@ export const Exercise = ({exercise, index, view}:Exercise) => {
 
     useEffect(()=>{
         setIsAuthorized(
-            session?.id === exercise.createdById || session?.isSuperuser || false
+            session?.user?.id === exercise.createdById || session?.user?.isSuperuser || false
         )
     },[session, exercise.createdById])
 

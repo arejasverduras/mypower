@@ -1,4 +1,4 @@
-import { WorkoutWithRelations } from "../../../../../types/workout";
+import { WorkoutWithRelations } from "../../../../types/workout";
 // import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";

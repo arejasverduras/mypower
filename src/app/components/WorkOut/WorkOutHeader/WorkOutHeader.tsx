@@ -1,10 +1,10 @@
 "use client"
-import { WorkoutWithRelations } from "../../../../../types/workout"
+import { WorkoutWithRelations } from "../../../../types/workout"
 import Link from "next/link";
 import Image from "next/image";
 import userPlaceholderImage from "../../../../../public/images/JaraFitM.png";
 import { EditDeleteButtons } from "../../UI functions/EditDeleteButtons/EditDeleteButtons";
-import { useSession } from "@/context/SessionContext";
+import { useSessionContext } from "@/context/SessionContext";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Error } from "../../UI functions/Error/Error";
@@ -12,7 +12,7 @@ import { Error } from "../../UI functions/Error/Error";
 
 export const WorkOutHeader = ({workout}: {workout: WorkoutWithRelations}) => {
     const [error, setError] = useState("");
-    const {session} = useSession();
+    const {session} = useSessionContext();
     const router = useRouter();
 
     const creatorOrSuper = session?.id === workout.createdBy.id || session?.isSuperuser;

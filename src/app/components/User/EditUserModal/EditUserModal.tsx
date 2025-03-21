@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import type { User } from "@prisma/client";
-import { ExerciseWithRelations } from "../../../../../types/exercise";
+import { ExerciseWithRelations } from "../../../../types/exercise";
 
 
 interface EditUserModalProps {

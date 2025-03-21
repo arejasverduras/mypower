@@ -12,26 +12,20 @@ declare module "next-auth" {
   }
 }
 
-declare module "next-auth/jwt" {
-  interface JWT {
-    accessToken?: string
-  }
-}
-
 export const authOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-      profile(profile) {
-        return {
-          id: profile.sub,
-          name: profile.name,
-          email: profile.email,
-          image: profile.picture,
-        };
-      }
+      // profile(profile) {
+      //   return {
+      //     id: profile.sub,
+      //     name: profile.name,
+      //     email: profile.email,
+      //     image: profile.picture,
+      //   };
+      // }
     }),
   ],
   secret: process.env.AUTH_SECRET,
@@ -54,4 +48,11 @@ export const getAuthSession = async (req: any, res: any) => {
 // ✅ Default export for API route
 export default function handler(req: any, res: any) {
   return NextAuth(req, res, authOptions);
+}
+
+
+declare module "next-auth/jwt" {
+  interface JWT {
+    accessToken?: string
+  }
 }

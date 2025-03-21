@@ -4,8 +4,8 @@ import { SearchBar } from "../components/UI functions/SearchBar/SearchBar";
 import { ExerciseList } from "../components/Exercises/ExerciseList/ExerciseList";
 import { WorkOutList } from "../components/WorkOuts/WorkOutList/WorkOutList";
 import Link from "next/link";
-import { ExerciseWithRelations } from "../../../types/exercise";
-import { WorkoutWithRelations } from "../../../types/workout";
+import { ExerciseWithRelations } from "../../types/exercise";
+import { WorkoutWithRelations } from "../../types/workout";
 import { User as UserType } from "@prisma/client";
 
 export default function SearchPage () {

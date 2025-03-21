@@ -1,5 +1,5 @@
 import { Exercise } from "./Exercise/Exercise"
-import { ExerciseWithRelations } from "../../../../../types/exercise"
+import { ExerciseWithRelations } from "../../../../types/exercise"
 
 export const ExerciseList = ({exercises}: {exercises: ExerciseWithRelations[]}) => {
 
