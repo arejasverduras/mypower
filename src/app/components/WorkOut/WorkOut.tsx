@@ -21,7 +21,7 @@ export const WorkOut = ({workout, view}: WorkOutProps) => {
     const [error, setError] = useState("");
     // const [message, setMessage] = useState("")
 
-    const creatorOrSuper = session?.id === workout.createdBy.id || session?.isSuperuser;
+    const creatorOrSuper = session?.user?.id === workout.createdBy.id || session?.user?.isSuperuser;
 
     const handleDeleteExercise = async (exerciseId: string) => {
         try {

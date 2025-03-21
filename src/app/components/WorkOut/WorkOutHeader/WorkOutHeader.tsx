@@ -15,7 +15,7 @@ export const WorkOutHeader = ({workout}: {workout: WorkoutWithRelations}) => {
     const {session} = useSessionContext();
     const router = useRouter();
 
-    const creatorOrSuper = session?.id === workout.createdBy.id || session?.isSuperuser;
+    const creatorOrSuper = session?.user?.id === workout.createdBy.id || session?.user?.isSuperuser;
 
     const handleEdit = () => null;
 

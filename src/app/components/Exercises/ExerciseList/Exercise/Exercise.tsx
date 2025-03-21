@@ -53,6 +53,8 @@ export const Exercise = ({exercise, index, view}:Exercise) => {
         )
     },[session, exercise.createdById])
 
+    console.log(isAuthorized);
+
     // const handleBack = () => {
     //     if (referrer) {
     //       // Navigate to the previous page
