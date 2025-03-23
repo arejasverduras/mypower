@@ -7,6 +7,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { SearchBar } from "../components/UI functions/SearchBar/SearchBar";
 import { User } from "@prisma/client";
+import { Error } from "../components/UI functions/Error/Error";
 
 
 export default function UsersPage() {
@@ -65,7 +66,7 @@ export default function UsersPage() {
         <div key={user.id} className="p-4 border-b">
           <Image src={user.image || "/default-avatar.png"} alt={user.name || "Anonymous"} width={32} height={32} className="rounded-full inline-block"/>  
           <Link href={`/users/${user.id}`}><span className="ml-2">{user.name || "Anonymous"}</span></Link>
-          {session?.isSuperuser && <div>{user.email}</div>}
+          {session?.user?.isSuperuser && <div>{user.email}</div>}
           <button className="ml-4 bg-green-500 text-white px-3 py-1 rounded">
             Follow
           </button>
@@ -83,8 +84,9 @@ export default function UsersPage() {
         <>
           <h1 className="text-xl font-bold mb-4">Users</h1>
             <SearchBar search={search} setSearch={setSearch} placeholderText="Search users..."/>
+            <Error error={error} />
           {loading ? <p>Loading...</p> : userList}
-          {error && <p className="text-red-500">{error}</p>}
+         
         </>
       )}
     </div>

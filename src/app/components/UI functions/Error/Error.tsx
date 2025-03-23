@@ -1,6 +1,7 @@
 
 export const Error = ({error}:{error:string}) => {
-    
+    if (!error) return null;
+
     return (
         <div className="flex justify-center sm:justify-start w-full">
         <div className="relative w-full sm:w-auto text-white p-4 mx-4 bg-red-500 rounded-md shadow-[2px_2px_4px_rgba(0,0,0,0.5)] shadow-red-900">

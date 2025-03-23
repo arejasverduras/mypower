@@ -1,28 +1,22 @@
 
 // import { getAuthSession } from "../../../../auth";
-import { NextApiRequest, NextApiResponse } from "next";
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
-
-
-// GET requests
-export async function GET(req: NextApiRequest, res: NextApiResponse) {
-  if (!req.url) {
-    return res.status(400).json({ error: "Invalid request URL" });
-  }
-  const { searchParams } = new URL(req.url, `http://${req.headers.host}`);
-  const search = searchParams.get('search')?.toLowerCase() || '';
-
-  console.log('server: '+ search);
-
+// GET and Search
+export async function GET(req: Request) {
   try {
+    const { searchParams } = new URL(req.url);
+    const search = searchParams.get("search")?.toLowerCase() || "";
+
+    console.log("Server search:", search);
+
     const exercises = await prisma.exercise.findMany({
       where: {
         OR: [
           { title: { contains: search } },
           { description: { contains: search } },
-          { tags: { some: { name: { contains: search } } } },
+          { tags: { some: { name: { contains: search} } } },
           { createdBy: { name: { contains: search } } },
           { workouts: { some: { workout: { title: { contains: search } } } } },
         ],
@@ -35,13 +29,14 @@ export async function GET(req: NextApiRequest, res: NextApiResponse) {
       },
       orderBy: { createdAt: "desc" },
     });
-    return NextResponse.json(exercises, {status:200})
 
+    return NextResponse.json(exercises, { status: 200 });
   } catch (error) {
     console.error("Error fetching exercises:", error);
-    return res.status(500).json({ error: "Failed to fetch exercises" });
+    return NextResponse.json({ error: "Failed to fetch exercises" }, { status: 500 });
   }
 }
+
 
 // // POST requests
 // export const POST = auth(async function POST(req: Request) {
