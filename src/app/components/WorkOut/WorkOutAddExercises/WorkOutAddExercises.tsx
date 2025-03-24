@@ -4,7 +4,7 @@ import { SearchBar } from "../../UI functions/SearchBar/SearchBar";
 import { WorkOutAddExerciseCard } from "../WorkOutAddExerciseCard/WorkOutAddExerciseCard";
 import { WorkoutWithRelations } from "../../../../types/workout";
 import { ExerciseWithRelations } from "../../../../types/exercise";
-import { Error } from "../../UI functions/Error/Error";
+import { Error } from "../../UI functions/Errors/ErrorItem/ErrorItem";
 
 interface WorkOutAddExercisesProps {
 

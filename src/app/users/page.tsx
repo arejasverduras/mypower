@@ -7,7 +7,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { SearchBar } from "../components/UI functions/SearchBar/SearchBar";
 import { User } from "@prisma/client";
-import { Error } from "../components/UI functions/Error/Error";
+import { Error } from "../components/UI functions/Errors/ErrorItem/ErrorItem";
 
 
 export default function UsersPage() {

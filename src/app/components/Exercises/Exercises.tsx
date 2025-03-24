@@ -8,9 +8,9 @@ import { SearchBar } from "../UI functions/SearchBar/SearchBar";
 
 export const Exercises = () => {
     const [exercises, setExercises] = useState<ExerciseWithRelations[]>([]);
-    const [error, setError] = useState<string | null>(null);
+    const [error, setError] = useState("");
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const { session, loading} = useSessionContext();
+    const { session, loading } = useSessionContext();
     const [search, setSearch] = useState('');
 
      // GET exercises from the API
@@ -86,7 +86,7 @@ const checkForSignIn = () => {
       <div className="bg-background min-h-screen p-6">
         <div className="max-w-4xl mx-auto"> 
             <h2 className="text-2xl">All exercises</h2>
-            {exercises.length === 0 && <p>No exercises available</p>}
+            {!loading && exercises.length === 0 && <p>No exercises available</p>}
             {error && <p>{error}</p>}
             <SearchBar search={search} setSearch={setSearch} placeholderText="Search exercises..." />
             <ExerciseList

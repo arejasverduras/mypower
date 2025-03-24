@@ -5,7 +5,7 @@ import { WorkOutList } from "./WorkOutList/WorkOutList";
 import { SearchBar } from "../UI functions/SearchBar/SearchBar";
 import { useSessionContext } from "@/context/SessionContext";
 import { CreateWorkoutModal } from "./CreateWorkoutModal/CreateWorkoutModal";
-import { Error } from "../UI functions/Error/Error";
+import { Error } from "../UI functions/Errors/ErrorItem/ErrorItem";
 
 export const WorkOuts = () => {
     const [workouts, setWorkouts] = useState<WorkoutWithRelations[]>([]);

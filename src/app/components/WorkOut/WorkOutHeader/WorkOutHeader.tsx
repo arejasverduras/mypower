@@ -7,7 +7,7 @@ import { EditDeleteButtons } from "../../UI functions/EditDeleteButtons/EditDele
 import { useSessionContext } from "@/context/SessionContext";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Error } from "../../UI functions/Error/Error";
+import { Error } from "../../UI functions/Errors/ErrorItem/ErrorItem";
 
 
 export const WorkOutHeader = ({workout}: {workout: WorkoutWithRelations}) => {

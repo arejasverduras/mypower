@@ -7,60 +7,87 @@ import Link from "next/link";
 import { ExerciseWithRelations } from "../../types/exercise";
 import { WorkoutWithRelations } from "../../types/workout";
 import { User as UserType } from "@prisma/client";
-import { Error } from "../components/UI functions/Error/Error";
+import { Errors, ErrorsType } from "../components/UI functions/Errors/Errors";
 
 export default function SearchPage() {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [exercises, setExercises] = useState<ExerciseWithRelations[]>([]);
   const [workouts, setWorkouts] = useState<WorkoutWithRelations[]>([]);
   const [users, setUsers] = useState<UserType[]>([]);
-  const [error, setError] = useState("");
+  const [errors, setErrors] = useState<ErrorsType>([]);
+
+
+
 
   useEffect(() => {
     if (searchTerm.trim() === "") {
       setExercises([]);
       setWorkouts([]);
       setUsers([]);
+      setErrors([]); // ✅ Ensure errors are cleared when no search
       return;
     }
-
+  
     const fetchData = async () => {
+      setErrors([]); // ✅ Reset errors at start
+  
       try {
         const [workoutsRes, exercisesRes, usersRes] = await Promise.allSettled([
           fetch(`/api/workouts?search=${searchTerm}`),
           fetch(`/api/exercises?search=${searchTerm}`),
           fetch(`/api/users?search=${searchTerm}`),
         ]);
-
-        if (workoutsRes.status === "fulfilled" && workoutsRes.value.ok) {
-          const workoutsData: WorkoutWithRelations[] = await workoutsRes.value.json();
-          setWorkouts(workoutsData);
-        } else if (workoutsRes.status === "rejected") {
-          console.error("Error fetching workouts:", workoutsRes.reason);
-          setError("Error fetchingWorkouts")
+  
+        // ✅ Handle Workouts Response
+        if (workoutsRes.status === "fulfilled") {
+          if (workoutsRes.value.ok) {
+            const workoutsData: WorkoutWithRelations[] = await workoutsRes.value.json();
+            setWorkouts(workoutsData);
+          } else {
+            console.error("Error fetching workouts:", await workoutsRes.value.text());
+            setErrors((prev) => [...prev, "Error fetching Workouts"]);
+          }
+        } else {
+          console.error("Request failed (workouts):", workoutsRes.reason);
+          setErrors((prev) => [...prev, "Network error fetching Workouts"]);
         }
-
-        if (exercisesRes.status === "fulfilled" && exercisesRes.value.ok) {
-          const exercisesData: ExerciseWithRelations[] = await exercisesRes.value.json();
-          setExercises(exercisesData);
-        } else if (exercisesRes.status === "rejected") {
-          console.error("Error fetching exercises:", exercisesRes.reason);
+  
+        // ✅ Handle Exercises Response
+        if (exercisesRes.status === "fulfilled") {
+          if (exercisesRes.value.ok) {
+            const exercisesData: ExerciseWithRelations[] = await exercisesRes.value.json();
+            setExercises(exercisesData);
+          } else {
+            console.error("Error fetching exercises:", await exercisesRes.value.text());
+            setErrors((prev) => [...prev, "Error fetching Exercises"]);
+          }
+        } else {
+          console.error("Request failed (exercises):", exercisesRes.reason);
+          setErrors((prev) => [...prev, "Network error fetching Exercises"]);
         }
-
-        if (usersRes.status === "fulfilled" && usersRes.value.ok) {
-          const usersData: UserType[] = await usersRes.value.json();
-          setUsers(usersData);
-        } else if (usersRes.status === "rejected") {
-          console.error("Error fetching users:", usersRes.reason);
+  
+        // ✅ Handle Users Response
+        if (usersRes.status === "fulfilled") {
+          if (usersRes.value.ok) {
+            const usersData: UserType[] = await usersRes.value.json();
+            setUsers(usersData);
+          } else {
+            console.error("Error fetching users:", await usersRes.value.text());
+            setErrors((prev) => [...prev, "Error fetching Users"]);
+          }
+        } else {
+          console.error("Request failed (users):", usersRes.reason);
+          setErrors((prev) => [...prev, "Network error fetching Users"]);
         }
       } catch (error) {
-        console.error("Error fetching search results:", error);
-        setError("Error fetching search results");
+        console.error("Unexpected Error fetching search results:", error);
+        setErrors((prev) => [...prev, "Unexpected error fetching search results"]);
       }
     };
-
+  
     fetchData();
   }, [searchTerm]);
+  
 
   return (
     <div className="bg-background min-h-screen p-6">
@@ -68,8 +95,10 @@ export default function SearchPage() {
         <h1 className="text-3xl font-heading text-headertext font-bold mb-6 text-center sm:text-left">Search</h1>
         <SearchBar search={searchTerm} setSearch={setSearchTerm} placeholderText="Search programs, workouts, exercises, tags, users ..." />
       </div>
+      <Errors errors={errors} />
+      
       <div className="searchResults">
-        <Error error={error}/>
+        
         {exercises.length === 0 && workouts.length === 0 && users.length === 0 ? (
           <p className="text-gray-500 text-center">No results found</p>
         ) : (

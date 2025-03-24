@@ -5,7 +5,7 @@ import { WorkOutHeader } from "./WorkOutHeader/WorkOutHeader";
 import { WorkOutExercises } from "./WorkOutExercises/WorkOutExercises";
 import { WorkOutAddExercises } from "./WorkOutAddExercises/WorkOutAddExercises";
 import { useSessionContext } from "@/context/SessionContext";
-import { Error } from "../UI functions/Error/Error";
+import { Error } from "../UI functions/Errors/ErrorItem/ErrorItem";
 
 
 // import Head from "next/head";

@@ -1,5 +1,5 @@
 
-export const Error = ({error}:{error:string}) => {
+export const ErrorItem = ({error}:{error:string}) => {
     if (!error) return null;
 
     return (
