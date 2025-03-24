@@ -40,6 +40,11 @@ export const authOptions = {
   },
 };
 
+// // ✅ Function to get session in API routes
+// export const getAuthSession = async (req: any, res: any) => {
+//   return getServerSession(req, res, authOptions);
+// };
+
 // ✅ Function to get session in API routes
 export const getAuthSession = async (req: any, res: any) => {
   return getServerSession(req, res, authOptions);

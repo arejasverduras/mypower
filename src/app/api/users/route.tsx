@@ -1,18 +1,28 @@
 import { NextResponse } from "next/server";
-import { auth } from "../../../../auth";
+import { getServerSession } from "next-auth";
+
+import { authOptions } from "../../../../auth";
 import prisma from "@/lib/prisma";
 
-export const GET = auth(async (req) => {
-  const { searchParams } = new URL(req.url);
-  const search = searchParams.get('search')?.toLowerCase() || '';
+export const GET = async (req: Request) => {
+  const session = await getServerSession(authOptions);
+
+  if (!session) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+
 
   try {
-    const isSuperuser = req.auth?.user.isSuperuser;
+    const { searchParams } = new URL(req.url);
+    const search = searchParams.get("search")?.toLowerCase() || "";
+    
+    const isSuperuser = session.user?.isSuperuser;
 
     const whereClause = search
       ? {
           OR: [
-            { name: { contains: search } },
+            { name: { contains: search} },
             { email: { contains: search } },
             { bio: { contains: search } },
             { quote: { contains: search } },
@@ -35,13 +45,9 @@ export const GET = auth(async (req) => {
       orderBy: { createdAt: "desc" },
     });
 
-    return NextResponse.json({users}, { status: 200 });
+    return NextResponse.json( users , { status: 200 });
   } catch (error) {
-    console.error(error);
-    return NextResponse.json(
-      { error: "Internal Server Error" },
-      { status: 500 }
-    );
+    console.error("Error fetching users:", error);
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
-});
-
+};

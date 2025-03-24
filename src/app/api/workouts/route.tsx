@@ -1,25 +1,18 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
-import { Prisma } from '@prisma/client';
-import { auth } from '../../../../auth';
 
-type NextAuthAPIRouteHandler = (req: Request) => Promise<
-  NextResponse<
-    | {
-        error: string
-      }
-    | {
-        ok: boolean
-      }
-  >
->
+// import { auth } from '../../../../auth';
+
+
 
 // GET requests
 export async function GET(req: Request) {
-  const { searchParams } = new URL(req.url);
-  const search = searchParams.get('search')?.toLowerCase() || '';
+
 
   try {
+    const { searchParams } = new URL(req.url);
+    const search = searchParams.get('search')?.toLowerCase() || ''; 
+    
     const workouts = await prisma.workout.findMany({
       where: {
         OR: [
@@ -44,64 +37,64 @@ export async function GET(req: Request) {
   } catch (error) {
     console.error(error);
     return NextResponse.json(
-      { error: 'Internal Server Error' },
+      { error: "Server: Failed to fetch workouts" },
       { status: 500 }
     );
   }
 }
 
 // POST requests
-export const POST = auth(async function POST(req: Request) {
-  const body = await req.json();
-  const session = await auth();
+// export const POST = auth(async function POST(req: Request) {
+//   const body = await req.json();
+//   const session = await auth();
 
-  if (!session) {
-    return NextResponse.json({ error: "Not authenticated to POST workout" }, { status: 401 });
-  }
+//   if (!session) {
+//     return NextResponse.json({ error: "Not authenticated to POST workout" }, { status: 401 });
+//   }
 
-  if (!body.title) {
-    return NextResponse.json({ error: "Title is required" }, { status: 400 });
-  }
+//   if (!body.title) {
+//     return NextResponse.json({ error: "Title is required" }, { status: 400 });
+//   }
 
-  try {
-    console.log("Creating workout with data:", body);
+//   try {
+//     console.log("Creating workout with data:", body);
 
-    const newWorkout = await prisma.workout.create({
-      data: {
-        title: body.title,
-        description: body.description || null,
-        isPublic: body.isPublic || true,
-        createdBy: { connect: { id: session.user.id } },
-        exercises: {
-          create: body.exercises.map((exercise: Prisma.WorkoutExerciseCreateWithoutWorkoutInput) => ({
-            exercise: { connect: { id: exercise.id } },
-            customDescription: exercise.customDescription || null,
-            customSets: exercise.customSets || null,
-            customRepetitions: exercise.customRepetitions || null,
-          })),
-        },
-        tags: {
-          connectOrCreate: body.tags.map((tag: Prisma.TagCreateOrConnectWithoutWorkoutsInput) => ({
-            where: { name: tag },
-            create: { name: tag },
-          })),
-        },
-      },
-      include: {
-        createdBy: true,
-        tags: true,
-        exercises: { include: { exercise: true } },
-        likedBy: true,
-        programs: true,
-      },
-    });
+//     const newWorkout = await prisma.workout.create({
+//       data: {
+//         title: body.title,
+//         description: body.description || null,
+//         isPublic: body.isPublic || true,
+//         createdBy: { connect: { id: session.user.id } },
+//         exercises: {
+//           create: body.exercises.map((exercise: Prisma.WorkoutExerciseCreateWithoutWorkoutInput) => ({
+//             exercise: { connect: { id: exercise.id } },
+//             customDescription: exercise.customDescription || null,
+//             customSets: exercise.customSets || null,
+//             customRepetitions: exercise.customRepetitions || null,
+//           })),
+//         },
+//         tags: {
+//           connectOrCreate: body.tags.map((tag: Prisma.TagCreateOrConnectWithoutWorkoutsInput) => ({
+//             where: { name: tag },
+//             create: { name: tag },
+//           })),
+//         },
+//       },
+//       include: {
+//         createdBy: true,
+//         tags: true,
+//         exercises: { include: { exercise: true } },
+//         likedBy: true,
+//         programs: true,
+//       },
+//     });
 
-    return NextResponse.json(newWorkout, { status: 201 });
-  } catch (error) {
-    console.error("Error creating workout:", error);
-    return NextResponse.json(
-      { error: "Failed to create workout" },
-      { status: 500 }
-    );
-  }
-}) as NextAuthAPIRouteHandler;
+//     return NextResponse.json(newWorkout, { status: 201 });
+//   } catch (error) {
+//     console.error("Error creating workout:", error);
+//     return NextResponse.json(
+//       { error: "Failed to create workout" },
+//       { status: 500 }
+//     );
+//   }
+// }) as NextAuthAPIRouteHandler;

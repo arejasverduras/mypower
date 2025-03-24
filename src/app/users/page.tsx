@@ -7,14 +7,14 @@ import Link from "next/link";
 import Image from "next/image";
 import { SearchBar } from "../components/UI functions/SearchBar/SearchBar";
 import { User } from "@prisma/client";
-import { Error } from "../components/UI functions/Errors/ErrorItem/ErrorItem";
+import { Errors, ErrorsType } from "../components/UI functions/Errors/Errors";
 
 
 export default function UsersPage() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
-  const [error, setError] = useState("");
+    const [errors, setErrors] = useState<ErrorsType>([]);
 
   const { session, loading: sessionLoading } = useSessionContext();
 
@@ -25,12 +25,13 @@ export default function UsersPage() {
         try {
           const res = await fetch("/api/users");
           if (!res.ok) {
-            setError("Failed to fetch users");
+            setErrors((prev) => [...prev, "Failed to fetch users"]);
           }
           const data = await res.json();
-          setUsers(data.users);
+          setUsers(data);
         } catch (error) {
           console.error("Failed to fetch users", error);
+          setErrors((prev) => [...prev, "Something went wrong: failed to fetch users"]);
         } finally {
           setLoading(false);
         }
@@ -84,7 +85,7 @@ export default function UsersPage() {
         <>
           <h1 className="text-xl font-bold mb-4">Users</h1>
             <SearchBar search={search} setSearch={setSearch} placeholderText="Search users..."/>
-            <Error error={error} />
+            <Errors errors={errors} />
           {loading ? <p>Loading...</p> : userList}
          
         </>

@@ -5,28 +5,32 @@ import { ExerciseWithRelations } from "../../../types/exercise";
 import { AddExerciseModal } from "./AddExerciseForm/AddExerciseForm";;
 import { useSessionContext } from "@/context/SessionContext";
 import { SearchBar } from "../UI functions/SearchBar/SearchBar";
+import { Errors, ErrorsType } from "../UI functions/Errors/Errors";
 
 export const Exercises = () => {
     const [exercises, setExercises] = useState<ExerciseWithRelations[]>([]);
-    const [error, setError] = useState("");
+    const [errors, setErrors] = useState<ErrorsType>([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const { session, loading } = useSessionContext();
     const [search, setSearch] = useState('');
 
      // GET exercises from the API
   useEffect(() => {
+    setErrors([]);
+    
     const fetchExercises = async () => {
       try {
         const res = await fetch("/api/exercises", { method: "GET" });
         if (!res.ok)  {
-          setError("Failed to load exercises");
+        
+          setErrors((prev) => [...prev, "Failed to load exercises"]);
           return;
         }
         const data = await res.json();
         setExercises(data);
       } catch (err) {
         console.error(err);
-        setError("Failed to load exercises");
+        setErrors((prev) => [...prev, "Failed to load exercises"]);
       }
     };
 
@@ -51,7 +55,7 @@ const checkForSignIn = () => {
         description?: string;
         execution?: string;
       }) => {
-
+        setErrors([]);
         try {
             const res = await fetch("/api/exercises", {
                 method: "POST",
@@ -59,13 +63,18 @@ const checkForSignIn = () => {
                 body: JSON.stringify(newExercise),
             });
 
-            if (!res.ok) throw new Error("Failed to add exercise client");
+            if (!res.ok) 
+              {
+                setErrors((prev) => [...prev, "API: Failed to add exercises"]);
+                return;
+              };
 
             const addedExercise = await res.json();
             setExercises((prev) => [addedExercise, ...prev]);
 
         } catch (err) {
             console.error(err);
+            setErrors((prev) => [...prev, "Failed to add exercise"]);
         }
       };
 
@@ -79,16 +88,16 @@ const checkForSignIn = () => {
       exercise.workouts?.some(workoutExercise => workoutExercise.workout.title.toLowerCase().includes(lowerCaseSearch))
   );
 
-  console.log(exercises);
-
-
     return (
       <div className="bg-background min-h-screen p-6">
+        
         <div className="max-w-4xl mx-auto"> 
-            <h2 className="text-2xl">All exercises</h2>
+        
+            <h2 className="text-2xl">Browse exercises</h2>
             {!loading && exercises.length === 0 && <p>No exercises available</p>}
-            {error && <p>{error}</p>}
+            
             <SearchBar search={search} setSearch={setSearch} placeholderText="Search exercises..." />
+            <Errors errors={errors} />
             <ExerciseList
                 exercises={filteredExercises}
             />

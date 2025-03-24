@@ -5,12 +5,12 @@ import { WorkOutList } from "./WorkOutList/WorkOutList";
 import { SearchBar } from "../UI functions/SearchBar/SearchBar";
 import { useSessionContext } from "@/context/SessionContext";
 import { CreateWorkoutModal } from "./CreateWorkoutModal/CreateWorkoutModal";
-import { Error } from "../UI functions/Errors/ErrorItem/ErrorItem";
+import { Errors, ErrorsType } from "../UI functions/Errors/Errors";
 
 export const WorkOuts = () => {
     const [workouts, setWorkouts] = useState<WorkoutWithRelations[]>([]);
     const [search, setSearch] = useState("");
-    const [error, setError] = useState("");
+    const [errors, setErrors] = useState<ErrorsType>([]);
     const [loading, setLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const { session } = useSessionContext();
@@ -18,10 +18,12 @@ export const WorkOuts = () => {
     useEffect(() => {
         const fetchWorkouts = async () => {
             setLoading(true);
+            setErrors([]);
             try {
                 const res = await fetch("/api/workouts", { method: "GET" });
                 if (!res.ok) {
-                    setError("Failed to load workouts");
+     
+                    setErrors((prev) => [...prev, "API: Failed to load workouts"]);
                     return;
                 }
                 const data = await res.json();
@@ -29,7 +31,8 @@ export const WorkOuts = () => {
                 setWorkouts(data);
             } catch (err) {
                 console.error(err);
-                setError("Failed to load workouts");
+                setErrors((prev) => [...prev, "Failed to load workouts"]);
+                
             } finally {
                 setLoading(false);
             }
@@ -38,6 +41,7 @@ export const WorkOuts = () => {
     }, []);
 
     const handleAddWorkout = async (newWorkout: { title: string; description?: string | null }) => {
+        setErrors([]);
         try {
             const res = await fetch("/api/workouts", {
                 method: "POST",
@@ -46,7 +50,8 @@ export const WorkOuts = () => {
             });
 
             if (!res.ok) 
-                {setError("Failed to add workout");
+                {
+                setErrors((prev) => [...prev, "Failed to add workouts"]);
                 return
             };
          
@@ -55,7 +60,7 @@ export const WorkOuts = () => {
             setWorkouts((prev) => [addedWorkout, ...prev]);
         } catch (err) {
             console.error(err);
-            setError("Failed to add workout");
+            setErrors((prev) => [...prev, "Failed to add workouts"]);
         }
     };
 
@@ -90,7 +95,7 @@ export const WorkOuts = () => {
                 ) : (
                     <WorkOutList workouts={workoutsList} />
                 )}
-                <Error error={error}/>
+                <Errors errors={errors}/>
                 <button
                     onClick={checkForSignIn}
                     className="py-2 px-4 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600"
