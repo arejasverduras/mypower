@@ -1,88 +1,121 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {  NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { auth, NextAuthRequest } from "../../../../../auth";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../../../../../auth";
 
 
 export async function GET(
-  req:Request, 
-  {params}: {params: Promise<{id:string}>}) {
-  const { id } = await params;
+  req: Request,
+  { params }: { params: { id: string } } 
+) {
+  const { id: exerciseId } = params;
 
-  const exerciseId = id;
-  
+  try {
+    const exercise = await prisma.exercise.findUnique({
+      where: { id: exerciseId },
+      include: {
+        createdBy: {
+          select: { id: true, name: true, image: true },
+        },
+      },
+    });
+
+    if (!exercise) {
+      return NextResponse.json({ error: "Exercise not found" }, { status: 404 });
+    }
+
+    return NextResponse.json(exercise, { status: 200 });
+  } catch (error) {
+    console.error("GET Exercise Error:", error);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+  }
+}
+
+
+export const PATCH = async (req: Request, {params}: {params: {id:string}}) => {
+  const session = await getServerSession(authOptions);
+
+  if (!session) {
+    return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+  }
+
+  const { id } = params;
+
+      // 2. Fetch the exercise to check ownership
+    const exercise = await prisma.exercise.findUnique({
+      where: { id },
+      select: { createdById: true },
+    });
+
+    if (!exercise) {
+      return NextResponse.json({ error: "Exercise not found" }, { status: 404 });
+    }
+
+  if (session.user.id !== exercise.createdById && !session.user.isSuperuser ) {
+    return NextResponse.json({ error: "Not authorized" }, { status: 403 });
+  }
+
+  const body = await req.json();
+
+      // 4. Update the exercise
     try {
-      const exercise = await prisma.exercise.findUnique({
-          where: { id: exerciseId },
-          include: {
-            createdBy: {
-              select: {id: true, name: true, image: true},
-            }
-          }
-        });
-    
-        if (!exercise) {
-          return NextResponse.json({ error: "Exercise not found" }, { status: 404 });
-        }
-    
-        return NextResponse.json(exercise, { status: 200 });
-      } catch (error) {
-        console.log(error)
-        return NextResponse.json({ error: "Internal server error" }, { status: 500 });
-      }
-};
+      const updatedExercise = await prisma.exercise.update({
+        where: { id },
+        data: {
+          title: body.title || undefined,
+          video: body.video || undefined,
+          image: body.image || undefined,
+          description: body.description || undefined,
+          execution: body.execution || undefined,
+        },
+      });
+
+      return NextResponse.json(updatedExercise, { status: 200 });
+    } catch (error) {
+      console.error("Error updating exercise:", error);
+      return NextResponse.json({ error: "Failed to update exercise" }, { status: 500 });
+    }
+
+}
+
+export const DELETE = async (req: Request, {params}: {params: {id:string}}) => {
+  const session = await getServerSession(authOptions);
+
+  if (!session) {
+    return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+  }
+
+  const { id } = params;
+
+      // 2. Fetch the exercise to check ownership
+    const exercise = await prisma.exercise.findUnique({
+      where: { id },
+      select: { createdById: true },
+    });
+
+    if (!exercise) {
+      return NextResponse.json({ error: "Exercise not found" }, { status: 404 });
+    }
+
+  if (session.user.id !== exercise.createdById && !session.user.isSuperuser ) {
+    return NextResponse.json({ error: "Not authorized" }, { status: 403 });
+  }
+
+    // 4. Delete the exercise
+    try {
+      await prisma.exercise.delete({
+        where: { id },
+      });
+
+      return NextResponse.json({ message: "Exercise deleted successfully" }, { status: 200 });
+    } catch (error) {
+      console.error("Error deleting exercise:", error);
+      return NextResponse.json({ error: "Failed to delete exercise" }, { status: 500 });
+    }
+}
 
 
-// export async function PATCH(
-//     req: NextRequest,
-//   { params }: {params: { id: string } },): Promise<Response> {
-//   return auth(async (
-//     authreq: any & { auth?: { user?: User } }
-//   ) => {
-//     const { id } = await params;
-
-//     // 1. Ensure the user is authenticated
-//     if (!authreq.auth?.user) {
-//       return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
-//     }
-
-//     // 2. Fetch the exercise to check ownership
-//     const exercise = await prisma.exercise.findUnique({
-//       where: { id },
-//       select: { createdById: true },
-//     });
-
-//     if (!exercise) {
-//       return NextResponse.json({ error: "Exercise not found" }, { status: 404 });
-//     }
-
-//     // 3. Check if the user is the creator or a superuser
-//     if (exercise.createdById !== authreq.auth.user.id && !authreq.auth.user.isSuperuser) {
-//       return NextResponse.json({ error: "Not authorized" }, { status: 403 });
-//     }
-
-//     const body = await req.json();
-
-//     // 4. Update the exercise
-//     try {
-//       const updatedExercise = await prisma.exercise.update({
-//         where: { id },
-//         data: {
-//           title: body.title || undefined,
-//           video: body.video || undefined,
-//           image: body.image || undefined,
-//           description: body.description || undefined,
-//           execution: body.execution || undefined,
-//         },
-//       });
-
-//       return NextResponse.json(updatedExercise, { status: 200 });
-//     } catch (error) {
-//       console.error("Error updating exercise:", error);
-//       return NextResponse.json({ error: "Failed to update exercise" }, { status: 500 });
-//     }
-//   })(req, {params}) as Promise<Response>;
-// }
 
 // export async function DELETE(
 //   req: NextRequest,
@@ -124,23 +157,6 @@ export async function GET(
 //     }
 //   })(req, context) as Promise<NextResponse>;
 // }
-
-
-export const PATCH = auth(async (
-  req: NextAuthRequest,
-  context: { params: Record<string, string | string[] | undefined> }
-): Promise<NextResponse> => {
-  const id = context.params.id as string; // ✅ Ensure `id` is a string
-
-  // 1. Ensure the user is authenticated
-  if (!req.auth) {
-    return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
-  }
-
-  console.log("PATCH request for ID:", id); // ✅ Debugging
-
-  return NextResponse.json({ message: "Success" }, { status: 200 });
-});
 
 
 

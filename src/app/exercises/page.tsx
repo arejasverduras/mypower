@@ -13,7 +13,7 @@ export default function ExercisesPage() {
                 {error === "not-found" && (
                     <p className="my-5"><i>Sorry, the exercise you were looking for does not exist!</i></p>
                 )}
-]
+
                 <h1>Page: exercises</h1>
                 <Exercises />
          

@@ -75,7 +75,7 @@ model Exercise {
   video       String?
   tags        Tag[]     @relation("ExerciseTags")
   isPublic    Boolean   @default(true)
-  createdBy   User      @relation(fields: [createdById], references: [id])
+  createdBy   User      @relation(fields: [createdById], references: [id], onDelete: Cascade) 
   createdById String
   createdAt   DateTime  @default(now())
   likedBy     LikedItem[]
@@ -113,9 +113,9 @@ model Program {
 // Intermediate table for Many-to-Many relationship
 model WorkoutExercise {
   id                String    @id @default(cuid())
-  workout           Workout   @relation(fields: [workoutId], references: [id])
+  workout           Workout   @relation(fields: [workoutId], references: [id], onDelete: Cascade) // ✅ Auto-delete from workouts
   workoutId         String
-  exercise          Exercise  @relation(fields: [exerciseId], references: [id])
+  exercise          Exercise  @relation(fields: [exerciseId], references: [id], onDelete: Cascade) // ✅ Auto-delete from exercises
   exerciseId        String
   customDescription String?
   customSets        Int?
@@ -149,19 +149,20 @@ model LikedItem {
   id          String    @id @default(cuid())
   user        User      @relation(fields: [userId], references: [id])
   userId      String
-  exercise    Exercise? @relation(fields: [exerciseId], references: [id])
+  exercise    Exercise? @relation(fields: [exerciseId], references: [id], onDelete: Cascade) // ✅ Deletes LikedItems when Exercise is deleted
   exerciseId  String?
-  workout     Workout?  @relation(fields: [workoutId], references: [id])
+  workout     Workout?  @relation(fields: [workoutId], references: [id], onDelete: Cascade) // ✅ Deletes LikedItems when Workout is deleted
   workoutId   String?
-  program     Program?  @relation(fields: [programId], references: [id])
+  program     Program?  @relation(fields: [programId], references: [id], onDelete: Cascade) // ✅ Deletes LikedItems when Program is deleted
   programId   String?
 }
 
+
 model ExerciseResult {
   id              String    @id @default(cuid())
-  user            User      @relation(fields: [userId], references: [id])
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId          String
-  workoutExercise WorkoutExercise @relation(fields: [workoutExerciseId], references: [id])
+  workoutExercise WorkoutExercise @relation(fields: [workoutExerciseId], references: [id], onDelete: Cascade)
   workoutExerciseId String
   sets            Int
   reps            Int

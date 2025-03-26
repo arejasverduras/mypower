@@ -6,11 +6,7 @@ declare module "next-auth" {
   }
 
   interface Session {
-    user: {
-      id: string;
-      email: string;
-      isSuperuser: boolean;
-    };
+    user: User; // ✅ Extends the User interface instead of redefining properties
   }
 }
 
