@@ -29,6 +29,7 @@ export const MessageProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
+    // apiLoading, setApiLoading ??
     <MessageContext.Provider value={{ messages, loading, setLoading, addMessage, clearMessages }}>
       {children}
     </MessageContext.Provider>

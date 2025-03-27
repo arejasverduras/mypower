@@ -6,6 +6,7 @@ import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import EditExerciseModal from "../../EditExerciseModal/EditExerciseModal"
 import { useSessionContext } from "@/context/SessionContext"
+import { useMessageContext } from "@/context/MessageContext"
 import { BackButton } from "@/app/components/UI functions/BackButton/BackButton"
 import { EditDeleteButtons } from "@/app/components/UI functions/EditDeleteButtons/EditDeleteButtons"
 import { ExerciseWithRelations } from "../../../../../types/exercise"
@@ -20,7 +21,7 @@ export const Exercise = ({exercise, index, view}:Exercise) => {
     const [open, setOpen] = useState(false);
     const [editingId, setEditingId] = useState<string | null>(null);
     const [exerciseData, setExerciseData] = useState<ExerciseWithRelations>(exercise)
-    const [error, setError] = useState("")
+    const { addMessage, setLoading, clearMessages} = useMessageContext();
     const { session } = useSessionContext();
     const [isAuthorized, setIsAuthorized] = useState(false);
     // const [referrer, setReferrer] = useState<string | null>(null);
@@ -72,7 +73,7 @@ export const Exercise = ({exercise, index, view}:Exercise) => {
     // PATCH exercise (update)
     const handleSaveExercise = (updatedExercise: ExerciseWithRelations) => {
         if (!isAuthorized) {
-            setError("You are not authorized to edit this exercise.");
+            addMessage({type: "error", text: "You are not authorized to edit this exercise."});
             return;
           }
         
@@ -82,9 +83,12 @@ export const Exercise = ({exercise, index, view}:Exercise) => {
   
      //   DELETE exercise
      const handleDeleteExercise = async (id:string) => {
-        
+        clearMessages();
+        setLoading(true);
         if (!isAuthorized) {
-            setError("You are not authorized to delete this exercise.");
+
+            addMessage({type: "error", text: "You are not authorized to delete this exercise."});
+            setLoading(false);
             return;
           }
 
@@ -93,13 +97,17 @@ export const Exercise = ({exercise, index, view}:Exercise) => {
         try {
           const res = await fetch(`/api/exercises/${id}`, { method: "DELETE" });
     
-          if (!res.ok) throw new Error("Failed to delete exercise");
-            
-          alert("Exercise deleted successfully");
+          if (!res.ok) {
+            addMessage({type: "error", text: "Failed to delete exercise"});
+            return;
+          } 
+          addMessage({type: "success", text: "Exercise deleted succesfully"});
             router.push("/exercises")
         } catch (err) {
           console.error(err);
-          alert("Failed to delete exercise.");
+          addMessage({type: "error", text: "Failed to delete exercise"});
+        } finally {
+            setLoading(false);
         }
       };
 
@@ -193,7 +201,7 @@ export const Exercise = ({exercise, index, view}:Exercise) => {
                         onEdit={onEdit} 
                         handleDelete={handleDeleteExercise}/>
                 )}
-                {error && <p className="text-red-500 m-5">{error}</p>}
+
                </div>
 
                     {editingId && (

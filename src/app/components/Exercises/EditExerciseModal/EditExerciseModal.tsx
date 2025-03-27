@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { YouTube } from "../../Video/YouTube/YouTube";
 import { ExerciseWithRelations } from "../../../../types/exercise";
+import { useMessageContext } from "@/context/MessageContext";
 
 interface EditExerciseModalProps {
   exerciseId: string;
@@ -14,14 +15,21 @@ export default function EditExerciseModal({
   onSave,
 }: EditExerciseModalProps) {
   const [formData, setFormData] = useState<Partial<ExerciseWithRelations>>({});
-  const [loading, setLoading] = useState(true); // To handle loading state
-  const [error, setError] = useState("");
+  // const [loading, setLoading] = useState(true); // To handle loading state
+  // const [error, setError] = useState("");
+  const { addMessage, loading, setLoading, clearMessages} = useMessageContext();
 
   useEffect(() => {
     const fetchExerciseDetails = async () => {
+      clearMessages();
+      setLoading(true);
+      
       try {
         const res = await fetch(`/api/exercises/${exerciseId}`);
-        if (!res.ok) setError("Failed to fetch exercise details");
+        if (!res.ok) {
+          addMessage({type: "error", text: "Failed to fetch exercise details"});
+          return;
+        }
         const data = await res.json();
         setFormData(data);
       } catch (err) {
@@ -49,6 +57,8 @@ export default function EditExerciseModal({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    clearMessages();
+    setLoading(true);
 
     try {
       const res = await fetch(`/api/exercises/${exerciseId}`, {
@@ -57,31 +67,29 @@ export default function EditExerciseModal({
         body: JSON.stringify(formData),
       });
 
-      if (!res.ok) throw new Error("Failed to update exercise");
+      if (!res.ok) {
+        addMessage({type: "error", text:"API: Failed to update exercise"});
+        return;
+      }
 
       const updatedExercise = await res.json();
       onSave(updatedExercise);
+      addMessage({type: "success", text: "Exercise updated succesfully"})
       onClose();
     } catch (err) {
       console.error(err);
+      addMessage({type: "error", text:"Failed to update exercise"});
+    } finally {
+      setLoading(false);
     }
   };
 
-  // const videoId = getYouTubeId(formData.video);
-
-  if (loading) {
-    return (
-      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-        <div className="text-white">Loading...</div>
-      </div>
-    );
-  }
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
       <div className="bg-primary-color text-white p-6 rounded-lg shadow-lg w-full max-w-md">
         <h2 className="text-xl font-bold mb-4">Edit Exercise</h2>
-        {error && <p className="text-red-500">{error}</p>}
+    {loading ? (<div>Loading exercise details.. </div>) : 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium">Title</label>
@@ -150,6 +158,7 @@ export default function EditExerciseModal({
             </button>
           </div>
         </form>
+}
       </div>
     </div>
   );
