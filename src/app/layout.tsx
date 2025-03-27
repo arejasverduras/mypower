@@ -4,6 +4,8 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { HeaderJara } from "./components/Header/Header";
 import SessionContextProvider from "@/context/SessionContext"; // ✅ Use only this
+import { MessageProvider } from "@/context/MessageContext";
+import { ApiMessage } from "./components/UI functions/ApiMessage/ApiMessage";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -26,8 +28,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <SessionContextProvider> {/* ✅ Only this is needed */}
-          <HeaderJara />
-          <main>{children}</main>
+          <MessageProvider>
+            <ApiMessage />
+            <HeaderJara />
+            <main>{children}</main>
+          </MessageProvider>
         </SessionContextProvider>
       </body>
     </html>

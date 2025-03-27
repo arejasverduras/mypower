@@ -4,33 +4,39 @@ import { ExerciseList } from "./ExerciseList/ExerciseList";
 import { ExerciseWithRelations } from "../../../types/exercise";
 import { AddExerciseModal } from "./AddExerciseForm/AddExerciseForm";;
 import { useSessionContext } from "@/context/SessionContext";
+import { useMessageContext } from "@/context/MessageContext";
 import { SearchBar } from "../UI functions/SearchBar/SearchBar";
-import { Errors, ErrorsType } from "../UI functions/Errors/Errors";
+
 
 export const Exercises = () => {
     const [exercises, setExercises] = useState<ExerciseWithRelations[]>([]);
-    const [errors, setErrors] = useState<ErrorsType>([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const { session, loading } = useSessionContext();
+    const { addMessage, setLoading, clearMessages } = useMessageContext();
     const [search, setSearch] = useState('');
 
      // GET exercises from the API
   useEffect(() => {
-    setErrors([]);
+    clearMessages();
+    setLoading(true);
     
     const fetchExercises = async () => {
       try {
         const res = await fetch("/api/exercises", { method: "GET" });
         if (!res.ok)  {
-        
-          setErrors((prev) => [...prev, "Failed to load exercises"]);
+          addMessage({ type: "error", text: "Failed to load exercises" });
+          // setErrors((prev) => [...prev, "Failed to load exercises"]);
           return;
         }
         const data = await res.json();
         setExercises(data);
+        addMessage({ type: "success", text: "Exercise loaded successfully" });
       } catch (err) {
         console.error(err);
-        setErrors((prev) => [...prev, "Failed to load exercises"]);
+        // setErrors((prev) => [...prev, "Failed to load exercises"]);
+        addMessage({ type: "error", text: "Failed to load exercises" });
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -55,9 +61,10 @@ const checkForSignIn = () => {
         description?: string;
         execution?: string;
       }) => {
-        setErrors([]);
+        clearMessages();
+        setLoading(true);
         try {
-            const res = await fetch("/api/exercises", {
+            const res = await fetch("/api/exerciss", {
                 method: "POST",
                 headers: { "Content-Type": "application/json"}, 
                 body: JSON.stringify(newExercise),
@@ -65,16 +72,18 @@ const checkForSignIn = () => {
 
             if (!res.ok) 
               {
-                setErrors((prev) => [...prev, "API: Failed to add exercises"]);
+                addMessage({ type: "error", text: "API: Failed to add exercise" });
+                // setErrors((prev) => [...prev, "API: Failed to add exercises"]);
                 return;
               };
-
             const addedExercise = await res.json();
             setExercises((prev) => [addedExercise, ...prev]);
-
+            addMessage({ type: "success", text: "Exercise added successfully" });
         } catch (err) {
             console.error(err);
-            setErrors((prev) => [...prev, "Failed to add exercise"]);
+            addMessage({ type: "error", text: "Failed to add exercise" });
+        } finally {
+          setLoading(false);
         }
       };
 
@@ -97,7 +106,7 @@ const checkForSignIn = () => {
             {!loading && exercises.length === 0 && <p>No exercises available</p>}
             
             <SearchBar search={search} setSearch={setSearch} placeholderText="Search exercises..." />
-            <Errors errors={errors} />
+            {/* <Errors errors={errors} /> */}
             <ExerciseList
                 exercises={filteredExercises}
             />

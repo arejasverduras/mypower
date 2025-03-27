@@ -7,11 +7,12 @@ import { EditDeleteButtons } from "../../UI functions/EditDeleteButtons/EditDele
 import { useSessionContext } from "@/context/SessionContext";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Error } from "../../UI functions/Errors/ErrorItem/ErrorItem";
+
+import { Errors, ErrorsType } from "../../UI functions/Errors/Errors";
 
 
 export const WorkOutHeader = ({workout}: {workout: WorkoutWithRelations}) => {
-    const [error, setError] = useState("");
+    const [errors, setErrors] = useState<ErrorsType>([]);
     const {session} = useSessionContext();
     const router = useRouter();
 
@@ -21,28 +22,29 @@ export const WorkOutHeader = ({workout}: {workout: WorkoutWithRelations}) => {
 
     //   DELETE exercise
     const handleDelete = async (id:string) => {
-        setError("");
+        setErrors([]);
 
         if (!creatorOrSuper) {
-            setError("You are not authorized to delete this workout.");
+
+            setErrors((prev) => [...prev, "You are not authorized to delete this workout."]);
             return;
             }
     
         if (!confirm("Are you sure you want to delete this workout?")) return;
     
         try {
-            const res = await fetch(`/api/workout/${id}/edit`, { method: "DELETE" });
+            const res = await fetch(`/api/workouts/${id}`, { method: "DELETE" });
     
             if (!res.ok) {
-                setError("Failed to delete workout");
+                setErrors((prev) => [...prev, "Failed to delete workout"]);
                 return;
             }
             
-            alert("User deleted successfully");
+            alert("Workout deleted successfully");
             router.push("/workouts")
         } catch (err) {
             console.error(err);
-            setError("Failed to delete workout.");
+            setErrors((prev) => [...prev, "Failed to delete workout"]);
             return;
         }
         };
@@ -90,7 +92,7 @@ export const WorkOutHeader = ({workout}: {workout: WorkoutWithRelations}) => {
                     {/* Like heart */}
                     {/* dot menu with sharing functions*/}
                     <div className="flex flex-col space-y-4 py-4 shadow-md shadow-midnightblue rounded-lg">
-                        {error && <Error error={error} />}
+                        <Errors errors={errors} />
                         {session && 
                             <div className="px-4">
                                 <EditDeleteButtons 
