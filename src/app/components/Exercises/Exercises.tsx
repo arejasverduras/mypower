@@ -64,7 +64,7 @@ const checkForSignIn = () => {
         clearMessages();
         setLoading(true);
         try {
-            const res = await fetch("/api/exerciss", {
+            const res = await fetch("/api/exercises", {
                 method: "POST",
                 headers: { "Content-Type": "application/json"}, 
                 body: JSON.stringify(newExercise),
