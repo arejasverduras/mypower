@@ -12,9 +12,10 @@ export const Exercises = () => {
     const [exercises, setExercises] = useState<ExerciseWithRelations[]>([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const { session, loading } = useSessionContext();
-    const { addMessage, setApiLoading, clearMessages } = useMessageContext();
+    const { addMessage, apiLoading, setApiLoading, clearMessages } = useMessageContext();
     const [search, setSearch] = useState('');
 
+    const sessionLoading = loading;
      // GET exercises from the API
   useEffect(() => {
     clearMessages();
@@ -101,27 +102,33 @@ const checkForSignIn = () => {
       <div className="bg-background min-h-screen p-6">
         
         <div className="max-w-4xl mx-auto"> 
-        
-            <h2 className="text-2xl">Browse exercises</h2>
-            {!loading && exercises.length === 0 && <p>No exercises available</p>}
+                <h2 className="text-2xl">Browse exercises</h2>
+                
+                <SearchBar search={search} setSearch={setSearch} placeholderText="Search exercises..." />
+
+                {apiLoading ? <div>Loading exercises...</div> : 
+                <ExerciseList
+                    exercises={filteredExercises}
+                />
+            }
+            {!apiLoading && exercises.length === 0 && <p>No exercises available</p>}
             
-            <SearchBar search={search} setSearch={setSearch} placeholderText="Search exercises..." />
-            {/* <Errors errors={errors} /> */}
-            <ExerciseList
-                exercises={filteredExercises}
-            />
-            <button
-              onClick={checkForSignIn}
-              className="py-2 px-4 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600"
-              >
-              + Add Exercise +
-            </button>
+            {sessionLoading ? 
+              <div>Loading session...</div> 
+              :
+              <button
+                onClick={checkForSignIn}
+                className="py-2 px-4 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600"
+                >
+                + Add Exercise +
+              </button>
+            }
+
             <AddExerciseModal 
               onAdd={handleAddExercise}
               isOpen={isModalOpen}
               onClose={()=> setIsModalOpen(false)}
               />
-              {loading && <div className="w-full h-full bg-black backdrop-blur-3xl">Loading..</div>}
           </div>
         </div>
     )
