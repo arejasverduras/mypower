@@ -11,11 +11,11 @@ import { SearchBar } from "../UI functions/SearchBar/SearchBar";
 export const Exercises = () => {
     const [exercises, setExercises] = useState<ExerciseWithRelations[]>([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const { session, loading } = useSessionContext();
+    const { session, sessionLoading } = useSessionContext();
     const { addMessage, apiLoading, setApiLoading, clearMessages } = useMessageContext();
     const [search, setSearch] = useState('');
 
-    const sessionLoading = loading;
+ 
      // GET exercises from the API
   useEffect(() => {
     clearMessages();

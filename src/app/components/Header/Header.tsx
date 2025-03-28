@@ -5,10 +5,10 @@ import UserAvatar from "../UserAvatar/UserAvatar"
 import { useSessionContext } from "@/context/SessionContext"
 
 export const HeaderJara = () => {
-    const { session, loading,  } = useSessionContext();
+    const { session, sessionLoading,  } = useSessionContext();
 
-    if (loading) {
-        return <div>Loading...</div>;
+    if (sessionLoading) {
+        return <div>Loading session...</div>;
       }
 
     if (session) {

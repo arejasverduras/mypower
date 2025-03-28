@@ -7,9 +7,9 @@ import SignInButton from "../components/SignInButton/SignInButton"
 import { SignOutButton } from "../components/SignOutButton/SignOutButton"
 
 export default function DashboardPage() {
-    const {session, loading} = useSessionContext();
+    const {session, sessionLoading} = useSessionContext();
     
-    if (loading) return (
+    if (sessionLoading) return (
         <div>Loading session..</div>
     )
 

@@ -14,9 +14,9 @@ export default function UsersPage() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
-    const [errors, setErrors] = useState<ErrorsType>([]);
+  const [errors, setErrors] = useState<ErrorsType>([]);
 
-  const { session, loading: sessionLoading } = useSessionContext();
+  const { session, sessionLoading } = useSessionContext();
 
   useEffect(() => {
     if (session) {
@@ -46,14 +46,7 @@ export default function UsersPage() {
     <div className="flex flex-col items-center justify-center h-screen">
       <h1 className="text-2xl font-bold mb-4">Please Sign In</h1>
       <p className="mb-4">You must be logged in to view this page.</p>
-      {/* <button
-        onClick={() => {
-          window.location.href = "/auth/signin";
-        }}
-        className="bg-blue-500 text-white px-4 py-2 rounded"
-      >
-        Sign In
-      </button> */}
+
       <SignInButton/>
     </div>
   );

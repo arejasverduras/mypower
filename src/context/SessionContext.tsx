@@ -6,7 +6,7 @@ import type { Session } from "next-auth";
 
 interface SessionContextType {
   session: Session | null;
-  loading: boolean;
+  sessionLoading: boolean;
   signIn: () => void;
   signOut: () => void;
 }
@@ -25,16 +25,16 @@ export default function SessionContextProvider({ children }: { children: React.R
 
 function InnerSessionProvider({ children }: { children: React.ReactNode }) {
   const { data: session, status } = useSession();
-  const [loading, setLoading] = useState(status === "loading");
+  const [sessionLoading, setSessionLoading] = useState(status === "loading");
 
   useEffect(() => {
-    setLoading(status === "loading");
+    setSessionLoading(status === "loading");
   }, [status]);
 
   console.log(session,status);
 
   return (
-    <SessionContext.Provider value={{ session, loading, signIn, signOut }}>
+    <SessionContext.Provider value={{ session, sessionLoading, signIn, signOut }}>
       {children}
     </SessionContext.Provider>
   );
