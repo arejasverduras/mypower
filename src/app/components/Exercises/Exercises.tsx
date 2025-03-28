@@ -12,13 +12,13 @@ export const Exercises = () => {
     const [exercises, setExercises] = useState<ExerciseWithRelations[]>([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const { session, loading } = useSessionContext();
-    const { addMessage, setLoading, clearMessages } = useMessageContext();
+    const { addMessage, setApiLoading, clearMessages } = useMessageContext();
     const [search, setSearch] = useState('');
 
      // GET exercises from the API
   useEffect(() => {
     clearMessages();
-    setLoading(true);
+    setApiLoading(true);
     
     const fetchExercises = async () => {
       try {
@@ -36,7 +36,7 @@ export const Exercises = () => {
         // setErrors((prev) => [...prev, "Failed to load exercises"]);
         addMessage({ type: "error", text: "Failed to load exercises" });
       } finally {
-        setLoading(false);
+        setApiLoading(false);
       }
     };
 
@@ -62,7 +62,7 @@ const checkForSignIn = () => {
         execution?: string;
       }) => {
         clearMessages();
-        setLoading(true);
+        setApiLoading(true);
         try {
             const res = await fetch("/api/exercises", {
                 method: "POST",
@@ -83,7 +83,7 @@ const checkForSignIn = () => {
             console.error(err);
             addMessage({ type: "error", text: "Failed to add exercise" });
         } finally {
-          setLoading(false);
+          setApiLoading(false);
         }
       };
 

@@ -15,14 +15,13 @@ export default function EditExerciseModal({
   onSave,
 }: EditExerciseModalProps) {
   const [formData, setFormData] = useState<Partial<ExerciseWithRelations>>({});
-  // const [loading, setLoading] = useState(true); // To handle loading state
-  // const [error, setError] = useState("");
-  const { addMessage, loading, setLoading, clearMessages} = useMessageContext();
+  const [submitLoading, setSubmitLoading] = useState(false); // To handle loading state
+  const { addMessage, apiLoading, setApiLoading, clearMessages} = useMessageContext();
 
   useEffect(() => {
     const fetchExerciseDetails = async () => {
       clearMessages();
-      setLoading(true);
+      setApiLoading(true);
       
       try {
         const res = await fetch(`/api/exercises/${exerciseId}`);
@@ -35,7 +34,7 @@ export default function EditExerciseModal({
       } catch (err) {
         console.error(err);
       } finally {
-        setLoading(false); // Stop loading once data is fetched
+        setApiLoading(false); // Stop loading once data is fetched
       }
     };
 
@@ -58,7 +57,8 @@ export default function EditExerciseModal({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     clearMessages();
-    setLoading(true);
+    setApiLoading(true);
+    setSubmitLoading(true);
 
     try {
       const res = await fetch(`/api/exercises/${exerciseId}`, {
@@ -80,7 +80,8 @@ export default function EditExerciseModal({
       console.error(err);
       addMessage({type: "error", text:"Failed to update exercise"});
     } finally {
-      setLoading(false);
+      setApiLoading(false);
+      setSubmitLoading(false);
     }
   };
 
@@ -89,7 +90,7 @@ export default function EditExerciseModal({
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
       <div className="bg-primary-color text-white p-6 rounded-lg shadow-lg w-full max-w-md">
         <h2 className="text-xl font-bold mb-4">Edit Exercise</h2>
-    {loading ? (<div>Loading exercise details.. </div>) : 
+    {apiLoading ? (<div>{submitLoading ? "Submitting.." : "Loading exercise details.."} </div>) : 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium">Title</label>

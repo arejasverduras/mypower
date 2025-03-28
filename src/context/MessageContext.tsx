@@ -8,8 +8,8 @@ interface Message {
 
 interface MessageContextType {
   messages: Message[];
-  loading: boolean;
-  setLoading: (loading: boolean) => void;
+  apiLoading: boolean;
+  setApiLoading: (loading: boolean) => void;
   addMessage: (message: Message) => void;
   clearMessages: () => void;
 }
@@ -18,7 +18,7 @@ const MessageContext = createContext<MessageContextType | undefined>(undefined);
 
 export const MessageProvider = ({ children }: { children: ReactNode }) => {
   const [messages, setMessages] = useState<Message[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [apiLoading, setApiLoading] = useState<boolean>(false);
 
   const addMessage = (message: Message) => {
     setMessages((prevMessages) => [...prevMessages, message]);
@@ -30,7 +30,7 @@ export const MessageProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     // apiLoading, setApiLoading ??
-    <MessageContext.Provider value={{ messages, loading, setLoading, addMessage, clearMessages }}>
+    <MessageContext.Provider value={{ messages, apiLoading, setApiLoading, addMessage, clearMessages }}>
       {children}
     </MessageContext.Provider>
   );

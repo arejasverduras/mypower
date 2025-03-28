@@ -21,7 +21,7 @@ export const Exercise = ({exercise, index, view}:Exercise) => {
     const [open, setOpen] = useState(false);
     const [editingId, setEditingId] = useState<string | null>(null);
     const [exerciseData, setExerciseData] = useState<ExerciseWithRelations>(exercise)
-    const { addMessage, setLoading, clearMessages} = useMessageContext();
+    const { addMessage, setApiLoading, clearMessages} = useMessageContext();
     const { session } = useSessionContext();
     const [isAuthorized, setIsAuthorized] = useState(false);
     // const [referrer, setReferrer] = useState<string | null>(null);
@@ -84,11 +84,11 @@ export const Exercise = ({exercise, index, view}:Exercise) => {
      //   DELETE exercise
      const handleDeleteExercise = async (id:string) => {
         clearMessages();
-        setLoading(true);
+        setApiLoading(true);
         if (!isAuthorized) {
 
             addMessage({type: "error", text: "You are not authorized to delete this exercise."});
-            setLoading(false);
+            setApiLoading(false);
             return;
           }
 
@@ -107,7 +107,7 @@ export const Exercise = ({exercise, index, view}:Exercise) => {
           console.error(err);
           addMessage({type: "error", text: "Failed to delete exercise"});
         } finally {
-            setLoading(false);
+            setApiLoading(false);
         }
       };
 
