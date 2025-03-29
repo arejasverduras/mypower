@@ -7,34 +7,37 @@ import Link from "next/link";
 import Image from "next/image";
 import { SearchBar } from "../components/UI functions/SearchBar/SearchBar";
 import { User } from "@prisma/client";
-import { Errors, ErrorsType } from "../components/UI functions/Errors/Errors";
-
+import {useMessageContext} from "@/context/MessageContext";
 
 
 export default function UsersPage() {
   const [users, setUsers] = useState<User[]>([]);
-  const [loading, setLoading] = useState(false);
+
   const [search, setSearch] = useState("");
-  const [errors, setErrors] = useState<ErrorsType>([]);
+
 
   const { session, sessionLoading } = useSessionContext();
+  const { addMessage, apiLoading, setApiLoading, clearMessages } = useMessageContext();
 
   useEffect(() => {
     if (session) {
       const fetchUsers = async () => {
-        setLoading(true);
+        setApiLoading(true);
+        clearMessages();
         try {
           const res = await fetch("/api/users");
           if (!res.ok) {
-            setErrors((prev) => [...prev, "Failed to fetch users"]);
+            addMessage({type: "error", text: "API: Failed to fetch users"});
+            return;
           }
           const data = await res.json();
           setUsers(data);
+          addMessage({type: "success", text: "Users loaded successfully"});
         } catch (error) {
           console.error("Failed to fetch users", error);
-          setErrors((prev) => [...prev, "Something went wrong: failed to fetch users"]);
+          addMessage({type: "error", text: "Failed to fetch users"});
         } finally {
-          setLoading(false);
+          setApiLoading(false);
         }
       };
 
@@ -79,9 +82,7 @@ export default function UsersPage() {
         <>
           <h1 className="text-xl font-bold mb-4">Users</h1>
             <SearchBar search={search} setSearch={setSearch} placeholderText="Search users..."/>
-            <Errors errors={errors} />
-          {loading ? <p>Loading...</p> : userList}
-         
+          {apiLoading ? <p>Loading...</p> : userList}
         </>
       )}
     </div>

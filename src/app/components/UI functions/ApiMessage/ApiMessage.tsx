@@ -3,9 +3,9 @@
 import { useMessageContext } from "@/context/MessageContext";
 
 export const ApiMessage = () => {
-  const { messages, loading, clearMessages } = useMessageContext();
+  const { messages, apiLoading, clearMessages } = useMessageContext();
 
-  if (loading) {
+  if (apiLoading) {
     return (
       <div className="fixed top-0 left-0 right-0 p-4 z-50">
         <div className="p-4 mb-4 rounded-lg shadow-md bg-blue-500 text-white">
