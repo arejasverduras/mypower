@@ -15,7 +15,7 @@ export const Exercises = () => {
     const { addMessage, apiLoading, setApiLoading, clearMessages } = useMessageContext();
     const [search, setSearch] = useState('');
 
- 
+    
      // GET exercises from the API
   useEffect(() => {
     clearMessages();
