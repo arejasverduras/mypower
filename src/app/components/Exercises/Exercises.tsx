@@ -15,7 +15,7 @@ export const Exercises = () => {
     const { addMessage, apiLoading, setApiLoading, clearMessages } = useMessageContext();
     const [search, setSearch] = useState('');
 
-    
+
      // GET exercises from the API
   useEffect(() => {
     clearMessages();
@@ -26,15 +26,13 @@ export const Exercises = () => {
         const res = await fetch("/api/exercises", { method: "GET" });
         if (!res.ok)  {
           addMessage({ type: "error", text: "Failed to load exercises" });
-          // setErrors((prev) => [...prev, "Failed to load exercises"]);
           return;
         }
         const data = await res.json();
         setExercises(data);
-        addMessage({ type: "success", text: "Exercise loaded successfully" });
+        // addMessage({ type: "success", text: "Exercise loaded successfully" });
       } catch (err) {
         console.error(err);
-        // setErrors((prev) => [...prev, "Failed to load exercises"]);
         addMessage({ type: "error", text: "Failed to load exercises" });
       } finally {
         setApiLoading(false);
@@ -74,7 +72,6 @@ const checkForSignIn = () => {
             if (!res.ok) 
               {
                 addMessage({ type: "error", text: "API: Failed to add exercise" });
-                // setErrors((prev) => [...prev, "API: Failed to add exercises"]);
                 return;
               };
             const addedExercise = await res.json();
@@ -103,16 +100,13 @@ const checkForSignIn = () => {
         
         <div className="max-w-4xl mx-auto"> 
                 <h2 className="text-2xl">Browse exercises</h2>
-                
                 <SearchBar search={search} setSearch={setSearch} placeholderText="Search exercises..." />
-
                 {apiLoading ? <div>Loading exercises...</div> : 
                 <ExerciseList
                     exercises={filteredExercises}
                 />
             }
-            {!apiLoading && exercises.length === 0 && <p>No exercises available</p>}
-            
+            {!apiLoading && exercises.length === 0 && <p>No exercises available</p>}   
             {sessionLoading ? 
               <div>Loading session...</div> 
               :
