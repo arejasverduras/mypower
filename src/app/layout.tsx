@@ -27,13 +27,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <MessageProvider>
         <SessionContextProvider> {/* ✅ Only this is needed */}
-          <MessageProvider>
+          
             <ApiMessage />
             <HeaderJara />
             <main>{children}</main>
-          </MessageProvider>
+          
         </SessionContextProvider>
+        </MessageProvider>
       </body>
     </html>
   );

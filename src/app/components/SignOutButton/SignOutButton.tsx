@@ -1,7 +1,10 @@
 "use client";
-import { signOut } from "next-auth/react";
+
+import { useSessionContext } from "@/context/SessionContext";
 
 export function SignOutButton() {
+  const { signOut } = useSessionContext();
+
 
   return (
     <button
