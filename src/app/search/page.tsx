@@ -7,15 +7,15 @@ import Link from "next/link";
 import { ExerciseWithRelations } from "../../types/exercise";
 import { WorkoutWithRelations } from "../../types/workout";
 import { User as UserType } from "@prisma/client";
-import { Errors, ErrorsType } from "../components/UI functions/Errors/Errors";
+import { useMessageContext } from "@/context/MessageContext";
 
 export default function SearchPage() {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [exercises, setExercises] = useState<ExerciseWithRelations[]>([]);
   const [workouts, setWorkouts] = useState<WorkoutWithRelations[]>([]);
   const [users, setUsers] = useState<UserType[]>([]);
-  const [errors, setErrors] = useState<ErrorsType>([]);
 
+  const { addMessage, apiLoading, setApiLoading, clearMessages } = useMessageContext();
 
 
 
@@ -24,13 +24,14 @@ export default function SearchPage() {
       setExercises([]);
       setWorkouts([]);
       setUsers([]);
-      setErrors([]); // ✅ Ensure errors are cleared when no search
+      clearMessages(); 
       return;
     }
   
     const fetchData = async () => {
-      setErrors([]); // ✅ Reset errors at start
-  
+      clearMessages(); 
+      setApiLoading(true);
+
       try {
         const [workoutsRes, exercisesRes, usersRes] = await Promise.allSettled([
           fetch(`/api/workouts?search=${searchTerm}`),
@@ -45,11 +46,16 @@ export default function SearchPage() {
             setWorkouts(workoutsData);
           } else {
             console.error("Error fetching workouts:", await workoutsRes.value.text());
-            setErrors((prev) => [...prev, "Error fetching Workouts"]);
+
+            addMessage({
+              type: "error",
+              text  : "Error fetching workouts"})
           }
         } else {
           console.error("Request failed (workouts):", workoutsRes.reason);
-          setErrors((prev) => [...prev, "Network error fetching Workouts"]);
+          addMessage({
+            type: "error",
+            text  : "Network error fetching workouts"})
         }
   
         // ✅ Handle Exercises Response
@@ -59,29 +65,45 @@ export default function SearchPage() {
             setExercises(exercisesData);
           } else {
             console.error("Error fetching exercises:", await exercisesRes.value.text());
-            setErrors((prev) => [...prev, "Error fetching Exercises"]);
+            addMessage({
+              type: "error",
+              text  : "Error fetching exercises"})
+            
           }
         } else {
           console.error("Request failed (exercises):", exercisesRes.reason);
-          setErrors((prev) => [...prev, "Network error fetching Exercises"]);
+          addMessage({
+            type: "error",
+            text  : "Network error fetching exercises"})
         }
   
         // ✅ Handle Users Response
         if (usersRes.status === "fulfilled") {
           if (usersRes.value.ok) {
-            const usersData: UserType[] = await usersRes.value.json();
+            const { users: usersData }: { users: UserType[] } = await usersRes.value.json();
+            // const usersData: UserType[] = await usersRes.value.json();
             setUsers(usersData);
           } else {
             console.error("Error fetching users:", await usersRes.value.text());
-            setErrors((prev) => [...prev, "Error fetching Users"]);
+    
+            addMessage({
+              type: "error",
+              text  : "Error fetching users"})
           }
         } else {
           console.error("Request failed (users):", usersRes.reason);
-          setErrors((prev) => [...prev, "Network error fetching Users"]);
+
+          addMessage({
+            type: "error",
+            text  : "Network error fetching users"})
         }
       } catch (error) {
         console.error("Unexpected Error fetching search results:", error);
-        setErrors((prev) => [...prev, "Unexpected error fetching search results"]);
+        addMessage({
+          type: "error",
+          text  : "Unexpected error fetching search results"})
+      } finally {
+        setApiLoading(false);
       }
     };
   
@@ -95,10 +117,28 @@ export default function SearchPage() {
         <h1 className="text-3xl font-heading text-headertext font-bold mb-6 text-center sm:text-left">Search</h1>
         <SearchBar search={searchTerm} setSearch={setSearchTerm} placeholderText="Search programs, workouts, exercises, tags, users ..." />
       </div>
-      <Errors errors={errors} />
-      
+      <div className="max-w-4xl mx-auto">
+        {apiLoading ? (
+          // Loading Spinner
+          <div className="flex justify-center">
+            <svg
+              className="animate-spin h-10 w-10 text-blue-500"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle className="opacity-25" cx="12" cy="12" r="10" strokeWidth="4" stroke="currentColor" />
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4.293 6.293a1 1 0 011.414 0L12 12.586l6.293-6.293a1 1 0 011.414 1.414l-7 7a1 1 0 01-1.414 0l-7-7a1 1 0 010-1.414z"
+              />
+            </svg>
+          </div>
+          // export to component
+        ) 
+        :
       <div className="searchResults">
-        
         {exercises.length === 0 && workouts.length === 0 && users.length === 0 ? (
           <p className="text-gray-500 text-center">No results found</p>
         ) : (
@@ -132,6 +172,7 @@ export default function SearchPage() {
             )}
           </div>
         )}
+      </div>}
       </div>
     </div>
   );

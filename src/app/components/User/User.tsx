@@ -31,7 +31,7 @@ export const User = ({id, data}: UserProps) => {
     }
 
     const onClose = () => setEditingId(null);
-    // PATCH exercise (update)
+    // PATCH user (update)
     const handleSaveExercise = (updatedUser: UserProps["data"]& {createdExercises: ExerciseWithRelations[]}) => {
         if (!session) {
             addMessage({type: "error", text: "You are not authorized to edit this exercise."});
@@ -42,7 +42,7 @@ export const User = ({id, data}: UserProps) => {
         setEditingId(null); // close modal
     };
 
-    //   DELETE exercise
+    //   DELETE user
     const handleDeleteUser = async (id:string) => {
         clearMessages();
        
