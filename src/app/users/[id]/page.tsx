@@ -7,39 +7,48 @@ export async function generateStaticParams() {
 
   if (!res.ok) throw new Error("Failed to fetch users");
 
-  const users = await res.json();
+  const data = await res.json();
 
-  return users.users.map((user: {id: string}) => ({
-      id: user.id, // Convert ID's to strings
-  }))
+  return data.users.map((user: { id: string }) => ({
+    id: user.id,
+  }));
+}
 
-};
+export default async function UserProfilePage({
+  params,
+}: {
+  params: { id: string };
+}) {
+  const { id } = params;
 
-export default async function UserProfilePage({ params }: { params: Promise<{id: string}>}) {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/users/${id}`,
+      { next: { revalidate: 10 } }
+    );
 
-  const { id } = await params;
+    if (res.status === 404) {
+      notFound(); // Redirect to the 404 page
+    }
 
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/users/${id}`, {next: {revalidate: 10}});
-      // Handle invalid or non-numeric IDs (400 response)
-      if (res.status === 400) {
-        notFound(); // Redirect to the 404 page
-      }
-    
-        if (res.status === 404) {
-            notFound(); // redirect to 404 page
-        }
-    
-        if (!res.ok) throw new Error("Failed to fetch user details");
-    
-        const user = await res.json();
+    if (!res.ok) {
+      throw new Error("Failed to fetch user details");
+    }
 
-  if (!user) {
-    return <p>User not found</p>;
+    const user = await res.json();
+
+    if (!user) {
+      return <p>User not found</p>;
+    }
+
+    return (
+      <>
+        <BackButton fallback="/users" />
+        <User data={user} id={id} />
+      </>
+    );
+  } catch (error) {
+    console.error("Error fetching user details:", error);
+    notFound(); // Redirect to the 404 page
   }
-  return (
-    <>
-        <BackButton fallback="/users"/>
-        <User data={user} id={id}/>
-    </>
-  );
 }

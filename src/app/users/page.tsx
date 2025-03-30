@@ -31,7 +31,7 @@ export default function UsersPage() {
             return;
           }
           const data = await res.json();
-          setUsers(data);
+          setUsers(data.users);
           addMessage({type: "success", text: "Users loaded successfully"});
         } catch (error) {
           console.error("Failed to fetch users", error);
@@ -44,6 +44,8 @@ export default function UsersPage() {
       fetchUsers();
     }
   }, [session]);
+
+  console.log(users);
 
   // Fallback content if not authenticated
   const signInPrompt = (

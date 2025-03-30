@@ -5,24 +5,18 @@ import { authOptions } from "../../../../auth";
 import prisma from "@/lib/prisma";
 
 export const GET = async (req: Request) => {
-  const session = await getServerSession(authOptions);
-
-  if (!session) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
-
-
   try {
+    const session = await getServerSession(authOptions);
+
     const { searchParams } = new URL(req.url);
     const search = searchParams.get("search")?.toLowerCase() || "";
-    
-    const isSuperuser = session.user?.isSuperuser;
+
+    const isSuperuser = session?.user?.isSuperuser;
 
     const whereClause = search
       ? {
           OR: [
-            { name: { contains: search} },
+            { name: { contains: search } },
             { email: { contains: search } },
             { bio: { contains: search } },
             { quote: { contains: search } },
@@ -45,7 +39,8 @@ export const GET = async (req: Request) => {
       orderBy: { createdAt: "desc" },
     });
 
-    return NextResponse.json( users , { status: 200 });
+    // Wrap the users array in an object with a `users` key
+    return NextResponse.json({ users }, { status: 200 });
   } catch (error) {
     console.error("Error fetching users:", error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });

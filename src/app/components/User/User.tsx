@@ -1,5 +1,4 @@
 "use client"
-
 import { EditUserModal } from "./EditUserModal/EditUserModal"
 import { EditDeleteButtons } from "../UI functions/EditDeleteButtons/EditDeleteButtons"
 import Image from "next/image"
@@ -9,6 +8,7 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { User as UserType } from "@prisma/client"
 import { ExerciseWithRelations } from "../../../types/exercise"
+import { useMessageContext } from "@/context/MessageContext"
 
 interface UserProps  {
     id: string,
@@ -17,14 +17,12 @@ interface UserProps  {
 
 export const User = ({id, data}: UserProps) => {
     const [userData, setUserData] = useState(data);
-    const [error, setError] = useState('');
     const [editingId, setEditingId] = useState<string | null>(null);
-    
-
     const {session} = useSessionContext();
+    const { addMessage, setApiLoading, clearMessages } = useMessageContext();
     const router = useRouter();
 
-    const isAuthorized = session?.id === id || session?.isSuperuser;
+    const isAuthorized = session?.user?.id === id || session?.user?.isSuperuser;
 
     // triggers editing modal
     const onEdit = (id: ExerciseWithRelations["id"]) => {
@@ -36,7 +34,7 @@ export const User = ({id, data}: UserProps) => {
     // PATCH exercise (update)
     const handleSaveExercise = (updatedUser: UserProps["data"]& {createdExercises: ExerciseWithRelations[]}) => {
         if (!session) {
-            setError("You are not authorized to edit this exercise.");
+            addMessage({type: "error", text: "You are not authorized to edit this exercise."});
             return;
             }
         
@@ -46,24 +44,31 @@ export const User = ({id, data}: UserProps) => {
 
     //   DELETE exercise
     const handleDeleteUser = async (id:string) => {
-
+        clearMessages();
+       
     if (!isAuthorized) {
-        setError("You are not authorized to delete this user.");
+        addMessage({type: "error", text: "You are not authorized to delete this user."});
         return;
         }
 
     if (!confirm("Are you sure you want to delete this user?")) return;
 
     try {
+        setApiLoading(true);
         const res = await fetch(`/api/users/${id}/edit`, { method: "DELETE" });
 
-        if (!res.ok) throw new Error("Failed to delete user");
-        
-        alert("User deleted successfully");
-        router.push("/users")
+        if (!res.ok) {
+            const errorData = await res.json();
+            addMessage({type: "error", text: errorData.message || "Failed to delete user."});
+            return;
+        }
+        router.push("/users");
+        addMessage({type: "success", text: "User deleted successfully."});
     } catch (err) {
         console.error(err);
-        alert("Failed to delete user.");
+        addMessage({type: "error", text: "Failed to delete user."});
+    } finally {
+        setApiLoading(false);
     }
     };
     
@@ -82,7 +87,6 @@ export const User = ({id, data}: UserProps) => {
                     handleDelete={handleDeleteUser}
                     />
                 }
-                {error && <div className="text-red-500">{error}</div>}
                 <h2 className="text-xl font-semibold mt-6">Added Exercises:</h2>
                 <ul>
                     {userData.createdExercises.map((exercise: ExerciseWithRelations) => (

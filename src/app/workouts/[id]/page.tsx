@@ -31,7 +31,7 @@ export default async function WorkoutPage({params}: { params: Promise<{id:string
         notFound(); // redirect to 404 page
     }
 
-    if (!res.ok) throw new Error("Failed to fetch worktout details");
+    if (!res.ok) throw new Error("Failed to fetch workout details");
 
     const workout = await res.json();
 
