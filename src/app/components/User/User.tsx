@@ -62,8 +62,8 @@ export const User = ({id, data}: UserProps) => {
             addMessage({type: "error", text: errorData.message || "Failed to delete user."});
             return;
         }
-        router.push("/users");
         addMessage({type: "success", text: "User deleted successfully."});
+        router.push("/users");
     } catch (err) {
         console.error(err);
         addMessage({type: "error", text: "Failed to delete user."});
