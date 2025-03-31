@@ -20,8 +20,16 @@ export const MessageProvider = ({ children }: { children: ReactNode }) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [apiLoading, setApiLoading] = useState<boolean>(false);
 
-  const addMessage = (message: Message) => {
+  const addMessage = (message: Message, timeout = 5000) => {
     setMessages((prevMessages) => [...prevMessages, message]);
+  
+    if (message.type === "success") {
+      setTimeout(() => {
+        setMessages((prevMessages) =>
+          prevMessages.filter((msg) => msg !== message)
+        );
+      }, timeout);
+    }
   };
 
   const clearMessages = () => {

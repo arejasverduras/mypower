@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import type { User } from "@prisma/client";
 import { ExerciseWithRelations } from "../../../../types/exercise";
+import{ useMessageContext }from "@/context/MessageContext";
+import { LoadingSpinner } from "../../UI functions/LoadingSpinner/LoadingSpinner";
 
 
 interface EditUserModalProps {
@@ -11,22 +13,29 @@ interface EditUserModalProps {
 
   export const EditUserModal = ({userId, onClose, onSave}: EditUserModalProps) => {
     const [formData, setFormData] = useState<Partial<User>>({});
-    const [loading, setLoading] = useState(true); // To handle loading state
     const [usernameAvailable, setUsernameAvailable] = useState<boolean | null>(null);
     const [validationLoading, setValidationLoading] = useState(false);
+    const { addMessage, apiLoading, setApiLoading, clearMessages } = useMessageContext();
 
 
     useEffect(() => {
         const fetchUserDetails = async () => {
+          clearMessages();
+          setApiLoading(true); // Start loading state
+
           try {
             const res = await fetch(`/api/users/${userId}`);
-            if (!res.ok) throw new Error("Failed to fetch user details");
+            if (!res.ok) {
+              addMessage({type: "error", text: "Failed to fetch user details."});
+              return;
+            }
             const data = await res.json();
             setFormData(data);
           } catch (err) {
             console.error(err);
-          } finally {
-            setLoading(false); // Stop loading once data is fetched
+            addMessage({type: "error", text: "An error occurred while fetching user details."});
+          } finally { 
+            setApiLoading(false); 
           }
         };
     
@@ -79,30 +88,38 @@ interface EditUserModalProps {
             return;
           }
       
-    
+
         try {
+          clearMessages();
+          setApiLoading(true); 
+          
           const res = await fetch(`/api/users/${userId}/edit`, {
             method: "PATCH",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(formData),
           });
     
-          if (!res.ok) throw new Error("Failed to update user");
+          if (!res.ok) {
+            addMessage({type: "error", text: "Failed to update user."});
+            return;
+          }
     
           const updatedUser = await res.json();
           onSave(updatedUser);
           onClose();
+          addMessage({type: "success", text: "User updated successfully."});
         } catch (err) {
           console.error(err);
+          addMessage({type: "error", text: "An error occurred while updating user."});
+        } finally {
+          setApiLoading(false);
         }
       };
 
-      if (loading) {
+      if (apiLoading) {
         return (
-          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="text-white">Loading form...</div>
-          </div>
-        );
+          <LoadingSpinner />
+        )
       }
 
       return (
