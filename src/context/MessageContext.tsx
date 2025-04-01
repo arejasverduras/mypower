@@ -20,7 +20,7 @@ export const MessageProvider = ({ children }: { children: ReactNode }) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [apiLoading, setApiLoading] = useState<boolean>(false);
 
-  const addMessage = (message: Message, timeout = 5000) => {
+  const addMessage = (message: Message, timeout = 3000) => {
     setMessages((prevMessages) => [...prevMessages, message]);
   
     if (message.type === "success") {
@@ -37,7 +37,6 @@ export const MessageProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    // apiLoading, setApiLoading ??
     <MessageContext.Provider value={{ messages, apiLoading, setApiLoading, addMessage, clearMessages }}>
       {children}
     </MessageContext.Provider>
