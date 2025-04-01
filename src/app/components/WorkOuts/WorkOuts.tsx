@@ -5,25 +5,24 @@ import { WorkOutList } from "./WorkOutList/WorkOutList";
 import { SearchBar } from "../UI functions/SearchBar/SearchBar";
 import { useSessionContext } from "@/context/SessionContext";
 import { CreateWorkoutModal } from "./CreateWorkoutModal/CreateWorkoutModal";
-import { Errors, ErrorsType } from "../UI functions/Errors/Errors";
+import { useMessageContext } from "@/context/MessageContext";
+import { LoadingSpinner } from "../UI functions/LoadingSpinner/LoadingSpinner";
 
 export const WorkOuts = () => {
     const [workouts, setWorkouts] = useState<WorkoutWithRelations[]>([]);
     const [search, setSearch] = useState("");
-    const [errors, setErrors] = useState<ErrorsType>([]);
-    const [loading, setLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const { session } = useSessionContext();
+    const { addMessage, apiLoading, setApiLoading, clearMessages} = useMessageContext();
 
     useEffect(() => {
         const fetchWorkouts = async () => {
-            setLoading(true);
-            setErrors([]);
+            setApiLoading(true);
+            clearMessages();
             try {
                 const res = await fetch("/api/workouts", { method: "GET" });
                 if (!res.ok) {
-     
-                    setErrors((prev) => [...prev, "API: Failed to load workouts"]);
+                    addMessage({type: "error", text: "Failed to load workouts"});    
                     return;
                 }
                 const data = await res.json();
@@ -31,17 +30,17 @@ export const WorkOuts = () => {
                 setWorkouts(data);
             } catch (err) {
                 console.error(err);
-                setErrors((prev) => [...prev, "Failed to load workouts"]);
-                
+                addMessage({type: "error", text: "Failed to load workouts"});
             } finally {
-                setLoading(false);
+                setApiLoading(false);
             }
         };
         fetchWorkouts();
     }, []);
 
     const handleAddWorkout = async (newWorkout: { title: string; description?: string | null }) => {
-        setErrors([]);
+        clearMessages();
+        setApiLoading(true);
         try {
             const res = await fetch("/api/workouts", {
                 method: "POST",
@@ -51,16 +50,17 @@ export const WorkOuts = () => {
 
             if (!res.ok) 
                 {
-                setErrors((prev) => [...prev, "Failed to add workouts"]);
+                addMessage({type: "error", text: "Failed to add workout"});
                 return
             };
-         
 
             const addedWorkout: WorkoutWithRelations = await res.json();
             setWorkouts((prev) => [addedWorkout, ...prev]);
         } catch (err) {
             console.error(err);
-            setErrors((prev) => [...prev, "Failed to add workouts"]);
+            addMessage({type: "error", text: "Failed to add workout"});
+        } finally {
+            setApiLoading(false);
         }
     };
 
@@ -88,14 +88,13 @@ export const WorkOuts = () => {
         <div className="bg-background min-h-screen p-6">
             <div className="max-w-4xl mx-auto">
                 <SearchBar search={search} setSearch={setSearch} placeholderText="Search workouts..." />
-                {loading ? (
-                    <p className="text-gray-500 text-center">Loading...</p>
+                {apiLoading ? (
+                    <LoadingSpinner />
                 ) : workoutsList.length === 0 ? (
                     <p className="text-gray-500 text-center">No workouts found</p>
                 ) : (
                     <WorkOutList workouts={workoutsList} />
                 )}
-                <Errors errors={errors}/>
                 <button
                     onClick={checkForSignIn}
                     className="py-2 px-4 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600"
