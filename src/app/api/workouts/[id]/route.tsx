@@ -48,7 +48,7 @@ export const PATCH = async (req: Request, {params}: {params: {id:string}}) => {
     });
 
     if (!workout) {
-      return NextResponse.json({ error: "Exercise not found" }, { status: 404 });
+      return NextResponse.json({ error: "Workout not found" }, { status: 404 });
     }
 
   if (session.user.id !== workout.createdById && !session.user.isSuperuser ) {
@@ -57,19 +57,30 @@ export const PATCH = async (req: Request, {params}: {params: {id:string}}) => {
 
   const body = await req.json();
 
+
       // 4. Update the exercise
       try {
+        // Parse tags from the request body
+        const tags = body.tags || [];
+    
+        // Update the workout, including tags
         const updatedWorkout = await prisma.workout.update({
           where: { id },
           data: {
             title: body.title,
             description: body.description,
-            // image: body.image
+            tags: {
+              set: [], // Clear existing tags
+              connectOrCreate: tags.map((tag: string) => ({
+                where: { name: tag },
+                create: { name: tag },
+              })),
+            },
           },
           include: {
             createdBy: true,
             tags: true,
-            exercises: { include: { exercise: { include: {createdBy: true}} } },
+            exercises: { include: { exercise: { include: { createdBy: true } } } },
             likedBy: true,
             programs: true,
           },
@@ -82,72 +93,7 @@ export const PATCH = async (req: Request, {params}: {params: {id:string}}) => {
       }
 
 }
-// PATCH = update metadata
-// export async function PATCH(
-//   req: NextRequest,
-//   context: { params: { id: string } },
-// ): Promise<Response> 
 
-// {
-//   return auth(async (
-
-//       authreq: any & { auth?: { user?: User } }
-//   ) => {
-//       const { id } = await context.params;
-
-//   // 1. checks for a logged in user
-//       if (!authreq.auth?.user) {
-//       return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
-//       }
-
-//   //   2. check if the workout exists
-//   const existingWorkout = await prisma.workout.findUnique({
-//       where: { id }
-//   })
-
-//   if (!existingWorkout) {
-//       return NextResponse.json({ error: "Workout not found"}, { status: 404})
-//   }
-
-//   // 3. Check if the user is the creator or a superuser
-//   const isSelfOrSuperuser =
-//           authreq?.auth?.user.id === id || authreq?.auth?.user.isSuperuser;
-
-//   if (!isSelfOrSuperuser) {
-//       return NextResponse.json({ error: "Not authorized" }, { status: 403 });
-//   }
-
-//   const { body } = await req.json();
-
-
-  // 4. Update the workouts metadata
-  // try {
-  //     const updatedWorkout = await prisma.workout.update({
-  //       where: { id },
-  //       data: {
-  //         title: body.title,
-  //         description: body.description,
-  //         // image: body.image
-  //       },
-  //       include: {
-  //         createdBy: true,
-  //         tags: true,
-  //         exercises: { include: { exercise: { include: {createdBy: true}} } },
-  //         likedBy: true,
-  //         programs: true,
-  //       },
-  //     });
-  
-  //     return NextResponse.json(updatedWorkout, { status: 200 });
-  //   } catch (error) {
-  //     console.log(error);
-  //     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
-  //   }
-  // }
-//           )(req, context) as Promise<Response>;
-// }
-
-// Delete the workout here
 
 
 export async function DELETE(req: Request, { params }: { params: { id: string } }) {

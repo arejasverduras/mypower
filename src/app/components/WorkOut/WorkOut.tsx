@@ -5,7 +5,7 @@ import { WorkOutHeader } from "./WorkOutHeader/WorkOutHeader";
 import { WorkOutExercises } from "./WorkOutExercises/WorkOutExercises";
 import { WorkOutAddExercises } from "./WorkOutAddExercises/WorkOutAddExercises";
 import { useSessionContext } from "@/context/SessionContext";
-import { Error } from "../UI functions/Errors/ErrorItem/ErrorItem";
+import { useMessageContext } from "@/context/MessageContext";
 
 
 // import Head from "next/head";
@@ -18,12 +18,14 @@ interface WorkOutProps {
 export const WorkOut = ({workout, view}: WorkOutProps) => {
     const [exercises, setExercises] = useState(workout.exercises);
     const {session} = useSessionContext();
-    const [error, setError] = useState("");
-    // const [message, setMessage] = useState("")
+    const { addMessage,  setApiLoading, clearMessages } = useMessageContext();
 
     const creatorOrSuper = session?.user?.id === workout.createdBy.id || session?.user?.isSuperuser;
 
     const handleDeleteExercise = async (exerciseId: string) => {
+        clearMessages();
+        setApiLoading(true);
+        
         try {
             const res = await fetch(`/api/workouts/${workout.id}/edit`, {
                 method: 'DELETE',
@@ -34,16 +36,19 @@ export const WorkOut = ({workout, view}: WorkOutProps) => {
             });
 
             if (!res.ok) {
-                setError('Failed to delete exercise');
+                addMessage({type: "error", text: "Failed to remove exercise from workout"});
                 return;
             }
 
             const updatedWorkout = await res.json();
             setExercises(updatedWorkout.exercises);
-            // setMessage(updatedWorkout.message);
+            addMessage({type: "success", text: "Exercise removed successfully from workout"});
         } catch (error) {
             console.error(error);
-            setError('Failed to delete exercise');
+            addMessage({type: "error", text: "Failed to remove exercise from workout"});
+
+        } finally {
+            setApiLoading(false);
         }
     };
 
@@ -51,8 +56,6 @@ export const WorkOut = ({workout, view}: WorkOutProps) => {
     return (
         <div className=" flex flex-col items-start space-y-4 max-w-5xl mx-auto">
             <WorkOutHeader workout={workout} />
-            {error && <Error error={error} />}
-            {/* {message && <div>{message}</div>} */}
             <WorkOutExercises workoutExercises={exercises || []} context={creatorOrSuper? "edit": "view"} onDelete={handleDeleteExercise} />
             <div className="h-4"></div>
             {creatorOrSuper && <WorkOutAddExercises exercises={exercises} setExercises={setExercises} workoutId={workout.id} />}

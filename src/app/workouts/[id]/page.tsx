@@ -1,5 +1,4 @@
 import { notFound } from "next/navigation";
-// import { Exercise } from "@/app/components/Exercises/ExerciseList/Exercise/Exercise";
 import {WorkOut} from "@/app/components/WorkOut/WorkOut";
 
 export async function generateStaticParams() {
