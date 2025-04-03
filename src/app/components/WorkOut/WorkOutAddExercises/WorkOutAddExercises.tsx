@@ -4,7 +4,7 @@ import { SearchBar } from "../../UI functions/SearchBar/SearchBar";
 import { WorkOutAddExerciseCard } from "../WorkOutAddExerciseCard/WorkOutAddExerciseCard";
 import { WorkoutWithRelations } from "../../../../types/workout";
 import { ExerciseWithRelations } from "../../../../types/exercise";
-import { Error } from "../../UI functions/Errors/ErrorItem/ErrorItem";
+import { useMessageContext } from "@/context/MessageContext";
 
 interface WorkOutAddExercisesProps {
 
@@ -17,32 +17,41 @@ export const WorkOutAddExercises = ({exercises, setExercises, workoutId}: WorkOu
     // search exercises from the library to add to the workout on the workout page (wrapped in WorkOut component)
     const [search, setSearch] = useState("");
     const [searchResults, setSearchResults] = useState<ExerciseWithRelations[]>([]);
-    const [error, setError] = useState("");
-    const [loading, setLoading] = useState(false);
+
+    const { addMessage, apiLoading, setApiLoading, clearMessages } = useMessageContext();
     
     // search for exercises by querying the api at /exercises. use debouncing while typing the search query
     useEffect(() => {
-        const delayDebounceFn = setTimeout(() => {
+        const delayDebounceFn = setTimeout(async () => {
             if (search !== "") {
-                setLoading(true);
-                fetch(`/api/exercises?search=${search}`)
-                    .then(res => res.json())
-                    .then(data => {
-                        setSearchResults(data);
-                        setLoading(false);
-                    })
-                    .catch(err => {
-                        setError(err);
-                        setLoading(false);
-                        console.log(err);
-                    });
+                clearMessages();
+                setApiLoading(true);
+    
+                try {
+                    const res = await fetch(`/api/exercises?search=${search}`);
+                    if (!res.ok) {
+                        throw new Error("Failed to fetch exercises");
+                    }
+    
+                    const data = await res.json();
+                    setSearchResults(data);
+                } catch (err) {
+                    console.error("Error searching exercises:", err);
+                    addMessage({ type: "error", text: "Failed to search exercises" });
+                } finally {
+                    setApiLoading(false);
+                }
             }
         }, 300);
-
+    
         return () => clearTimeout(delayDebounceFn);
     }, [search]);
 
+    // POST exercise to the workout
     const handleAddExercise = async (exercise: ExerciseWithRelations) => {
+        clearMessages();
+        setApiLoading(true);
+        
         try {
             const res = await fetch(`/api/workouts/${workoutId}/edit`, {
                 method: 'POST',
@@ -53,15 +62,18 @@ export const WorkOutAddExercises = ({exercises, setExercises, workoutId}: WorkOu
             });
 
             if (!res.ok) {
-                setError('Failed to add exercise');
+                addMessage({type: "error", text: "Failed to add exercise"});
                 return;
             }
 
             const updatedWorkout = await res.json();
             setExercises(updatedWorkout.exercises);
+            addMessage({type: "success", text: "Exercise added successfully"});
         } catch (error) {
             console.error(error);
-            setError('Failed to add exercise');
+            addMessage({type: "error", text: "Failed to add exercise"});
+        } finally {
+            setApiLoading(false);
         }
     };
 
@@ -72,10 +84,9 @@ export const WorkOutAddExercises = ({exercises, setExercises, workoutId}: WorkOu
     return (
         <div className="bg-midnightblue w-full rounded-lg">
             <SearchBar search={search} setSearch={setSearch} placeholderText="Find exercises to add.." />
-            {error && <Error error={error} />}
 
             <div className="flex flex-col space-y-8 bg-midnightblue text-white p-4 rounded-lg shadow-md w-full">
-            {loading ? <div>Searching...</div> :
+            {apiLoading ? <div>Searching...</div> :
                 searchResults.length > 0 && search !== "" ? (
                     searchResults.map((exercise, index) => (
                         

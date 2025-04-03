@@ -6,6 +6,8 @@ import { WorkOutExercises } from "./WorkOutExercises/WorkOutExercises";
 import { WorkOutAddExercises } from "./WorkOutAddExercises/WorkOutAddExercises";
 import { useSessionContext } from "@/context/SessionContext";
 import { useMessageContext } from "@/context/MessageContext";
+import SignInButton from "../SignInButton/SignInButton";
+import { LoadingSpinner } from "../UI functions/LoadingSpinner/LoadingSpinner";
 
 
 // import Head from "next/head";
@@ -17,7 +19,7 @@ interface WorkOutProps {
 
 export const WorkOut = ({workout, view}: WorkOutProps) => {
     const [exercises, setExercises] = useState(workout.exercises);
-    const {session} = useSessionContext();
+    const {session, sessionLoading} = useSessionContext();
     const { addMessage,  setApiLoading, clearMessages } = useMessageContext();
 
     const creatorOrSuper = session?.user?.id === workout.createdBy.id || session?.user?.isSuperuser;
@@ -58,7 +60,13 @@ export const WorkOut = ({workout, view}: WorkOutProps) => {
             <WorkOutHeader workout={workout} />
             <WorkOutExercises workoutExercises={exercises || []} context={creatorOrSuper? "edit": "view"} onDelete={handleDeleteExercise} />
             <div className="h-4"></div>
-            {creatorOrSuper && <WorkOutAddExercises exercises={exercises} setExercises={setExercises} workoutId={workout.id} />}
+            
+            {sessionLoading && <LoadingSpinner />}
+            {!sessionLoading && creatorOrSuper ? 
+                <WorkOutAddExercises exercises={exercises} setExercises={setExercises} workoutId={workout.id} /> 
+                : <div className="flex flex-col space-y-8 bg-midnightblue text-white p-4 rounded-lg shadow-md w-full">
+                    Sign-in to add exercises <SignInButton />
+                </div>}
         </div>
     );
 }
