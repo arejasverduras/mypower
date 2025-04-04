@@ -1,40 +1,10 @@
 import { WorkoutWithRelations } from "../../../../types/workout";
 import Link from "next/link";
 import { EditDeleteButtons } from "../../UI functions/EditDeleteButtons/EditDeleteButtons";
-// import { Errors, ErrorsType } from "../../UI functions/Errors/Errors";
-// import { useState } from "react";
+
 
 export const WorkOutCard = ({workout}: {workout: WorkoutWithRelations}) => {
-    // const [errors, setErrors] = useState<ErrorsType>([]);
 
-
-    // const handleDelete = async (id:string) => {
-    //     setErrors([]);
-
-    //     if (!creatorOrSuper) {
-
-    //         setErrors((prev) => [...prev, "You are not authorized to delete this workout."]);
-    //         return;
-    //         }
-    
-    //     if (!confirm("Are you sure you want to delete this workout?")) return;
-    
-    //     try {
-    //         const res = await fetch(`/api/workouts/${id}`, { method: "DELETE" });
-    
-    //         if (!res.ok) {
-    //             setErrors((prev) => [...prev, "Failed to delete workout"]);
-    //             return;
-    //         }
-            
-    //         alert("Workout deleted successfully");
-    //         router.push("/workouts")
-    //     } catch (err) {
-    //         console.error(err);
-    //         setErrors((prev) => [...prev, "Failed to delete workout"]);
-    //         return;
-    //     }
-    //     };
 
     return (
         <div key={workout.id} data-cy="workout-card" className="bg-white shadow-card p-5 rounded-xl border border-gray-200">

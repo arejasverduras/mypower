@@ -84,10 +84,10 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
   }
 
   try {
-    const { exerciseId, metadata } = await req.json();
+    const { exerciseId, customDescription, customSets, customRepetitions } = await req.json();
 
     // Update the exercise metadata in the workout
-    const updatedWorkout = await prisma.workoutExercise.update({
+    const updatedWorkoutExercise = await prisma.workoutExercise.update({
       where: {
         workoutId_exerciseId: {
           workoutId: id,
@@ -95,7 +95,9 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
         },
       },
       data: {
-        ...metadata,
+        customDescription,
+        customSets,
+        customRepetitions,
       },
       include: {
         workout: {
@@ -106,7 +108,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
       },
     });
 
-    return NextResponse.json(updatedWorkout, { status: 200 });
+    return NextResponse.json(updatedWorkoutExercise, { status: 200 });
   } catch (error) {
     console.error("Error updating exercise metadata:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });

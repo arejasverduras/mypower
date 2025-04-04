@@ -57,7 +57,7 @@ export const WorkOut = ({workout, view}: WorkOutProps) => {
     if (view === "page")
     return (
         <div className=" flex flex-col items-start space-y-4 max-w-5xl mx-auto">
-            <WorkOutHeader workout={workout} />
+            <WorkOutHeader workout={workout} context="page" />
             <WorkOutExercises workoutExercises={exercises || []} context={creatorOrSuper? "edit": "view"} onDelete={handleDeleteExercise} />
             <div className="h-4"></div>
             

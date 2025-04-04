@@ -9,6 +9,7 @@ interface WorkOutExercisesProps {
 
 export const WorkOutExercises = ({ workoutExercises, context, onDelete }: WorkOutExercisesProps) => {
     
+
     
     return (
         <div className="flex flex-col space-y-8 bg-midnightblue text-white p-4 rounded-lg shadow-md w-full">

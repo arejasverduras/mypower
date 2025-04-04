@@ -85,7 +85,7 @@ export const WorkOuts = () => {
     );
 
     return (
-        <div className="bg-background min-h-screen p-6">
+        <div className="flex flex-col min-h-screen p-6">
             <div className="max-w-4xl mx-auto">
                 <SearchBar search={search} setSearch={setSearch} placeholderText="Search workouts..." />
                 {apiLoading ? (

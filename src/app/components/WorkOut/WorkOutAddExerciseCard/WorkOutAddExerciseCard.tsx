@@ -6,7 +6,6 @@ import { useState } from "react";
 import { YouTube } from "../../Video/YouTube/YouTube";
 
 
-
 interface WorkOutAddExerciseCardProps {
     exercise: ExerciseWithRelations;
     context:  "search" | "workOutSearch";

@@ -6,6 +6,7 @@ import { YouTube } from "../../Video/YouTube/YouTube";
 import { HeartIcon } from '@heroicons/react/24/solid'; 
 import { HeartIcon as HeartOutline } from "@heroicons/react/24/outline";
 import { TrashIcon } from '@heroicons/react/24/solid';
+import {PencilIcon} from "@heroicons/react/24/solid";
 
 interface WorkOutExerciseCardProps {
     exercise: WorkoutWithRelations["exercises"][0];
@@ -19,6 +20,8 @@ export const WorkOutExerciseCard = ({exercise, context, onDelete}: WorkOutExerci
     
 
     const handleLike = () => setLike(!like);
+
+    const handleEditMeta = () => console.log("edit meta data");
     
     return (
         <div className="flex flex-col items-center">
@@ -57,6 +60,7 @@ export const WorkOutExerciseCard = ({exercise, context, onDelete}: WorkOutExerci
                                         <p><b>Break: </b>2 min</p> 
                                     </div>
                                 ): <div>{exercise.exercise.execution}</div>}
+                                
                             {/* <p className="text-white text-sm ">by {exercise.exercise.createdBy.name }</p> */}
 
         
@@ -88,12 +92,14 @@ export const WorkOutExerciseCard = ({exercise, context, onDelete}: WorkOutExerci
                                 (   <div className="flex space-x-2 ">
                                         <p><b>Sets:</b> {exercise.customSets || null}</p>
                                         <p><b>Reps:</b> {exercise.customRepetitions}</p> 
+                                        <PencilIcon className="h-4 w-6 text-white cursor-pointer" onClick={handleEditMeta} />
                                     </div>
                                 ): (<>
                                         <h4 className="font-bold">Execution</h4>
                                         <div>{exercise.exercise.execution}</div>
+                                        <div onClick={handleEditMeta} className="cursor-pointer underline mt-2">Set custom sets and reps</div>
                                     </>)}
-                                
+                                    
                             </div>
 
                         </div>
