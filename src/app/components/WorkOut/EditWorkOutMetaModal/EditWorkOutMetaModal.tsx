@@ -4,7 +4,7 @@ import { WorkoutWithRelations } from "../../../../types/workout";
 import { useState } from "react";
 import { useMessageContext } from "@/context/MessageContext";
 import { useSessionContext } from "@/context/SessionContext";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 
 
 
@@ -16,7 +16,7 @@ interface EditWorkOutMetaModalProps {
 export const EditWorkOutMetaModal = ({ workout, onClose }: EditWorkOutMetaModalProps) => {
     const { addMessage, setApiLoading, clearMessages } = useMessageContext();
     const { session } = useSessionContext();
-    const router = useRouter();
+    // const router = useRouter();
 
     const [title, setTitle] = useState(workout.title || "");
     const [description, setDescription] = useState(workout.description || "");
@@ -50,7 +50,7 @@ export const EditWorkOutMetaModal = ({ workout, onClose }: EditWorkOutMetaModalP
             }
 
             addMessage({ type: "success", text: "Workout metadata updated successfully." });
-            router.refresh();
+            // router.refresh();
             onClose();
         } catch (err) {
             console.error(err);

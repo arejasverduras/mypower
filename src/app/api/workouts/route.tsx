@@ -63,17 +63,26 @@ export async function POST(req: Request) {
       data: {
         title: body.title,
         description: body.description || null,
-        isPublic: body.isPublic ?? true, // ✅ Defaults to true if not provided
+        isPublic: body.isPublic ?? true, // Defaults to true if not provided
         createdBy: { connect: { id: session.user.id } },
       },
       include: {
         createdBy: true,
+        tags: true, // Include tags in the response
+        exercises: { include: { exercise: true } }, // Include exercises in the response
         likedBy: true,
         programs: true,
       },
     });
 
-    return NextResponse.json(newWorkout, { status: 201 });
+    // Ensure `tags` and `exercises` are initialized as empty arrays if not present
+    const responseWorkout = {
+      ...newWorkout,
+      tags: newWorkout.tags || [],
+      exercises: newWorkout.exercises || [],
+    };
+
+    return NextResponse.json(responseWorkout, { status: 201 });
   } catch (error) {
     console.error("Error creating workout:", error);
     return NextResponse.json(

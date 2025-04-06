@@ -9,11 +9,11 @@ import { useMessageContext } from "@/context/MessageContext";
 interface WorkOutAddExercisesProps {
 
     exercises: WorkoutWithRelations["exercises"];
-    setExercises: (exercises: WorkoutWithRelations["exercises"]) => void;
+    onUpdate: (updatedWorkout: WorkoutWithRelations) => void;
     workoutId: string;
 }
 
-export const WorkOutAddExercises = ({exercises, setExercises, workoutId}: WorkOutAddExercisesProps) => {
+export const WorkOutAddExercises = ({exercises, onUpdate, workoutId}: WorkOutAddExercisesProps) => {
     // search exercises from the library to add to the workout on the workout page (wrapped in WorkOut component)
     const [search, setSearch] = useState("");
     const [searchResults, setSearchResults] = useState<ExerciseWithRelations[]>([]);
@@ -67,7 +67,7 @@ export const WorkOutAddExercises = ({exercises, setExercises, workoutId}: WorkOu
             }
 
             const updatedWorkout = await res.json();
-            setExercises(updatedWorkout.exercises);
+            onUpdate(updatedWorkout); // Update currentWorkout with the new data
             addMessage({type: "success", text: "Exercise added successfully"});
         } catch (error) {
             console.error(error);
