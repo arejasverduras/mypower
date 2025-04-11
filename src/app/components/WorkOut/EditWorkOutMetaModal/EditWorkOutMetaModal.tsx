@@ -16,7 +16,6 @@ interface EditWorkOutMetaModalProps {
 export const EditWorkOutMetaModal = ({ workout, onClose }: EditWorkOutMetaModalProps) => {
     const { addMessage, setApiLoading, clearMessages } = useMessageContext();
     const { session } = useSessionContext();
-    // const router = useRouter();
 
     const [title, setTitle] = useState(workout.title || "");
     const [description, setDescription] = useState(workout.description || "");
@@ -50,7 +49,6 @@ export const EditWorkOutMetaModal = ({ workout, onClose }: EditWorkOutMetaModalP
             }
 
             addMessage({ type: "success", text: "Workout metadata updated successfully." });
-            // router.refresh();
             onClose();
         } catch (err) {
             console.error(err);

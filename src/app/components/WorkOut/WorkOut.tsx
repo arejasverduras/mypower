@@ -29,6 +29,27 @@ export const WorkOut = ({ workout, view }: WorkOutProps) => {
         setWorkout(updatedWorkout); // Update workout metadata
     };
 
+    const handleUpdateExercise = (updatedExercise: {
+        id: string;
+        customRepetitions: string | null;
+        customSets: number | null;
+        customDescription: string | null;
+      }) => {
+        setWorkout((prevWorkout) => ({
+          ...prevWorkout,
+          exercises: prevWorkout.exercises.map((exercise) =>
+            exercise.exercise.id === updatedExercise.id
+              ? {
+                  ...exercise,
+                  customRepetitions: updatedExercise.customRepetitions,
+                  customSets: updatedExercise.customSets,
+                  customDescription: updatedExercise.customDescription,
+                }
+              : exercise
+          ),
+        }));
+      };
+
     const handleDeleteExercise = async (exerciseId: string) => {
         clearMessages();
         setApiLoading(true);
@@ -70,6 +91,7 @@ export const WorkOut = ({ workout, view }: WorkOutProps) => {
                     workoutExercises={exercises || []}
                     context={creatorOrSuper ? "edit" : "view"}
                     onDelete={handleDeleteExercise}
+                    onUpdateExercise={handleUpdateExercise} // Pass update callback}      
                 />
                 <div className="h-4"></div>
 
