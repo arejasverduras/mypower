@@ -91,7 +91,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
     const { exerciseId, customDescription, customSets, customRepetitions } = await req.json();
 
     // Update the exercise metadata in the workout
-    const updatedWorkoutExercise = await prisma.workoutExercise.update({
+    await prisma.workoutExercise.update({
       where: {
         workoutId_exerciseId: {
           workoutId: id,
@@ -103,16 +103,21 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
         customSets,
         customRepetitions,
       },
+    });
+
+    // Fetch the full updated workout with all relationships
+    const updatedWorkout = await prisma.workout.findUnique({
+      where: { id },
       include: {
-        workout: {
-          include: {
-            exercises: { include: { exercise: { include: { createdBy: true } } } },
-          },
-        },
+        exercises: { include: { exercise: { include: { createdBy: true } } } },
+        createdBy: true,
+        tags: true,
+        likedBy: true,
+        programs: true,
       },
     });
 
-    return NextResponse.json(updatedWorkoutExercise, { status: 200 });
+    return NextResponse.json(updatedWorkout, { status: 200 });
   } catch (error) {
     console.error("Error updating exercise metadata:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });

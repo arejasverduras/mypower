@@ -12,16 +12,20 @@ interface WorkOutExerciseCardProps {
     exercise: WorkoutWithRelations["exercises"][0];
     context: "view" | "edit" | "search";
     onDelete: (exerciseId: string) => void;
+    onEditMeta: (exercise: WorkoutWithRelations["exercises"][0]) => void;
+  
 }
 
-export const WorkOutExerciseCard = ({exercise, context, onDelete}: WorkOutExerciseCardProps) => {
+export const WorkOutExerciseCard = ({exercise, context, onEditMeta, onDelete}: WorkOutExerciseCardProps) => {
     const [preview, setPreview] = useState(false);
     const [like, setLike] = useState(false);
     
 
     const handleLike = () => setLike(!like);
 
-    const handleEditMeta = () => console.log("edit meta data");
+    const handleEditMeta = () => {
+        onEditMeta(exercise);
+    }
     
     return (
         <div className="flex flex-col items-center">

@@ -8,6 +8,7 @@ import { useSessionContext } from "@/context/SessionContext";
 import { useMessageContext } from "@/context/MessageContext";
 import SignInButton from "../SignInButton/SignInButton";
 import { LoadingSpinner } from "../UI functions/LoadingSpinner/LoadingSpinner";
+import { editWorkoutExerciseMeta } from "@/lib/api";
 
 
 // import Head from "next/head";
@@ -25,29 +26,38 @@ export const WorkOut = ({ workout, view }: WorkOutProps) => {
 
     const creatorOrSuper = session?.user?.id === workout.createdBy.id || session?.user?.isSuperuser;
 
+    // updates workout state after changing title, description and tags in the Header
     const handleUpdateWorkout = (updatedWorkout: WorkoutWithRelations) => {
-        setWorkout(updatedWorkout); // Update workout metadata
+        setWorkout(updatedWorkout); 
     };
 
-    const handleUpdateExercise = (updatedExercise: {
-        id: string;
-        customRepetitions: string | null;
-        customSets: number | null;
-        customDescription: string | null;
-      }) => {
-        setWorkout((prevWorkout) => ({
-          ...prevWorkout,
-          exercises: prevWorkout.exercises.map((exercise) =>
-            exercise.exercise.id === updatedExercise.id
-              ? {
-                  ...exercise,
-                  customRepetitions: updatedExercise.customRepetitions,
-                  customSets: updatedExercise.customSets,
-                  customDescription: updatedExercise.customDescription,
-                }
-              : exercise
-          ),
-        }));
+
+// // API call to edit workout exercise metadata: custom reps, sets, description
+      const handleEditExerciseMeta = async (
+        exerciseId: string,
+        metadata: {
+          customRepetitions: string | null;
+          customSets: number | null;
+          customDescription: string | null;
+        }
+      ) => {
+        clearMessages();
+        setApiLoading(true);
+      
+        try {
+          // Call the API to update the exercise metadata
+          const updatedWorkout = await editWorkoutExerciseMeta(workout.id, exerciseId, metadata);
+      
+          // Update the workout state with the new data
+          setWorkout(updatedWorkout);
+      
+          addMessage({ type: "success", text: "Exercise metadata updated successfully" });
+        } catch (error) {
+          console.error(error);
+          addMessage({ type: "error", text: "Failed to update exercise metadata" });
+        } finally {
+          setApiLoading(false);
+        }
       };
 
     const handleDeleteExercise = async (exerciseId: string) => {
@@ -91,7 +101,8 @@ export const WorkOut = ({ workout, view }: WorkOutProps) => {
                     workoutExercises={exercises || []}
                     context={creatorOrSuper ? "edit" : "view"}
                     onDelete={handleDeleteExercise}
-                    onUpdateExercise={handleUpdateExercise} // Pass update callback}      
+                    onEditExerciseMeta={handleEditExerciseMeta} // Pass API call function
+    
                 />
                 <div className="h-4"></div>
 

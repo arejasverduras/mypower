@@ -9,19 +9,22 @@ interface WorkOutExercisesProps {
   workoutExercises: ExerciseWithCustomFields[];
   context: "view" | "edit" | "search";
   onDelete: (exerciseId: string) => void;
-  onUpdateExercise: (updatedExercise: {
-    id: string;
-    customRepetitions: ExerciseWithCustomFields["customRepetitions"];
-    customSets: ExerciseWithCustomFields["customSets"];
-    customDescription: ExerciseWithCustomFields["customDescription"];
-  }) => void;
+
+  onEditExerciseMeta: (
+    exerciseId: string,
+    metadata: {
+      customRepetitions: string | null;
+      customSets: number | null;
+      customDescription: string | null;
+    }
+  ) => Promise<void>; // API call function
 }
 
 export const WorkOutExercises = ({
   workoutExercises,
   context,
   onDelete,
-  onUpdateExercise,
+    onEditExerciseMeta,
 }: WorkOutExercisesProps) => {
   const [selectedExercise, setSelectedExercise] = useState<ExerciseWithCustomFields | null>(null);
 
@@ -29,24 +32,21 @@ export const WorkOutExercises = ({
     setSelectedExercise(exercise);
   };
 
+//   api call to edit workout exercise meta data. to be passed to the modal
+
+
   return (
     <div className="flex flex-col space-y-8 bg-midnightblue text-white p-4 rounded-lg shadow-md w-full">
       {workoutExercises.length > 0 ? (
         workoutExercises.map((exercise, index) => (
-          <div key={index} className="flex justify-between items-center">
+          <div key={index}>
             <WorkOutExerciseCard
               exercise={exercise}
               context={context}
               onDelete={onDelete}
+              onEditMeta={handleEditClick}
             />
-            {context === "edit" && (
-              <button
-                onClick={() => handleEditClick(exercise)}
-                className="py-1 px-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-              >
-                Edit
-              </button>
-            )}
+
           </div>
         ))
       ) : (
@@ -64,8 +64,15 @@ export const WorkOutExercises = ({
             customSets: selectedExercise.customSets,
             customDescription: selectedExercise.customDescription,
           }}
-          onSave={(updatedExercise) => {
-            onUpdateExercise(updatedExercise);
+          onSave={async (updatedExercise) => {
+            // Call the API function to update the metadata
+            await onEditExerciseMeta(updatedExercise.id, {
+              customRepetitions: updatedExercise.customRepetitions,
+              customSets: updatedExercise.customSets,
+              customDescription: updatedExercise.customDescription,
+            });
+
+            // Close the modal
             setSelectedExercise(null);
           }}
         />
