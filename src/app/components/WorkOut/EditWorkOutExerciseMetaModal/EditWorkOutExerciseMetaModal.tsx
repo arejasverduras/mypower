@@ -14,12 +14,14 @@ interface EditWorkOutExerciseMetaModalProps {
     customRepetitions: ExerciseWithCustomFields["customRepetitions"];
     customSets: ExerciseWithCustomFields["customSets"];
     customDescription: ExerciseWithCustomFields["customDescription"];
+    customBreak: ExerciseWithCustomFields["customBreak"];
   };
   onSave: (updatedExercise: {
     id: string;
     customRepetitions: ExerciseWithCustomFields["customRepetitions"];
     customSets: ExerciseWithCustomFields["customSets"];
     customDescription: ExerciseWithCustomFields["customDescription"];
+    customBreak: ExerciseWithCustomFields["customBreak"];
   }) => void;
 }
 
@@ -31,10 +33,12 @@ export const EditWorkOutExerciseMetaModal = ({
 }: EditWorkOutExerciseMetaModalProps) => {
   const [customRepetitions, setCustomRepetitions] = useState(exercise.customRepetitions || null);
   const [customSets, setCustomSets] = useState(exercise.customSets || 0);
-    const [customDescription, setCustomDescription] = useState(exercise.customDescription || "");
+  const [customDescription, setCustomDescription] = useState(exercise.customDescription || "");
+  const [customBreak, setCustomBreak] = useState(exercise.customBreak || "2 min");
+
 
   const handleSave = () => {
-    onSave({ id: exercise.id, customRepetitions, customSets, customDescription });
+    onSave({ id: exercise.id, customRepetitions, customSets, customDescription, customBreak });
     onClose();
   };
 
@@ -47,7 +51,8 @@ export const EditWorkOutExerciseMetaModal = ({
           </label>
           <input
             id="customDescription"
-            type="text"
+            type="textarea"
+            placeholder="Add a custom description"
             value={customDescription}
             onChange={(e) => setCustomDescription(e.target.value)}
             className="w-full mt-1 p-2 bg-transparent border border-white rounded-lg focus:outline-none focus:ring-2 focus:ring-white"
@@ -74,6 +79,18 @@ export const EditWorkOutExerciseMetaModal = ({
             type="number"
             value={customSets}
             onChange={(e) => setCustomSets(Number(e.target.value))}
+            className="w-full mt-1 p-2 bg-transparent border border-white rounded-lg focus:outline-none focus:ring-2 focus:ring-white"
+          />
+        </div>
+        <div>
+          <label htmlFor="customBreak" className="block text-sm font-medium">
+            Custom Break
+          </label>
+          <input
+            id="customBreak"
+            type="text"
+            value={customBreak}
+            onChange={(e) => setCustomBreak(e.target.value)}
             className="w-full mt-1 p-2 bg-transparent border border-white rounded-lg focus:outline-none focus:ring-2 focus:ring-white"
           />
         </div>

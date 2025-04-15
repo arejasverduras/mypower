@@ -120,6 +120,9 @@ model WorkoutExercise {
   customDescription String?
   customSets        Int?
   customRepetitions String?
+  customBreak       String?   // Break between sets
+  customExecution   String?   // Custom execution instructions
+  customRest        String?   // Rest between exercises (to be implemented later)
   results           ExerciseResult[] // One-to-Many relationship
 
   // Composite key to enforce unique pairing of workout and exercise

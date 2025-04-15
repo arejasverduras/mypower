@@ -88,7 +88,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
   }
 
   try {
-    const { exerciseId, customDescription, customSets, customRepetitions } = await req.json();
+    const { exerciseId, customDescription, customSets, customRepetitions, customBreak, customExecution, customRest } = await req.json();
 
     // Update the exercise metadata in the workout
     await prisma.workoutExercise.update({
@@ -102,6 +102,9 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
         customDescription,
         customSets,
         customRepetitions,
+        customBreak,
+        customExecution,
+        customRest,
       },
     });
 

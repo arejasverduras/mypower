@@ -15,7 +15,11 @@ export async function GET(req:Request, {params}: {params: Promise<{id:string}>})
           include: {
             createdBy: true,
             tags: true,
-            exercises: { include: { exercise: { include: {createdBy: true}} } },
+            exercises: {
+               include: { 
+                exercise: { include: {createdBy: true}} 
+              } 
+            },
             likedBy: true,
             programs: true,
           },
