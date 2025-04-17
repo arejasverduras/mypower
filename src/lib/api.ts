@@ -6,6 +6,8 @@ export const editWorkoutExerciseMeta = async (
       customSets: number | null;
       customDescription: string | null;
       customBreak: string | null;
+      customExecution: string | null;
+      customRest: string | null;
     }
   ) => {
     const res = await fetch(`/api/workouts/${workoutId}/edit`, {

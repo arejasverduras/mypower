@@ -66,6 +66,10 @@ export const WorkOutExerciseCard = ({exercise, context, onEditMeta, onDelete}: W
         </div>
         <div className="flex flex-col items-center justify-center">
           {/* Tags */}
+
+            {/* {exercise.customExecution || exercise.exercise.execution} */}
+
+
         </div>
         <div className="relative flex items-center space-x-4">
           {/* Like button */}
@@ -154,66 +158,66 @@ export const WorkOutExerciseCard = ({exercise, context, onEditMeta, onDelete}: W
       </div>
             
             {/* Tray */}
-            <div className="bg-bgblue rounded-b-lg w-11/12 cursor-pointer">
-            <div className="border-l-4 border-b-4 rounded-b-lg border-b-white border-l-blue-400 ">
-                {!preview ? (
-                        <div 
-                            className="flex justify-center items-center " onClick={() => setPreview(!preview)}>
-                            {exercise.customSets || exercise.customRepetitions || exercise.customBreak ?
-                                (   <div className="flex justify-center items-center space-x-6 p-2">
-                                        <p><b>Sets: </b>{exercise.customSets || null}</p>
-                                        <p><b>Reps: </b>{exercise.customRepetitions}</p>
-                                        <p><b>Break: </b>{exercise.customBreak || "2 min"}</p> 
-                                    </div>
-                                ): <div>{exercise.exercise.execution}</div>}
-                                
-                            {/* <p className="text-white text-sm ">by {exercise.exercise.createdBy.name }</p> */}
-
-        
-                            </div>
-                    ):(
-                        <div className="flex flex-col justify-center py-5 cursor-default">
-                        
-                            {exercise.exercise.video && (   
-                                <div className="rounded-3xl  h-80">
-                                    <YouTube 
-                                        embedId={exercise.exercise.video}  />
-                                    
-                                    </div>
-                                )}
-                            {exercise.exercise.image && (
-                                <div className="flex justify-center">
-                                    <Image 
-                                        src={exercise.exercise.image} 
-                                        width={500} 
-                                        height={300} 
-                                        alt="exercise image"
-                                        className="rounded-3xl w-full" />
+    <div className="bg-bgblue rounded-b-lg w-11/12 cursor-pointer">
+        <div className="border-l-4 border-b-4 rounded-b-lg border-b-white border-l-blue-400 ">
+            {!preview ? (
+                    <div 
+                        className="flex justify-center items-center " onClick={() => setPreview(!preview)}>
+                        {exercise.customSets || exercise.customRepetitions || exercise.customBreak ?
+                            (   <div className="flex justify-center items-center space-x-6 p-2">
+                                    <p><b>Sets: </b>{exercise.customSets || null}</p>
+                                    <p><b>Reps: </b>{exercise.customRepetitions}</p>
+                                    <p><b>Break: </b>{exercise.customBreak || "-"}</p> 
                                 </div>
-                            )}
-                            <div className="p-5" >
-                                <h4 className="font-bold mb-0 flex">Description   {context==="edit" && <PencilIcon className="h-4 w-6 text-white cursor-pointer" onClick={handleEditMeta} />}</h4>
-                                <p className="mb-4 ">{exercise.customDescription || exercise.exercise.description}</p>
-                                <h4 className="font-bold flex">Execution {context==="edit" && <PencilIcon className="h-4 w-6 text-white cursor-pointer" onClick={handleEditMeta} />}</h4>
-                                <div className="mb-4">{exercise.customExecution || exercise.exercise.execution}</div>
-                                {exercise.customSets || exercise.customRepetitions || exercise.customBreak ?
-                                (   <div className="flex space-x-6">
-                                        <p><b>Sets:</b> {exercise.customSets || null}</p>
-                                        <p><b>Reps:</b> {exercise.customRepetitions}</p> 
-                                        <p><b>Break:</b> {exercise.customBreak || "2 min"}</p> 
-                                        {context==="edit" && <PencilIcon className="h-4 w-6 text-white cursor-pointer" onClick={handleEditMeta} />}
-                                    </div>
-                                ): (<>
-                                        <div onClick={handleEditMeta} className="cursor-pointer underline mt-2">Set custom sets, reps and breaks</div>
-                                    </>)}
-                                    
-                            </div>
+                            ): <div>{exercise.exercise.execution}</div>}
+                            
+                        {/* <p className="text-white text-sm ">by {exercise.exercise.createdBy.name }</p> */}
 
                         </div>
-                    )}
+                ):(
+                    <div className="flex flex-col justify-center py-5 cursor-default">
+                    
+                        {exercise.exercise.video && (   
+                            <div className="rounded-3xl  h-80">
+                                <YouTube 
+                                    embedId={exercise.exercise.video}  />
+                                
+                                </div>
+                            )}
+                        {exercise.exercise.image && (
+                            <div className="flex justify-center">
+                                <Image 
+                                    src={exercise.exercise.image} 
+                                    width={500} 
+                                    height={300} 
+                                    alt="exercise image"
+                                    className="rounded-3xl w-full" />
+                            </div>
+                        )}
+                        <div className="p-5" >
+                            <h4 className="font-bold mb-0 flex">Description   {context==="edit" && <PencilIcon className="h-4 w-6 text-white cursor-pointer" onClick={handleEditMeta} />}</h4>
+                            <p className="mb-4 ">{exercise.customDescription || exercise.exercise.description}</p>
+                            <h4 className="font-bold flex">Execution {context==="edit" && <PencilIcon className="h-4 w-6 text-white cursor-pointer" onClick={handleEditMeta} />}</h4>
+                            <div className="mb-4">{exercise.customExecution || exercise.exercise.execution}</div>
+                            {exercise.customSets || exercise.customRepetitions || exercise.customBreak ?
+                            (   <div className="flex space-x-6">
+                                    <p><b>Sets:</b> {exercise.customSets || null}</p>
+                                    <p><b>Reps:</b> {exercise.customRepetitions}</p> 
+                                    <p><b>Break:</b> {exercise.customBreak || "2 min"}</p> 
+                                    {context==="edit" && <PencilIcon className="h-4 w-6 text-white cursor-pointer" onClick={handleEditMeta} />}
+                                </div>
+                            ): (<>
+                                    <div onClick={handleEditMeta} className="cursor-pointer underline mt-2">Set custom sets, reps and breaks</div>
+                                </>)}
+                                
+                        </div>
+
                     </div>
+                )}
                 </div>
-            <div>
+        </div>
+
+                <div>
 
             </div>
         </div>

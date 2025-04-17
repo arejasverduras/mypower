@@ -40,6 +40,8 @@ export const WorkOut = ({ workout, view }: WorkOutProps) => {
           customSets: number | null;
           customDescription: string | null;
           customBreak: string | null;
+          customExecution: string | null;
+          customRest: string | null;
         }
       ) => {
         clearMessages();

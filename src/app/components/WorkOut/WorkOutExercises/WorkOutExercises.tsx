@@ -17,6 +17,8 @@ interface WorkOutExercisesProps {
       customSets: number | null;
       customDescription: string | null;
       customBreak: string | null;
+      customExecution: string | null;
+      customRest: string | null;
     }
   ) => Promise<void>; // API call function
 }
@@ -62,8 +64,10 @@ export const WorkOutExercises = ({
             title: selectedExercise.exercise.title,
             customRepetitions: selectedExercise.customRepetitions,
             customSets: selectedExercise.customSets,
-            customDescription: selectedExercise.customDescription,
+            customDescription: selectedExercise.customDescription || selectedExercise.exercise.description,
             customBreak: selectedExercise.customBreak,
+            customExecution: selectedExercise.customExecution || selectedExercise.exercise.execution,
+            customRest: selectedExercise.customRest,
           }}
           onSave={async (updatedExercise) => {
             // Call the API function to update the metadata
@@ -72,6 +76,8 @@ export const WorkOutExercises = ({
               customSets: updatedExercise.customSets,
               customDescription: updatedExercise.customDescription,
               customBreak: updatedExercise.customBreak,
+              customExecution: updatedExercise.customExecution,
+              customRest: updatedExercise.customRest,
             });
 
             // Close the modal

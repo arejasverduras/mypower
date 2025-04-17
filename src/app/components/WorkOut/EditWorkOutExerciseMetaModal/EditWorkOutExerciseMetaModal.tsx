@@ -15,6 +15,8 @@ interface EditWorkOutExerciseMetaModalProps {
     customSets: ExerciseWithCustomFields["customSets"];
     customDescription: ExerciseWithCustomFields["customDescription"];
     customBreak: ExerciseWithCustomFields["customBreak"];
+    customExecution: ExerciseWithCustomFields["customExecution"];
+    customRest: ExerciseWithCustomFields["customRest"];
   };
   onSave: (updatedExercise: {
     id: string;
@@ -22,6 +24,8 @@ interface EditWorkOutExerciseMetaModalProps {
     customSets: ExerciseWithCustomFields["customSets"];
     customDescription: ExerciseWithCustomFields["customDescription"];
     customBreak: ExerciseWithCustomFields["customBreak"];
+    customExecution: ExerciseWithCustomFields["customExecution"];
+    customRest: ExerciseWithCustomFields["customRest"];
   }) => void;
 }
 
@@ -35,10 +39,12 @@ export const EditWorkOutExerciseMetaModal = ({
   const [customSets, setCustomSets] = useState(exercise.customSets || 0);
   const [customDescription, setCustomDescription] = useState(exercise.customDescription || "");
   const [customBreak, setCustomBreak] = useState(exercise.customBreak || "2 min");
+  const [customExecution, setCustomExecution] = useState(exercise.customExecution || "");
+  const [customRest, setCustomRest] = useState(exercise.customRest || "3 min");
 
 
   const handleSave = () => {
-    onSave({ id: exercise.id, customRepetitions, customSets, customDescription, customBreak });
+    onSave({ id: exercise.id, customRepetitions, customSets, customDescription, customBreak, customExecution, customRest });
     onClose();
   };
 
@@ -55,6 +61,19 @@ export const EditWorkOutExerciseMetaModal = ({
             placeholder="Add a custom description"
             value={customDescription}
             onChange={(e) => setCustomDescription(e.target.value)}
+            className="w-full mt-1 p-2 bg-transparent border border-white rounded-lg focus:outline-none focus:ring-2 focus:ring-white"
+          />
+        </div>
+        <div>
+          <label htmlFor="customExecution" className="block text-sm font-medium">
+            Custom Execution
+          </label>
+          <input
+            id="customExecution"
+            type="text"
+            placeholder="Add a custom execution"
+            value={customExecution}
+            onChange={(e) => setCustomExecution(e.target.value)}
             className="w-full mt-1 p-2 bg-transparent border border-white rounded-lg focus:outline-none focus:ring-2 focus:ring-white"
           />
         </div>
@@ -91,6 +110,18 @@ export const EditWorkOutExerciseMetaModal = ({
             type="text"
             value={customBreak}
             onChange={(e) => setCustomBreak(e.target.value)}
+            className="w-full mt-1 p-2 bg-transparent border border-white rounded-lg focus:outline-none focus:ring-2 focus:ring-white"
+          />
+        </div>
+        <div>
+          <label htmlFor="Rest" className="block text-sm font-medium">
+            Rest before next exercise
+          </label>
+          <input
+            id="Rest"
+            type="text"
+            value={customRest}
+            onChange={(e) => setCustomRest(e.target.value)}
             className="w-full mt-1 p-2 bg-transparent border border-white rounded-lg focus:outline-none focus:ring-2 focus:ring-white"
           />
         </div>
