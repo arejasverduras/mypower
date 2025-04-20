@@ -61,15 +61,13 @@ export const WorkOutExerciseCard = ({exercise, context, onEditMeta, onDelete}: W
            <div className="flex items-center bg-headertext text-midnightblue p-4 rounded-lg shadow-md w-full justify-between">
         <div onClick={() => setPreview(!preview)}>
           <h3 className="font-bold text-2xl cursor-pointer ">
-            {context === "search" ? "searchResult" : exercise.exercise.title}
+            {exercise.customSets !== null && exercise.customSets > 0 ? `${exercise.customSets} x `  : null}  {exercise.exercise.title}
           </h3>
         </div>
         <div className="flex flex-col items-center justify-center">
           {/* Tags */}
 
             {/* {exercise.customExecution || exercise.exercise.execution} */}
-
-
         </div>
         <div className="relative flex items-center space-x-4">
           {/* Like button */}
@@ -167,7 +165,7 @@ export const WorkOutExerciseCard = ({exercise, context, onEditMeta, onDelete}: W
                             (   <div className="flex justify-center items-center space-x-6 p-2">
                                     <p><b>Sets: </b>{exercise.customSets || null}</p>
                                     <p><b>Reps: </b>{exercise.customRepetitions}</p>
-                                    <p><b>Break: </b>{exercise.customBreak || "-"}</p> 
+                                    <p><b>Pause: </b>{exercise.customBreak || "-"}</p> 
                                 </div>
                             ): <div>{exercise.exercise.execution}</div>}
                             
@@ -203,7 +201,7 @@ export const WorkOutExerciseCard = ({exercise, context, onEditMeta, onDelete}: W
                             (   <div className="flex space-x-6">
                                     <p><b>Sets:</b> {exercise.customSets || null}</p>
                                     <p><b>Reps:</b> {exercise.customRepetitions}</p> 
-                                    <p><b>Break:</b> {exercise.customBreak || "2 min"}</p> 
+                                    <p><b>Pause:</b> {exercise.customBreak || "2 min"}</p> 
                                     {context==="edit" && <PencilIcon className="h-4 w-6 text-white cursor-pointer" onClick={handleEditMeta} />}
                                 </div>
                             ): (<>
@@ -215,11 +213,15 @@ export const WorkOutExerciseCard = ({exercise, context, onEditMeta, onDelete}: W
                     </div>
                 )}
                 </div>
-        </div>
-
-                <div>
-
             </div>
+            {/* Rest block */}
+            {exercise.customRest && 
+                <div className=" bg-blue-500 mt-8 rounded-lg p-2 w-1/2">
+                    <p className="text-white text-lg text-center">
+                        {exercise.customRest} rest
+                    </p>
+                </div>
+            }
         </div>
     )
 };
