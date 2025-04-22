@@ -40,7 +40,7 @@ export const EditWorkOutExerciseMetaModal = ({
   const [customDescription, setCustomDescription] = useState(exercise.customDescription || "");
   const [customBreak, setCustomBreak] = useState(exercise.customBreak || "2 min");
   const [customExecution, setCustomExecution] = useState(exercise.customExecution || "");
-  const [customRest, setCustomRest] = useState(exercise.customRest || "3 min");
+  const [customRest, setCustomRest] = useState(exercise.customRest || "");
 
 
   const handleSave = () => {

@@ -63,6 +63,37 @@ export const WorkOut = ({ workout, view }: WorkOutProps) => {
         }
       };
 
+      const handleReorderExercises = async (newOrder: string[]) => {
+        clearMessages();
+        setApiLoading(true);
+      
+        try {
+          // Call the API to persist the new order
+          const res = await fetch(`/api/workouts/${workout.id}/edit`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ exerciseOrder: newOrder }),
+          });
+      
+          if (!res.ok) {
+            addMessage({ type: "error", text: "Failed to reorder exercises" });
+            return;
+          }
+      
+          // Update the workout state with the new order
+          const updatedWorkout = await res.json();
+          setWorkout(updatedWorkout);
+          addMessage({ type: "success", text: "Exercises reordered successfully" });
+        } catch (error) {
+          console.error(error);
+          addMessage({ type: "error", text: "Failed to reorder exercises" });
+        } finally {
+          setApiLoading(false);
+        }
+      };
+
     const handleDeleteExercise = async (exerciseId: string) => {
         clearMessages();
         setApiLoading(true);
@@ -104,8 +135,8 @@ export const WorkOut = ({ workout, view }: WorkOutProps) => {
                     workoutExercises={exercises || []}
                     context={creatorOrSuper ? "edit" : "view"}
                     onDelete={handleDeleteExercise}
-                    onEditExerciseMeta={handleEditExerciseMeta} // Pass API call function
-    
+                    onEditExerciseMeta={handleEditExerciseMeta} 
+                    onReorder={handleReorderExercises} 
                 />
                 <div className="h-4"></div>
 

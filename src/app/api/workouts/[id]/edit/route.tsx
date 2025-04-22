@@ -186,15 +186,20 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
       )
     );
 
-    // Fetch the updated workout with the new order
-    const updatedWorkout = await prisma.workout.findUnique({
+     // Fetch the full updated workout with all relationships
+     const updatedWorkout = await prisma.workout.findUnique({
       where: { id },
       include: {
-        exercises: {
-          include: { exercise: { include: { createdBy: true } } },
+        exercises: { include: { exercise: { include: { createdBy: true } } },
           orderBy: { order: "asc" }, // Ensure the exercises are returned in the correct order
         },
+        createdBy: true,
+        tags: true,
+        likedBy: true,
+        programs: true,
+        
       },
+      
     });
 
     return NextResponse.json(updatedWorkout, { status: 200 });
