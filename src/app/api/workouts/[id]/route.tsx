@@ -17,9 +17,9 @@ export async function GET(req:Request, {params}: {params: Promise<{id:string}>})
             tags: true,
             exercises: {
                include: { 
-                exercise: { include: {createdBy: true, tags: true} },
-                  
-              } 
+                exercise: { include: {createdBy: true, tags: true},},
+              },
+              orderBy: { order: "asc" }, 
             },
             likedBy: true,
             programs: true,

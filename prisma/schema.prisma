@@ -124,7 +124,6 @@ model WorkoutExercise {
   customExecution   String?   // Custom execution instructions
   customRest        String?   // Rest between exercises (to be implemented later)
   order             Int       // Order of the exercise in the workout
-  createdAt         DateTime  @default(now())
   results           ExerciseResult[] // One-to-Many relationship
 
   // Composite key to enforce unique pairing of workout and exercise
