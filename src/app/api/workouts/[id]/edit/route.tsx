@@ -17,6 +17,9 @@ export async function POST(req: Request, { params }: { params: { id: string } })
   // Check if the workout exists
   const existingWorkout = await prisma.workout.findUnique({
     where: { id },
+    include: {
+      exercises: true, // Include exercises to calculate the next order value
+    },
   });
 
   if (!existingWorkout) {
@@ -34,13 +37,17 @@ export async function POST(req: Request, { params }: { params: { id: string } })
   try {
     const { exerciseId } = await req.json();
 
-    // Add the exercise to the workout
+    // Determine the next order value
+    const nextOrder = existingWorkout.exercises.length + 1;
+
+    // Add the exercise to the workout with the correct order
     const updatedWorkout = await prisma.workout.update({
       where: { id },
       data: {
         exercises: {
           create: {
             exerciseId,
+            order: nextOrder, // Set the order for the new exercise
           },
         },
       },
@@ -127,74 +134,75 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
   }
 }
 
+
 // Change the order of exercises in a workout
-// export async function PUT(req: Request, { params }: { params: { id: string } }) {
-//   const session = await getServerSession(authOptions);
+export async function PUT(req: Request, { params }: { params: { id: string } }) {
+  const session = await getServerSession(authOptions);
 
-//   if (!session) {
-//     return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
-//   }
+  if (!session) {
+    return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+  }
 
-//   const { id } = params;
+  const { id } = params;
 
-//   // Check if the workout exists
-//   const existingWorkout = await prisma.workout.findUnique({
-//     where: { id },
-//   });
+  // Check if the workout exists
+  const existingWorkout = await prisma.workout.findUnique({
+    where: { id },
+  });
 
-//   if (!existingWorkout) {
-//     return NextResponse.json({ error: "Workout not found" }, { status: 404 });
-//   }
+  if (!existingWorkout) {
+    return NextResponse.json({ error: "Workout not found" }, { status: 404 });
+  }
 
-//   // Check if the user is the creator or a superuser
-//   const isSelfOrSuperuser =
-//     session.user.id === existingWorkout.createdById || session.user.isSuperuser;
+  // Check if the user is the creator or a superuser
+  const isSelfOrSuperuser =
+    session.user.id === existingWorkout.createdById || session.user.isSuperuser;
 
-//   if (!isSelfOrSuperuser) {
-//     return NextResponse.json({ error: "Not authorized" }, { status: 403 });
-//   }
+  if (!isSelfOrSuperuser) {
+    return NextResponse.json({ error: "Not authorized" }, { status: 403 });
+  }
 
-//   try {
-//     const { exerciseOrder } = await req.json();
+  try {
+    const { exerciseOrder } = await req.json();
 
-//     if (!Array.isArray(exerciseOrder)) {
-//       return NextResponse.json({ error: "Invalid exercise order format" }, { status: 400 });
-//     }
+    if (!Array.isArray(exerciseOrder)) {
+      return NextResponse.json({ error: "Invalid exercise order format" }, { status: 400 });
+    }
 
-//     // Update the order of exercises
-//     await Promise.all(
-//       exerciseOrder.map((exerciseId: string, index: number) =>
-//         prisma.workoutExercise.update({
-//           where: {
-//             workoutId_exerciseId: {
-//               workoutId: id,
-//               exerciseId,
-//             },
-//           },
-//           data: {
-//             order: index + 1, // Set the order based on the array index
-//           },
-//         })
-//       )
-//     );
+    // Update the order of exercises
+    await Promise.all(
+      exerciseOrder.map((exerciseId: string, index: number) =>
+        prisma.workoutExercise.update({
+          where: {
+            workoutId_exerciseId: {
+              workoutId: id,
+              exerciseId,
+            },
+          },
+          data: {
+            order: index + 1, // Set the order based on the array index
+          },
+        })
+      )
+    );
 
-//     // Fetch the updated workout with the new order
-//     const updatedWorkout = await prisma.workout.findUnique({
-//       where: { id },
-//       include: {
-//         exercises: {
-//           include: { exercise: { include: { createdBy: true } } },
-//           orderBy: { order: "asc" }, // Ensure the exercises are returned in the correct order
-//         },
-//       },
-//     });
+    // Fetch the updated workout with the new order
+    const updatedWorkout = await prisma.workout.findUnique({
+      where: { id },
+      include: {
+        exercises: {
+          include: { exercise: { include: { createdBy: true } } },
+          orderBy: { order: "asc" }, // Ensure the exercises are returned in the correct order
+        },
+      },
+    });
 
-//     return NextResponse.json(updatedWorkout, { status: 200 });
-//   } catch (error) {
-//     console.error("Error updating exercise order:", error);
-//     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
-//   }
-// }
+    return NextResponse.json(updatedWorkout, { status: 200 });
+  } catch (error) {
+    console.error("Error updating exercise order:", error);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+  }
+}
 
 
 // Delete an exercise from a workout
