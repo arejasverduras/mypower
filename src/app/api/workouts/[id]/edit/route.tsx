@@ -190,8 +190,15 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
      const updatedWorkout = await prisma.workout.findUnique({
       where: { id },
       include: {
-        exercises: { include: { exercise: { include: { createdBy: true } } },
-          orderBy: { order: "asc" }, // Ensure the exercises are returned in the correct order
+        exercises: { 
+            include: { 
+              exercise: { 
+                include: { 
+                  createdBy: true 
+                        } 
+                      } 
+                    },
+            orderBy: { order: "asc" }, // Ensure the exercises are returned in the correct order
         },
         createdBy: true,
         tags: true,
