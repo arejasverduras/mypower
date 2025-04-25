@@ -20,7 +20,7 @@ interface WorkOutProps {
 
 export const WorkOut = ({ workout, view }: WorkOutProps) => {
     const [currentWorkout, setWorkout] = useState(workout); // Manage workout state
-    const exercises = currentWorkout.exercises || [];
+
     const { session, sessionLoading } = useSessionContext();
     const { addMessage, setApiLoading, clearMessages } = useMessageContext();
 
@@ -53,7 +53,7 @@ export const WorkOut = ({ workout, view }: WorkOutProps) => {
       
           // Update the workout state with the new data
           setWorkout(updatedWorkout);
-      
+        
           addMessage({ type: "success", text: "Exercise metadata updated successfully" });
         } catch (error) {
           console.error(error);
@@ -64,11 +64,16 @@ export const WorkOut = ({ workout, view }: WorkOutProps) => {
       };
 
       const handleReorderExercises = async (newOrder: string[]) => {
+        // Optimistically update the order
+        const reorderedExercises = newOrder
+          .map((id) => currentWorkout.exercises.find((exercise) => exercise.exercise.id === id))
+          .filter((exercise): exercise is NonNullable<typeof exercise> => exercise !== undefined);
+        setWorkout({ ...currentWorkout, exercises: reorderedExercises });
+    
         clearMessages();
         setApiLoading(true);
-      
+    
         try {
-          // Call the API to persist the new order
           const res = await fetch(`/api/workouts/${workout.id}/edit`, {
             method: "PUT",
             headers: {
@@ -76,13 +81,11 @@ export const WorkOut = ({ workout, view }: WorkOutProps) => {
             },
             body: JSON.stringify({ exerciseOrder: newOrder }),
           });
-      
+    
           if (!res.ok) {
-            addMessage({ type: "error", text: "Failed to reorder exercises" });
-            return;
+            throw new Error("Failed to reorder exercises");
           }
-      
-          // Update the workout state with the new order
+    
           const updatedWorkout = await res.json();
           setWorkout(updatedWorkout);
           addMessage({ type: "success", text: "Exercises reordered successfully" });
@@ -132,7 +135,7 @@ export const WorkOut = ({ workout, view }: WorkOutProps) => {
                     onUpdate={handleUpdateWorkout} // Pass update callback
                 />
                 <WorkOutExercises
-                    workoutExercises={exercises || []}
+                    workoutExercises={currentWorkout.exercises || []}
                     context={creatorOrSuper ? "edit" : "view"}
                     onDelete={handleDeleteExercise}
                     onEditExerciseMeta={handleEditExerciseMeta} 
@@ -143,7 +146,7 @@ export const WorkOut = ({ workout, view }: WorkOutProps) => {
                 {sessionLoading && <LoadingSpinner />}
                 {!sessionLoading && creatorOrSuper ? (
                     <WorkOutAddExercises 
-                        exercises={exercises} 
+                        exercises={currentWorkout.exercises} 
                         workoutId={workout.id}
                         onUpdate={handleUpdateWorkout} // Pass update callback
                         />

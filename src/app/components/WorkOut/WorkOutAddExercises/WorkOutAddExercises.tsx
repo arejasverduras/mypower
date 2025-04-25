@@ -68,6 +68,7 @@ export const WorkOutAddExercises = ({exercises, onUpdate, workoutId}: WorkOutAdd
 
             const updatedWorkout = await res.json();
             onUpdate(updatedWorkout); // Update currentWorkout with the new data
+            
             addMessage({type: "success", text: "Exercise added successfully"});
         } catch (error) {
             console.error(error);

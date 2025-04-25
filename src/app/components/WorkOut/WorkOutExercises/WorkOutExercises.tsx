@@ -73,9 +73,11 @@ export const WorkOutExercises = ({
       const newIndex = workoutExercises.findIndex((item) => item.exercise.id === over.id);
 
       const reorderedExercises = arrayMove(workoutExercises, oldIndex, newIndex);
+      // Update the local state with the new order
+       // Optimistically update the order
+      //  onReorder(reorderedExercises.map((exercise) => exercise.exercise.id));
 
-
-      // Call the API to persist the new order
+             // Call the API to persist the new order
       const newOrder = reorderedExercises.map((exercise) => exercise.exercise.id);
       await onReorder(newOrder);
     }

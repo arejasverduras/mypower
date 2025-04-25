@@ -52,7 +52,11 @@ export async function POST(req: Request, { params }: { params: { id: string } })
         },
       },
       include: {
-        exercises: { include: { exercise: { include: { createdBy: true } } } },
+        exercises: { 
+          include: { 
+            exercise: { include: { createdBy: true },  },
+            
+       } },
         createdBy: true,
         tags: true,
         likedBy: true,
