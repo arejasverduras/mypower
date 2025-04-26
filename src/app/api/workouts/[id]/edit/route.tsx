@@ -56,7 +56,9 @@ export async function POST(req: Request, { params }: { params: { id: string } })
           include: { 
             exercise: { include: { createdBy: true },  },
             
-       } },
+       },
+        orderBy: { order: "asc" }, // Ensure the exercises are returned in the correct order    
+      },
         createdBy: true,
         tags: true,
         likedBy: true,
@@ -123,7 +125,12 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
     const updatedWorkout = await prisma.workout.findUnique({
       where: { id },
       include: {
-        exercises: { include: { exercise: { include: { createdBy: true } } } },
+        exercises: { 
+          include: { 
+            exercise: { include: { createdBy: true } } 
+          }, 
+          orderBy: {order: "asc"}
+        },
         createdBy: true,
         tags: true,
         likedBy: true,
@@ -267,7 +274,12 @@ export async function DELETE(req: Request, { params }: { params: { id: string } 
         likedBy: true,
         programs: true,
         // Include the exercises with their metadata
-        exercises: { include: { exercise: { include: { createdBy: true } } } },
+        exercises: { 
+          include: { 
+            exercise: { include: { createdBy: true } } 
+          },
+          orderBy: { order: "asc" }, // Ensure the exercises are returned in the correct order 
+        },
         
       },
     });

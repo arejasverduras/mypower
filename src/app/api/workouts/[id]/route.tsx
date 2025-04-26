@@ -85,7 +85,12 @@ export const PATCH = async (req: Request, {params}: {params: {id:string}}) => {
           include: {
             createdBy: true,
             tags: true,
-            exercises: { include: { exercise: { include: { createdBy: true } } } },
+            exercises: { 
+              include: { 
+                exercise: { include: { createdBy: true } } 
+              },
+              orderBy: { order: "asc" }, 
+            },
             likedBy: true,
             programs: true,
           },
