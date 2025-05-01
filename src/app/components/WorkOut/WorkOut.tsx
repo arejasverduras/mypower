@@ -20,7 +20,6 @@ interface WorkOutProps {
 
 export const WorkOut = ({ workout, view }: WorkOutProps) => {
     const [currentWorkout, setWorkout] = useState(workout); // Manage workout state
-
     const { session, sessionLoading } = useSessionContext();
     const { addMessage, setApiLoading, clearMessages } = useMessageContext();
 
@@ -146,7 +145,7 @@ export const WorkOut = ({ workout, view }: WorkOutProps) => {
                 {sessionLoading && <LoadingSpinner />}
                 {!sessionLoading && creatorOrSuper ? (
                     <WorkOutAddExercises 
-                        exercises={currentWorkout.exercises} 
+                        currentWorkout={currentWorkout} 
                         workoutId={workout.id}
                         onUpdate={handleUpdateWorkout} // Pass update callback
                         />

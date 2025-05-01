@@ -7,13 +7,12 @@ import { ExerciseWithRelations } from "../../../../types/exercise";
 import { useMessageContext } from "@/context/MessageContext";
 
 interface WorkOutAddExercisesProps {
-
-    exercises: WorkoutWithRelations["exercises"];
+    currentWorkout: WorkoutWithRelations;
     onUpdate: (updatedWorkout: WorkoutWithRelations) => void;
     workoutId: string;
 }
 
-export const WorkOutAddExercises = ({exercises, onUpdate, workoutId}: WorkOutAddExercisesProps) => {
+export const WorkOutAddExercises = ({currentWorkout, onUpdate, workoutId}: WorkOutAddExercisesProps) => {
     // search exercises from the library to add to the workout on the workout page (wrapped in WorkOut component)
     const [search, setSearch] = useState("");
     const [searchResults, setSearchResults] = useState<ExerciseWithRelations[]>([]);
@@ -51,9 +50,32 @@ export const WorkOutAddExercises = ({exercises, onUpdate, workoutId}: WorkOutAdd
     const handleAddExercise = async (exercise: ExerciseWithRelations) => {
         clearMessages();
         setApiLoading(true);
+
+// Optimistic update: Create a new workout object with the added exercise
+    const previousWorkout = { ...currentWorkout }; // Save the previous state
+    const newExercise = {
+        id: "", // Assign a unique ID if available
+        workoutId,
+        exercise,
+        exerciseId: exercise.id,
+        customDescription: null,
+        customSets: null,
+        customRepetitions: null,
+        customBreak: null,
+        customExecution: null,
+        customRest: null,
+        order: currentWorkout.exercises.length + 1,
+    };
+    const updatedWorkout = {
+        ...currentWorkout,
+        exercises: [...currentWorkout.exercises, newExercise],
+    };
+
+    onUpdate(updatedWorkout); // Optimistically update the entire workout state
+
         
         try {
-            const res = await fetch(`/api/workouts/${workoutId}/edit`, {
+            const res = await fetch(`/api/workouts/${workoutId}/edt`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -63,16 +85,21 @@ export const WorkOutAddExercises = ({exercises, onUpdate, workoutId}: WorkOutAdd
 
             if (!res.ok) {
                 addMessage({type: "error", text: "Failed to add exercise"});
+                setTimeout(() => {
+                    onUpdate(previousWorkout); // Roll back to the previous state
+
+                }, 2000);
                 return;
             }
 
-            const updatedWorkout = await res.json();
-            onUpdate(updatedWorkout); // Update currentWorkout with the new data
-            
+            const updatedWorkoutFromAPI = await res.json();
+            onUpdate(updatedWorkoutFromAPI); // Update currentWorkout with the new data
             addMessage({type: "success", text: "Exercise added successfully"});
         } catch (error) {
             console.error(error);
             addMessage({type: "error", text: "Failed to add exercise"});
+            onUpdate(previousWorkout); // Roll back to the previous state
+
         } finally {
             setApiLoading(false);
         }
@@ -96,7 +123,7 @@ export const WorkOutAddExercises = ({exercises, onUpdate, workoutId}: WorkOutAdd
                             exercise={exercise} 
                             context={"workOutSearch"}
                             onAdd={handleAddExercise}
-                            exists={checkExisting(exercise, exercises)}
+                            exists={checkExisting(exercise, currentWorkout.exercises)}
                             /> 
                     ))
                 ) : (
