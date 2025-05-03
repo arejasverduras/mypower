@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect } from "react";
 import { WorkoutWithRelations } from "../../../types/workout";
 import { WorkOutHeader } from "./WorkOutHeader/WorkOutHeader";
 import { WorkOutExercises } from "./WorkOutExercises/WorkOutExercises";
@@ -9,6 +9,7 @@ import { useMessageContext } from "@/context/MessageContext";
 import SignInButton from "../SignInButton/SignInButton";
 import { LoadingSpinner } from "../UI functions/LoadingSpinner/LoadingSpinner";
 import { editWorkoutExerciseMeta } from "@/lib/api";
+import { useWorkoutStore } from "@/app/stores/workoutStore";
 
 
 // import Head from "next/head";
@@ -19,11 +20,18 @@ interface WorkOutProps {
 }
 
 export const WorkOut = ({ workout, view }: WorkOutProps) => {
-    const [currentWorkout, setWorkout] = useState(workout); // Manage workout state
+    const {currentWorkout, setWorkout, updateWorkout } = useWorkoutStore(); // Manage workout state
     const { session, sessionLoading } = useSessionContext();
     const { addMessage, setApiLoading, clearMessages } = useMessageContext();
 
     const creatorOrSuper = session?.user?.id === workout.createdBy.id || session?.user?.isSuperuser;
+
+  // initialize zustand store with the workout prop
+  useEffect(() => {
+    if (!currentWorkout) {
+        setWorkout(workout); // Initialize Zustand state only if it's not already set
+    }
+}, [currentWorkout, workout, setWorkout]);
 
     // updates workout state after changing title, description and tags in the Header
     const handleUpdateWorkout = (updatedWorkout: WorkoutWithRelations) => {
@@ -65,9 +73,11 @@ export const WorkOut = ({ workout, view }: WorkOutProps) => {
       const handleReorderExercises = async (newOrder: string[]) => {
         // Optimistically update the order
         const reorderedExercises = newOrder
-          .map((id) => currentWorkout.exercises.find((exercise) => exercise.exercise.id === id))
+          .map((id) => currentWorkout?.exercises.find((exercise) => exercise.exercise.id === id))
           .filter((exercise): exercise is NonNullable<typeof exercise> => exercise !== undefined);
-        setWorkout({ ...currentWorkout, exercises: reorderedExercises });
+        
+        updateWorkout({exercises: reorderedExercises}); // Update the workout state with the new order
+          // setWorkout({ ...currentWorkout, exercises: reorderedExercises });
     
         clearMessages();
         setApiLoading(true);
@@ -124,7 +134,9 @@ export const WorkOut = ({ workout, view }: WorkOutProps) => {
             setApiLoading(false);
         }
     };
-
+    if (!currentWorkout) {
+      return (<LoadingSpinner />);
+  }
     if (view === "page")
         return (
             <div className="flex flex-col items-start space-y-4 max-w-5xl mx-auto">
@@ -134,7 +146,7 @@ export const WorkOut = ({ workout, view }: WorkOutProps) => {
                     onUpdate={handleUpdateWorkout} // Pass update callback
                 />
                 <WorkOutExercises
-                    workoutExercises={currentWorkout.exercises || []}
+                    workoutExercises={currentWorkout?.exercises || []}
                     context={creatorOrSuper ? "edit" : "view"}
                     onDelete={handleDeleteExercise}
                     onEditExerciseMeta={handleEditExerciseMeta} 
