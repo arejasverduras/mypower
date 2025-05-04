@@ -75,7 +75,7 @@ export const WorkOutAddExercises = ({currentWorkout, onUpdate, workoutId}: WorkO
 
         
         try {
-            const res = await fetch(`/api/workouts/${workoutId}/edt`, {
+            const res = await fetch(`/api/workouts/${workoutId}/edit`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
