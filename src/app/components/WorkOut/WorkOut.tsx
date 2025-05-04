@@ -157,9 +157,7 @@ export const WorkOut = ({ workout, view }: WorkOutProps) => {
                 {sessionLoading && <LoadingSpinner />}
                 {!sessionLoading && creatorOrSuper ? (
                     <WorkOutAddExercises 
-                        currentWorkout={currentWorkout} 
-                        workoutId={workout.id}
-                        onUpdate={handleUpdateWorkout} // Pass update callback
+                        workoutId={workout.id}// Pass update callback
                         />
 
                 ) : (
