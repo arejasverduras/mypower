@@ -30,6 +30,9 @@ export const WorkOut = ({ workout, view }: WorkOutProps) => {
   useEffect(() => {
     if (!currentWorkout) {
         setWorkout(workout); // Initialize Zustand state only if it's not already set
+    } 
+    else if (currentWorkout.id !== workout.id) {
+        setWorkout(workout); // Update Zustand state if the workout prop changes
     }
 }, [currentWorkout, workout, setWorkout]);
 
