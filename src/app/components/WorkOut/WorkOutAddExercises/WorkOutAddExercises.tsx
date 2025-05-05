@@ -3,8 +3,8 @@ import { useState, useEffect } from "react";
 import { SearchBar } from "../../UI functions/SearchBar/SearchBar";
 import { WorkOutAddExerciseCard } from "../WorkOutAddExerciseCard/WorkOutAddExerciseCard";
 import { ExerciseWithRelations } from "../../../../types/exercise";
-import { useMessageContext } from "@/context/MessageContext";
 import { useWorkoutStore } from "@/app/stores/workoutStore";
+import { useMessageStore } from "@/app/stores/apiMessageStore";
 
 interface WorkOutAddExercisesProps {
     workoutId: string;
@@ -16,7 +16,7 @@ export const WorkOutAddExercises = ({ workoutId}: WorkOutAddExercisesProps) => {
     const [searchResults, setSearchResults] = useState<ExerciseWithRelations[]>([]);
 
     const { currentWorkout, addExercise} = useWorkoutStore();
-    const { addMessage, apiLoading, setApiLoading, clearMessages } = useMessageContext();
+    const { addMessage, apiLoading, setApiLoading, setCustomLoadingMessage, clearMessages } = useMessageStore();
     
     // search for exercises by querying the api at /exercises. use debouncing while typing the search query
     useEffect(() => {
@@ -24,7 +24,7 @@ export const WorkOutAddExercises = ({ workoutId}: WorkOutAddExercisesProps) => {
             if (search !== "") {
                 clearMessages();
                 setApiLoading(true);
-    
+                setCustomLoadingMessage("Searching for exercises...");
                 try {
                     const res = await fetch(`/api/exercises?search=${search}`);
                     if (!res.ok) {
@@ -38,6 +38,7 @@ export const WorkOutAddExercises = ({ workoutId}: WorkOutAddExercisesProps) => {
                     addMessage({ type: "error", text: "Failed to search exercises" });
                 } finally {
                     setApiLoading(false);
+                    setCustomLoadingMessage("");
                 }
             }
         }, 300);

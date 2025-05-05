@@ -1,15 +1,16 @@
 // import { useMessageContext } from "@/context/MessageContext";
 "use client"
-import { useMessageContext } from "@/context/MessageContext";
+// import { useMessageContext } from "@/context/MessageContext";
+import { useMessageStore } from "@/app/stores/apiMessageStore";
 
 export const ApiMessage = () => {
-  const { messages, apiLoading, clearMessages } = useMessageContext();
+  const { messages, apiLoading, customLoadingMessage, clearMessages } = useMessageStore();
 
   if (apiLoading) {
     return (
       <div className="fixed top-0 left-0 right-0 p-4 z-50">
         <div className="p-4 mb-4 rounded-lg shadow-md bg-blue-500 text-white">
-          Loading...
+          {customLoadingMessage || "Loading..."}
         </div>
       </div>
     );

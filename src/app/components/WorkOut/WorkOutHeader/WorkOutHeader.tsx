@@ -6,7 +6,7 @@ import userPlaceholderImage from "../../../../../public/images/JaraFitM.png";
 import { EditDeleteButtons } from "../../UI functions/EditDeleteButtons/EditDeleteButtons";
 import { useSessionContext } from "@/context/SessionContext";
 import { useRouter } from "next/navigation";
-import { useMessageContext } from "@/context/MessageContext";
+import { useMessageStore } from "@/app/stores/apiMessageStore";
 import { useState } from "react";
 import { EditWorkOutMetaModal } from "../EditWorkOutMetaModal/EditWorkOutMetaModal";
 
@@ -22,7 +22,7 @@ export const WorkOutHeader = ({
   onDelete?: (deletedWorkoutId: string) => void;
 }) => {
   const { session } = useSessionContext();
-  const { addMessage, setApiLoading, clearMessages } = useMessageContext();
+  const { addMessage, setApiLoading, clearMessages } = useMessageStore();
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [dotMenuOpen, setDotMenuOpen] = useState(false);
@@ -50,6 +50,7 @@ export const WorkOutHeader = ({
 
   const onClose = async () => {
     setIsModalOpen(false);
+    
 
     try {
       const res = await fetch(`/api/workouts/${workout.id}`);
