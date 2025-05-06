@@ -7,7 +7,7 @@ import { WorkOutAddExercises } from "./WorkOutAddExercises/WorkOutAddExercises";
 import { useSessionContext } from "@/context/SessionContext";
 import SignInButton from "../SignInButton/SignInButton";
 import { LoadingSpinner } from "../UI functions/LoadingSpinner/LoadingSpinner";
-import { useWorkoutStore } from "@/app/stores/workoutStore";
+import { useWorkoutStore } from "@/stores/workoutStore";
 
 
 // import Head from "next/head";

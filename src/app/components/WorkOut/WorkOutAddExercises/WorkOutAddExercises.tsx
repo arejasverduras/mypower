@@ -3,8 +3,8 @@ import { useState, useEffect } from "react";
 import { SearchBar } from "../../UI functions/SearchBar/SearchBar";
 import { WorkOutAddExerciseCard } from "../WorkOutAddExerciseCard/WorkOutAddExerciseCard";
 import { ExerciseWithRelations } from "../../../../types/exercise";
-import { useWorkoutStore } from "@/app/stores/workoutStore";
-import { useMessageStore } from "@/app/stores/apiMessageStore";
+import { useWorkoutStore } from "@/stores/workoutStore";
+import { useMessageStore } from "@/stores/apiMessageStore";
 
 interface WorkOutAddExercisesProps {
     workoutId: string;

@@ -6,7 +6,7 @@ import userPlaceholderImage from "../../../../../public/images/JaraFitM.png";
 import { EditDeleteButtons } from "../../UI functions/EditDeleteButtons/EditDeleteButtons";
 import { useSessionContext } from "@/context/SessionContext";
 import { useRouter } from "next/navigation";
-import { useMessageStore } from "@/app/stores/apiMessageStore";
+import { useMessageStore } from "@/stores/apiMessageStore";
 import { useState } from "react";
 import { EditWorkOutMetaModal } from "../EditWorkOutMetaModal/EditWorkOutMetaModal";
 

@@ -1,7 +1,7 @@
 // import { useMessageContext } from "@/context/MessageContext";
 "use client"
 // import { useMessageContext } from "@/context/MessageContext";
-import { useMessageStore } from "@/app/stores/apiMessageStore";
+import { useMessageStore } from "@/stores/apiMessageStore";
 
 export const ApiMessage = () => {
   const { messages, apiLoading, customLoadingMessage, clearMessages } = useMessageStore();
