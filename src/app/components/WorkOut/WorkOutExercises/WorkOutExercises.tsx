@@ -18,17 +18,27 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { SortableItem } from "../../DragDrop/SortableItem/SortableItem";
+import { useWorkoutStore } from "@/stores/workoutStore";
 
 type ExerciseWithCustomFields = WorkoutWithRelations["exercises"][0];
 
 interface WorkOutExercisesProps {
-  workoutExercises: ExerciseWithCustomFields[];
+  workout: WorkoutWithRelations;
   context: "view" | "edit" | "search";
-  onDelete: (exerciseId: string) => void;
-  onReorder: (newOrder: string[]) => Promise<void>; // API call function to reorder exercises
+}
 
+export const WorkOutExercises = ({
+  workout,
+  context,
+}: WorkOutExercisesProps) => {
+  const [selectedExercise, setSelectedExercise] = useState<ExerciseWithCustomFields | null>(null);
+  const { editExerciseMeta, reorderExercises, deleteExercise } = useWorkoutStore(); // Manage workout state
+  
+  const handleEditClick = (exercise: WorkoutWithRelations["exercises"][0]) => {
+    setSelectedExercise(exercise);
+  };
 
-  onEditExerciseMeta: (
+  const handleEditExerciseMeta = async (
     exerciseId: string,
     metadata: {
       customRepetitions: string | null;
@@ -38,23 +48,22 @@ interface WorkOutExercisesProps {
       customExecution: string | null;
       customRest: string | null;
     }
-  ) => Promise<void>; // API call function
-}
-
-export const WorkOutExercises = ({
-  workoutExercises,
-  context,
-  onDelete,
-  onReorder,
-  onEditExerciseMeta,
-}: WorkOutExercisesProps) => {
-  const [selectedExercise, setSelectedExercise] = useState<ExerciseWithCustomFields | null>(null);
-
-
-  const handleEditClick = (exercise: WorkoutWithRelations["exercises"][0]) => {
-    setSelectedExercise(exercise);
+  ) => {
+    await editExerciseMeta(workout.id, exerciseId, metadata);
   };
 
+
+  const handleReorderExercises = async (newOrder: string[]) => {
+      await reorderExercises(workout.id, newOrder);
+  };
+
+
+  const handleDeleteExercise = async (exerciseId: string) => {
+      await deleteExercise(workout.id, exerciseId);
+  };
+
+
+// Handle Drag and Drop
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
@@ -69,17 +78,17 @@ export const WorkOutExercises = ({
     const { active, over } = event;
 
     if (active.id !== over.id) {
-      const oldIndex = workoutExercises.findIndex((item) => item.exercise.id === active.id);
-      const newIndex = workoutExercises.findIndex((item) => item.exercise.id === over.id);
+      const oldIndex = workout.exercises.findIndex((item) => item.exercise.id === active.id);
+      const newIndex = workout.exercises.findIndex((item) => item.exercise.id === over.id);
 
-      const reorderedExercises = arrayMove(workoutExercises, oldIndex, newIndex);
+      const reorderedExercises = arrayMove(workout.exercises, oldIndex, newIndex);
       // Update the local state with the new order
        // Optimistically update the order
       //  onReorder(reorderedExercises.map((exercise) => exercise.exercise.id));
 
              // Call the API to persist the new order
       const newOrder = reorderedExercises.map((exercise) => exercise.exercise.id);
-      await onReorder(newOrder);
+      await handleReorderExercises(newOrder);
     }
   };
 
@@ -90,18 +99,18 @@ export const WorkOutExercises = ({
       onDragEnd={handleDragEnd}
     >
       <SortableContext
-        items={workoutExercises.map((exercise) => exercise.exercise.id)}
+        items={workout.exercises.map((exercise) => exercise.exercise.id)}
         strategy={verticalListSortingStrategy}
       >
 
     <div className="flex flex-col space-y-8 bg-midnightblue text-white p-4 rounded-lg shadow-md w-full">
-      {workoutExercises.length > 0 ? (
-        workoutExercises.map((exercise) => (
+      {workout.exercises.length > 0 ? (
+        workout.exercises.map((exercise) => (
           <SortableItem key={exercise.exercise.id} id={exercise.exercise.id}>
             <WorkOutExerciseCard
               exercise={exercise}
               context={context}
-              onDelete={onDelete}
+              onDelete={handleDeleteExercise}
               onEditMeta={handleEditClick}
             />
           </SortableItem>
@@ -130,7 +139,7 @@ export const WorkOutExercises = ({
           }}
           onSave={async (updatedExercise) => {
             // Call the API function to update the metadata
-            await onEditExerciseMeta(updatedExercise.id, {
+            await handleEditExerciseMeta(updatedExercise.id, {
               customRepetitions: updatedExercise.customRepetitions,
               customSets: updatedExercise.customSets,
               customDescription: updatedExercise.customDescription,

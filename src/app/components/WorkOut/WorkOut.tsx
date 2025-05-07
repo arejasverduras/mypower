@@ -18,7 +18,7 @@ interface WorkOutProps {
 }
 
 export const WorkOut = ({ workout, view }: WorkOutProps) => {
-    const {currentWorkout, setWorkout, updateWorkout, editExerciseMeta, reorderExercises, deleteExercise } = useWorkoutStore(); // Manage workout state
+    const {currentWorkout, setWorkout, updateWorkout } = useWorkoutStore(); // Manage workout state
     const { session, sessionLoading } = useSessionContext();
 
 
@@ -40,31 +40,6 @@ export const WorkOut = ({ workout, view }: WorkOutProps) => {
          updateWorkout(updatedWorkout); // Call the API to update the workout
     };
 
-    // API call to edit workout exercise metadata: custom reps, sets, description
-      const handleEditExerciseMeta = async (
-        exerciseId: string,
-        metadata: {
-          customRepetitions: string | null;
-          customSets: number | null;
-          customDescription: string | null;
-          customBreak: string | null;
-          customExecution: string | null;
-          customRest: string | null;
-        }
-      ) => {
-        await editExerciseMeta(workout.id, exerciseId, metadata);
-      };
-
-
-      const handleReorderExercises = async (newOrder: string[]) => {
-          await reorderExercises(workout.id, newOrder);
-      };
-
-
-      const handleDeleteExercise = async (exerciseId: string) => {
-          await deleteExercise(workout.id, exerciseId);
-      };
-
 
     if (!currentWorkout) {
       return (<LoadingSpinner />);
@@ -78,11 +53,8 @@ export const WorkOut = ({ workout, view }: WorkOutProps) => {
                     onUpdate={handleUpdateWorkout} // Pass update callback
                 />
                 <WorkOutExercises
-                    workoutExercises={currentWorkout?.exercises || []}
+                    workout={currentWorkout}
                     context={creatorOrSuper ? "edit" : "view"}
-                    onDelete={handleDeleteExercise}
-                    onEditExerciseMeta={handleEditExerciseMeta} 
-                    onReorder={handleReorderExercises} 
                 />
                 <div className="h-4"></div>
 
